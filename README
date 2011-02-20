@@ -1,13 +1,7 @@
-# foo
+Usage:
 
-FIXME: write description
+	git clone git@github.com:ekoontz/minimal-compojure.git
+	cd minimal-compojure/
+	lein deps
+	lein ring server
 
-## Usage
-
-FIXME: write
-
-## License
-
-Copyright (C) 2010 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
