@@ -1,6 +1,6 @@
 Usage:
 
-	git clone git@github.com:ekoontz/minimal-compojure.git
+	git clone git://github.com/ekoontz/minimal-compojure.git	
 	cd minimal-compojure/
 	lein deps
 	lein ring server
