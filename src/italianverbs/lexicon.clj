@@ -15,6 +15,7 @@
 (defn add-verb [italian english]
   (def lexicon (assoc lexicon italian english)))
 
+(add-verb "dimenticare" "to forget")
 (add-verb "dire" "to say")
 (add-verb "fare" "to do")
 (add-verb "scrivere" "to write")

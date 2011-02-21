@@ -1,5 +1,7 @@
 (ns italianverbs.core
-  (:use compojure.core)
+  (:use [compojure.core]
+	[italianverbs.mongo]
+	[foo.html])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
@@ -36,9 +38,7 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (foohtml/page "tests" 
-		     "Tests go here.."
-		     request)
+         :body (page "mongotest" (mongotest) request)
 	 })
 
   (GET "/session/set/"  

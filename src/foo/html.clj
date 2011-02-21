@@ -22,6 +22,9 @@
 	  [:a {:href "/"} "Main"  ] ] 
 
         [:div 
+	  [:a {:href "/quiz/"} "Quiz"]] 
+
+        [:div 
 	  [:a {:href "/lexicon/"} "Lexicon"  ] ] 
 
         [:div 
