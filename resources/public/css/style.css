@@ -13,9 +13,10 @@ div.http {
     top:1px;
     right:1px;
     padding:1px;
-    border:1px solid #caecae;
+    border:4px solid #caecae;
     width:30%;
     float:right;
+    height:3em;
 }
 
 div.http h4 {

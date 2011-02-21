@@ -8,11 +8,15 @@
 
 (defn sessiondata [data] 
   (html
-   [:div.sessiondata
-    [:h4 "Session"]
-    [:div (pr-str data)]
-    [:a {:href "/session/clear/"} "Clear"]
-    [:a {:href "/session/set/"} "New"]]))
+   (let [name (get data :name)]
+	[:div.sessiondata
+	(if name 
+	    [:p "Welcome, " name "." 
+		 [:a {:href "/session/clear/"} "Logout"]
+		 ]
+	  [:a {:href "/session/set/"} "Login"]
+	  )
+	])))
 
 (defn footer [session]
      (html
@@ -47,9 +51,10 @@
    (if request
        [:div.http
      (sessiondata (get request :session))
-     (foolib/reqdata (get request :request-method) 
-		     (get request :uri)
-		     (get request :query-string))
+     (if false ; probably removing this
+	 (foolib/reqdata (get request :request-method) 
+			 (get request :uri)
+			 (get request :query-string)))
      ])
      (footer (get request :session))
    ]))
