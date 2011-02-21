@@ -35,12 +35,6 @@
 		  footer)
 	 })
 
-  (GET "/session/"
-       {session :session}
-       {
-       :body (str banner (sessiondata session) footer)
-       })
-
   (GET "/session/set/"  
        request
        {
