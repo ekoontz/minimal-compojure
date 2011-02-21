@@ -26,11 +26,8 @@
 (add-verb "pranzare" "to eat lunch")
 (add-verb "smettere" "to quit")
 
-(defn verb-table []
+(defn verb-table [lexicon]
   (html [:table 
 	(for [verb (sort (keys lexicon))]
 	     (verb-row verb))]))
-
-(defn show [] 
-  (verb-table))
 

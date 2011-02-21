@@ -8,6 +8,7 @@ div#content {
 
 
 div.sessiondata {
+    display:none;
     text-align:right;
     position:absolute;
     bottom:1px;
@@ -19,6 +20,7 @@ div.sessiondata {
 }
 
 div.reqdata {
+    display:none;
     text-align:right;
     position:absolute;
     right:1px;
@@ -58,3 +60,34 @@ div.poweredby {
   width:100%
 }
 
+div.guess {
+    width:90%;
+    float:left;
+    padding-left:1em;
+}
+
+div.guess h3 {
+    padding:0.5em;
+    margin:0;
+    text-align:left;
+    width:auto;
+}
+
+div.guess i {
+    float:right;
+    text-align:right;
+    width:auto;
+}
+
+div.question {
+    width:100%;
+    float:left;
+    border:0px dashed blue;
+}
+
+div.debug {
+    display:none;
+    border:1px dashed green;
+    margin:1px;
+    padding:1px;
+}

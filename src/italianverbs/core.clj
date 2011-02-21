@@ -5,7 +5,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
-	    [foo.html :as foohtml]
+	    [italianverbs.quiz :as quiz]
 	    [italianverbs.lexicon :as lexicon]))
 
 (defroutes main-routes
@@ -19,7 +19,7 @@
 
        ;; response map
        { :session (get request :session)
-         :body (foohtml/page "Welcome"
+         :body (page "Welcome"
 		     "Welcome to Italian Verbs."
 		     request)
        }
@@ -29,8 +29,18 @@
        request
        ;; response map
        { :session (get request :session)
-         :body (foohtml/page "Lexicon"
-		     (lexicon/show)
+         :body (page "Lexicon"
+		     (lexicon/verb-table lexicon/lexicon)
+		     request)
+       }
+       )
+
+  (GET "/quiz/" 
+       request
+       ;; response map
+       { :session (get request :session)
+         :body (page "Quiz"
+		     (quiz/run)
 		     request)
        }
        )
@@ -58,7 +68,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (foohtml/page "not found." "Sorry, page not found.")))
+  (route/not-found (page "not found." "Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function
