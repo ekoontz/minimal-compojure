@@ -29,14 +29,16 @@
        {session :session}
        {
        :session {:val 123 :fruit "grape"}
-       :body (str banner (message "Session set.") (sessiondata session) footer)
+       :status 302
+       :headers {"Location" "/?msg=set"}
        })
 
   (GET "/session/clear/" 
        {} 
        {
        :session {}
-       :body (str banner (message "Session cleared.") footer)
+       :status 302
+       :headers {"Location" "/?msg=cleared"}
        })
 
   (route/resources "/")
