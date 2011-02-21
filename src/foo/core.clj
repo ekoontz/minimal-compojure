@@ -17,7 +17,8 @@
 
        ;; response map
        { :session (get request :session)
-         :body (page (str "Welcome to Foo."
+         :body (page "Welcome"
+		     (str "Welcome to Foo."
 			  (sessiondata (get request :session))
 			  (reqdata (get request :request-method)
 				   (get request :uri))))
@@ -27,7 +28,8 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page (str "Tests go here."
+         :body (page "tests" 
+		     (str "Tests go here.."
 			  (sessiondata (get request :session)) 
 			  (reqdata (get request :request-method) 
 				   (get request :uri))))
@@ -50,7 +52,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (page "Sorry, page not found.")))
+  (route/not-found (page "not found." "Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function

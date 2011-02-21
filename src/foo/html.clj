@@ -31,14 +31,14 @@
         "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
                       "Compojure" ] ] ))
 
-(defn page [content]
+(defn page [title & [content request]]
      (html5
       [:head 
-        [:title "Welcome to Foo"]
+        [:title "Foo &#0187; " title]
       ]
       [:body
         [:div
-	  [:h1 "Welcome to the Foo app"]]
+	  [:h1 "Foo &#0187; " title]]
         content 
 	footer ]))
 
