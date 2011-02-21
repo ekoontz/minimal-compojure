@@ -39,20 +39,20 @@
                       "Compojure" ] ] ))
 
 (defn page [title & [content request]]
-     (html5
-      [:head 
-        [:title "Verbi italiani &#0187; " title]
-	(include-css "/css/style.css")]
-      [:body
-        [:div
-	  [:h1 "Verbi italiani &#0187; " title]]
-	[:div#content content]
-	(if request
-	    (str 
-		 (sessiondata (get request :session))
-		 (foolib/reqdata (get request :request-method) 
-			  (get request :uri)
-			  (get request :query-string))))
+  (html5
+   [:head 
+   [:title "Verbi italiani &#0187; " title]
+   (include-css "/css/style.css")]
+   [:body
+   [:div
+   [:h1 "Verbi italiani &#0187; " title]]
+   [:div#content content]
+   (if request
+       [:div.http
+         (sessiondata (get request :session))
+	 (foolib/reqdata (get request :request-method) 
+			 (get request :uri)
+			 (get request :query-string))])
+   footer ]))
 
-	footer ]))
 

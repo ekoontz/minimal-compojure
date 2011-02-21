@@ -6,38 +6,25 @@ div#content {
     width:100%;
 }
 
-
-div.sessiondata {
-    display:none;
+div.http {
+    display:block;
     text-align:right;
     position:absolute;
-    bottom:1px;
-    left:1px;
-    padding:1px;
-    border:1px solid #caecae;
-    width:30%;
-    float:right;
-}
-
-div.reqdata {
-    display:none;
-    text-align:right;
-    position:absolute;
+    top:1px;
     right:1px;
-    bottom:1px;
     padding:1px;
     border:1px solid #caecae;
     width:30%;
     float:right;
 }
 
-div.sessiondata a {
-    padding-right:1em;
-}
-
-div.sessiondata h4 {
+div.http h4 {
     padding:0;
     margin:0;
+}
+
+div.http a {
+    padding:0.25em;
 }
 
 div.footer {
