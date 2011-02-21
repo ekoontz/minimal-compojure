@@ -8,8 +8,13 @@
 	      MessageDigest)
 	     (java.math BigInteger)))
 
+(defn find-or-insert-user [username]
+  (let [found (fetch-one :users :where {:name username})]
+       (if found found
+	 (insert! :users {:name username :lastlogin "never"}))))
+
 (defn new [username] ;; create a new session for the given user.
-  (let [newuser (insert! :users {:name username :lastlogin "foo"})
+  (let [newuser (find-or-insert-user username)
         newsession (insert! :session {:user username :start "now"})]
        {:name (get newuser :name)}))
 
