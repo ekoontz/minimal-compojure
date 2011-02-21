@@ -44,7 +44,8 @@
 	    (str 
 		 (sessiondata (get request :session))
 		 (reqdata (get request :request-method) 
-			  (get request :uri))))
+			  (get request :uri)
+			  (get request :query-string))))
 
 	footer ]))
 
