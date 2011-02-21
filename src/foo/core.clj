@@ -17,22 +17,20 @@
 
        ;; response map
        { :session (get request :session)
-         :body (str banner (message "Welcome to Foo.") 
-		    (sessiondata (get request :session))
-		    (reqdata (get request :request-method)
-			     (get request :uri))
-		    footer)
+         :body (page (str "Welcome to Foo."
+			  (sessiondata (get request :session))
+			  (reqdata (get request :request-method)
+				   (get request :uri))))
        }
        )
 
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (str banner (message "Tests go here.") 
-		  (sessiondata (get request :session)) 
-		  (reqdata (get request :request-method) 
-			   (get request :uri))
-		  footer)
+         :body (page (str "Tests go here."
+			  (sessiondata (get request :session)) 
+			  (reqdata (get request :request-method) 
+				   (get request :uri))))
 	 })
 
   (GET "/session/set/"  
@@ -52,7 +50,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (str banner (message "Sorry, page not found.") footer)))
+  (route/not-found (page "Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function

@@ -11,6 +11,7 @@
                  [org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [ring/ring-core "0.2.0"]                   
-                 [ring/ring-jetty-adapter "0.2.0"]]     
+                 [ring/ring-jetty-adapter "0.2.0"]    
+		 [hiccup "0.3.4"]]
   :dev-dependencies [[lein-ring "0.3.2"]]
   :ring {:handler foo.core/app})
