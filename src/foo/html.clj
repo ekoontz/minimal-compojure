@@ -1,5 +1,6 @@
-(ns foo.core
-    (:use [hiccup core page-helpers]))
+(ns foo.html
+    (:use [hiccup core page-helpers])
+    (:require [foo.lib :as foolib]))
 
 (defn message [msg] 
   (html
@@ -34,16 +35,16 @@
 (defn page [title & [content request]]
      (html5
       [:head 
-        [:title "Foo &#0187; " title]
+        [:title "ItalianVerbs &#0187; " title]
       ]
       [:body
         [:div
-	  [:h1 "Foo &#0187; " title]]
+	  [:h1 "ItalianVerbs &#0187; " title]]
         content 
 	(if request
 	    (str 
 		 (sessiondata (get request :session))
-		 (reqdata (get request :request-method) 
+		 (foolib/reqdata (get request :request-method) 
 			  (get request :uri)
 			  (get request :query-string))))
 

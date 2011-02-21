@@ -1,10 +1,13 @@
-(ns foo.core
+(ns italianverbs.core
   (:use compojure.core)
   (:require [compojure.route :as route]
-            [compojure.handler :as handler]))
+            [compojure.handler :as handler]
+	    [foo.lib :as foolib]
+	    [foo.html :as foohtml]))
 
-(load-file "src/foo/lib.clj")
-(load-file "src/foo/html.clj")
+
+;(load-file "src/foo/html.clj")
+;(load-file "src/foo/lib.clj")
 
 (defroutes main-routes
 
@@ -17,8 +20,8 @@
 
        ;; response map
        { :session (get request :session)
-         :body (page "Welcome"
-		     "Welcome to Foo."
+         :body (foohtml/page "Welcome"
+		     "Welcome to Italian Verbs."
 		     request)
        }
        )
@@ -26,7 +29,7 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "tests" 
+         :body (foohtml/page "tests" 
 		     "Tests go here.."
 		     request)
 	 })
@@ -48,7 +51,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (page "not found." "Sorry, page not found.")))
+  (route/not-found (foohtml/page "not found." "Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function

@@ -1,4 +1,4 @@
-(ns foo.core
+(ns foo.lib
     (:use [hiccup core page-helpers]))
 
 (defn reqdata [request-method & [ uri query-string]] 
