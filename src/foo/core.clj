@@ -32,7 +32,8 @@
        :body (str banner (message "Session set.") (sessiondata session) footer)
        })
 
-  (GET "/session/clear/"  
+  (GET "/session/clear/" 
+       {} 
        {
        :session {}
        :body (str banner (message "Session cleared.") footer)
