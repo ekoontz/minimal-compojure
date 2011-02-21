@@ -7,6 +7,7 @@
                  [org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [compojure "0.6.0-RC3"]
+		 [congomongo "0.1.3-SNAPSHOT"]
                  [net.defn.ring/ring-jetty-adapter "0.2.0"]
                  [org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
