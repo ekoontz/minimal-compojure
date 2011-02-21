@@ -3,8 +3,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]))
 
-(load-file "src/foo/html.clj")
 (load-file "src/foo/lib.clj")
+(load-file "src/foo/html.clj")
 
 (defroutes main-routes
 
@@ -18,10 +18,8 @@
        ;; response map
        { :session (get request :session)
          :body (page "Welcome"
-		     (str "Welcome to Foo."
-			  (sessiondata (get request :session))
-			  (reqdata (get request :request-method)
-				   (get request :uri))))
+		     "Welcome to Foo."
+		     request)
        }
        )
 
@@ -29,10 +27,8 @@
        request
        { :session (get request :session)
          :body (page "tests" 
-		     (str "Tests go here.."
-			  (sessiondata (get request :session)) 
-			  (reqdata (get request :request-method) 
-				   (get request :uri))))
+		     "Tests go here.."
+		     request)
 	 })
 
   (GET "/session/set/"  

@@ -40,5 +40,11 @@
         [:div
 	  [:h1 "Foo &#0187; " title]]
         content 
+	(if request
+	    (str 
+		 (sessiondata (get request :session))
+		 (reqdata (get request :request-method) 
+			  (get request :uri))))
+
 	footer ]))
 
