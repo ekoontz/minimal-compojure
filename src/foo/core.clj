@@ -33,7 +33,6 @@
        })
 
   (GET "/session/clear/"  
-       {session :session}
        {
        :session {}
        :body (str banner (message "Session cleared.") footer)
