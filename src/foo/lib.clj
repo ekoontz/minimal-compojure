@@ -3,7 +3,7 @@
 
 (defn reqdata [request-method & [ uri query-string]] 
   (html
-   [:div {:class "reqdata"}
+   [:div.reqdata
      [:table
        [:tr
          [:th "Method" ]

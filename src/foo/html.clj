@@ -8,7 +8,7 @@
 
 (defn sessiondata [data] 
   (html
-   [:div {:class "sessiondata"}
+   [:div.sessiondata
     [:h4 "Session"]
     [:pre (pr-str data)]
     [:a {:href "/session/clear/"} "Clear"]
@@ -16,7 +16,7 @@
 
 (def footer 
      (html
-      [:div {:class "footer"}
+      [:div.footer
 
         [:div 
 	  [:a {:href "/"} "Main"  ] ] 
@@ -31,7 +31,7 @@
 	  [:a {:href "/form/"} "Forms"  ] ] 
 
       ] 
-      [:div {:class "poweredby" }
+      [:div.poweredby
         "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
                       "Compojure" ] ] ))
 
