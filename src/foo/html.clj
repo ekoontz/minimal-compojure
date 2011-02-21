@@ -38,12 +38,12 @@
 (defn page [title & [content request]]
      (html5
       [:head 
-        [:title "ItalianVerbs &#0187; " title]
+        [:title "Verbi italiani &#0187; " title]
 	(include-css "/css/style.css")]
       [:body
         [:div
-	  [:h1 "ItalianVerbs &#0187; " title]]
-        content 
+	  [:h1 "Verbi italiani &#0187; " title]]
+	[:div#content content]
 	(if request
 	    (str 
 		 (sessiondata (get request :session))

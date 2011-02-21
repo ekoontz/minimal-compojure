@@ -2,11 +2,27 @@ body {
    font-family: sans-serif;
 }
 
+div#content {
+    width:100%;
+}
+
+
 div.sessiondata {
     text-align:right;
     position:absolute;
-    top:1px;
+    bottom:1px;
+    left:1px;
+    padding:1px;
+    border:1px solid #caecae;
+    width:30%;
+    float:right;
+}
+
+div.reqdata {
+    text-align:right;
+    position:absolute;
     right:1px;
+    bottom:1px;
     padding:1px;
     border:1px solid #caecae;
     width:30%;
@@ -24,7 +40,7 @@ div.sessiondata h4 {
 
 div.footer {
     width:60%;
-    float:right;
+    float:left;
     margin:1em;
     padding:0.5em;
     border:1px solid #ededed;
@@ -42,10 +58,3 @@ div.poweredby {
   width:100%
 }
 
-div.reqdata {
-    padding:3px;
-    width:40%;
-    background:#ededed;
-    border:2px solid #caecae;
-    margin-top:0.5em
-}
