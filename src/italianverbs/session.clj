@@ -13,6 +13,11 @@
        (if found found
 	 (insert! :users {:name username :lastlogin "never"}))))
 
+;; TODO : figure out date/time in Clojure.
+(defn last-activity [username]
+  (let [my-user (fetch-one :users :where {:name username})]
+       (update! :users my-user (merge my-user {:lastlogin "reallynow"}))))
+
 (defn start-session [username]
   (last-activity username)
   (insert! :session {:user username :start "now"}))
@@ -23,6 +28,3 @@
         newsession (start-session username)]
        {:name (get newuser :name)}))
 
-(defn last-activity [username]
-  (let [my-user (fetch-one :users :where {:name username})]
-       (update! :users my-user (merge my-user {:lastlogin "reallynow"}))))

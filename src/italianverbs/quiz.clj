@@ -31,6 +31,27 @@
 	                  :answer (get lexicon (nth (keys lexicon) index))
                          }))
 
+(defn show-history-rows [qs]
+  (if (first qs)
+      (let
+	  [row (first qs)]
+	   [:tr [:td "foo3" ]]
+	   (show-history-rows (rest qs))
+	  )
+    [:tr [:td (str "the end" (count qs) )   ]]))
+
+(defn show-history []
+  (let 
+      [qs (fetch :question)]
+   [:table
+   [:tr [:th "count"] [:td (count qs) ] ]
+   [:tr [:th (get (first qs) :question)] [:td (get (first qs) :answer )]]
+   [:tr [:th (get (second qs) :question)] [:td (get (second qs) :answer )]]
+   (show-history-rows qs)
+   ]
+  )
+)
+
 (defn next-question [index lexicon]
   (let 
       [italian-verb (nth (keys lexicon) index)
@@ -49,7 +70,17 @@
        [:div.question
        [:h2 [:i italian-verb]]
          (guess (dissoc lexicon italian-verb) 
-		number-of-guesses english-verb true-before)])))
+		number-of-guesses english-verb true-before) 
+       ]
+
+       [:div.history
+         (show-history)
+       ]
+
+ )
+
+ ) 
+)
 
 (defn quiz []
   (next-question (rand-int (count lexicon/lexicon)) lexicon/lexicon))

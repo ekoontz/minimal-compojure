@@ -1,6 +1,7 @@
 (ns italianverbs.core
   (:use [compojure.core]
 	[italianverbs.mongo]
+	[somnium.congomongo]
 	[foo.html])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
@@ -91,3 +92,5 @@
 (def app
   (handler/site main-routes))
 
+; global initializations go here, i guess..
+(mongo! :db "mydb")

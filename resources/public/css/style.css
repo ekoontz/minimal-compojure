@@ -83,3 +83,7 @@ div.debug {
     padding:1px;
 }
 
+div.history {
+    border:1px dashed blue;
+    float:right;
+}
