@@ -4,20 +4,27 @@
             [compojure.handler :as handler]))
 
 (load-file "src/foo/html.clj")
+(load-file "src/foo/lib.clj")
 
 (defroutes main-routes
   (GET "/" 
-       {session :session}
-       {
-       :session session
-       :body (str banner (message "Welcome.") (sessiondata session) footer)
-       })
+       ;; request map
+       { session :session request-method :request-method }
+
+       ;; response map
+       { :session session 
+         :body (str banner (message "Welcome to Foo.") 
+		    (sessiondata session) 
+		    (reqdata request-method)
+		    footer)
+       }
+       )
 
   (GET "/test/" 
-       {session :session}
-       (str banner (message "Tests go here.")
-	    (sessiondata session)
-	    footer))
+       { session :session request-method :request-method }
+       :body (str banner (message "Tests go here.") 
+		  (sessiondata session) (reqdata request-method)
+		  footer))
 
   (GET "/session/"
        {session :session}
