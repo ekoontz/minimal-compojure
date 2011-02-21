@@ -4,7 +4,7 @@
 
 (defn sessiondata [data] 
   (str 
-   "<div style='text-align:right;position:absolute;top:0;right:0;float:right;padding:0;border:1px solid #caecae';width:10%>"
+   "<div style='text-align:right;position:absolute;top:1;right:1;padding:1;border:1px solid #caecae';width:10%>"
    "<h4 style='padding:0;margin:0'>Session</h4><pre>" 
    (pr-str data) 
    "</pre>"
@@ -12,9 +12,12 @@
     <a style='padding-left:1em' href='/session/set/'>New</a>"
    "</div>"))
 
-(def footer "<div style='margin:1em;padding:0.5em;border:1px solid #ededed'>
-<p><a href='/'>Main</a></p>
-<p><a href='/test/'>Tests</a></p>
-<p><a href='/form/'>Form Processing</a></p>
-<div style='float:right'>Powered by Compojure</div></body></html>")
+(def footer 
+     "<div style='width:60%;float:right;margin:1em;padding:0.5em;border:1px solid #ededed'>
+        <div style='margin-right:1em;width:auto;float:left'><a href='/'>Main</a></div>
+	<div style='margin-right:1em;width:auto;float:left'><a href='/test/'>Tests</a></div>
+	<div style='margin-right:1em;width:auto;float:left'><a href='/form/'>Form Processing</a></div>
+      </div>
+      <div style='float:right;width:100%'>Powered by Compojure</div>
+      </body></html>")
 
