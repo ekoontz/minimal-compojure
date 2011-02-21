@@ -3,11 +3,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
-	    [foo.html :as foohtml]))
-
-
-;(load-file "src/foo/html.clj")
-;(load-file "src/foo/lib.clj")
+	    [foo.html :as foohtml]
+	    [italianverbs.lexicon :as lexicon]))
 
 (defroutes main-routes
 
@@ -22,6 +19,16 @@
        { :session (get request :session)
          :body (foohtml/page "Welcome"
 		     "Welcome to Italian Verbs."
+		     request)
+       }
+       )
+
+  (GET "/lexicon/" 
+       request
+       ;; response map
+       { :session (get request :session)
+         :body (foohtml/page "Lexicon"
+		     (lexicon/show)
 		     request)
        }
        )

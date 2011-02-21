@@ -22,6 +22,9 @@
 	  [:a {:href "/"} "Main"  ] ] 
 
         [:div {:style "margin-right:1em;width:auto;float:left"}
+	  [:a {:href "/lexicon/"} "Lexicon"  ] ] 
+
+        [:div {:style "margin-right:1em;width:auto;float:left"}
 	  [:a {:href "/test/"} "Test"  ] ] 
 
         [:div {:style "margin-right:1em;width:auto;float:left"}
