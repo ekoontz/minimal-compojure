@@ -1,5 +1,7 @@
 (ns italianverbs.quiz
-    (:use [hiccup core page-helpers])
+    (:use 
+     [hiccup core page-helpers]
+     [somnium.congomongo])
     (:require [italianverbs.lexicon :as lexicon]))
 
 (defn wrapchoice [word & [ istrue ] ]
@@ -9,7 +11,6 @@
 	       [:h3 [:a {:href (str href_prefix "guess=" word)} word]
   	       (if istrue [:i.debug true])
 	       ]])))
-
 
 (defn guess [lexicon remaining answer show-true-before]
   (if (>= remaining 0)
@@ -24,12 +25,21 @@
 		 (guess (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
 			answer show-true-before)))))))
 
+(defn store-question [index lexicon]
+      (insert! :question {:q-index index 
+                          :question (nth (keys lexicon) index) 
+	                  :answer (get lexicon (nth (keys lexicon) index))
+                         }))
+
 (defn next-question [index lexicon]
   (let 
       [italian-verb (nth (keys lexicon) index)
        english-verb (get lexicon italian-verb)
        number-of-guesses 4
-       true-before (rand-int (+ 1 number-of-guesses))]
+       true-before (rand-int (+ 1 number-of-guesses))
+       store-question (store-question index lexicon)
+       ]
+       
       (html 
        [:div.debug (str "index:" index "(" italian-verb ")" ) ] 
        [:div.debug (str "english:" english-verb)]
