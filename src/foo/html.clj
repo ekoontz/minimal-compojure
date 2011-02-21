@@ -18,6 +18,6 @@
 	<div style='margin-right:1em;width:auto;float:left'><a href='/test/'>Tests</a></div>
 	<div style='margin-right:1em;width:auto;float:left'><a href='/form/'>Form Processing</a></div>
       </div>
-      <div style='float:right;width:100%'>Powered by Compojure</div>
+      <div style='float:right;text-align:right;width:100%'>Powered by <a href='http://github.com/weavejester/compojure'>Compojure</a></div>
       </body></html>")
 
