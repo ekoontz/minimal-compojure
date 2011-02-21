@@ -9,13 +9,15 @@
 (defroutes main-routes
   (GET "/" 
        ;; request map
-       { session :session request-method :request-method }
+       { session :session 
+         uri :uri
+         request-method :request-method }
 
        ;; response map
        { :session session 
          :body (str banner (message "Welcome to Foo.") 
 		    (sessiondata session) 
-		    (reqdata request-method)
+		    (reqdata request-method uri)
 		    footer)
        }
        )
