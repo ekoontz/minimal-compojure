@@ -1,8 +1,10 @@
 Usage:
 
-1. git clone git://github.com/ekoontz/minimal-compojure.git	
-2. cd minimal-compojure/
+1. git clone git://github.com/ekoontz/minimal-compojure.git i2
+2. cd i2/
 3. lein deps
 4. lein ring server
+5. sudo mongod 
 
-  ..then start editing : src/foo/core.clj. That's all there is to it!
+  ..then start editing : src/italianverbs/core.clj. 
+  That's all there is to it!
