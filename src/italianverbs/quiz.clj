@@ -31,13 +31,13 @@
 	                  :answer (get lexicon (nth (keys lexicon) index))
                          }))
 
-(defn show-history-rows [qs]
+(defn show-history-rows [qs count]
    (if (first qs)
        (let
 	  [row (first qs)]
 	  (html
-	   [:tr [:th (get row :question)  ] [:td (get row :answer)]  ]
-	   (show-history-rows (rest qs))
+	   [:tr [:td count] [:th (get row :question)  ] [:td (get row :answer)]  ]
+	   (show-history-rows (rest qs) (+ 1 count)) 
 	  ))
  ))
 
@@ -45,7 +45,7 @@
   (let 
       [qs (fetch :question)]
    [:table
-   (show-history-rows qs)
+   (show-history-rows qs 1)
    ]
   )
 )
