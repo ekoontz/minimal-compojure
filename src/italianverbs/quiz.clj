@@ -32,21 +32,19 @@
                          }))
 
 (defn show-history-rows [qs]
-  (if (first qs)
-      (let
+   (if (first qs)
+       (let
 	  [row (first qs)]
-	   [:tr [:td "foo3" ]]
+	  (html
+	   [:tr [:th (get row :question)  ] [:td (get row :answer)]  ]
 	   (show-history-rows (rest qs))
-	  )
-    [:tr [:td (str "the end" (count qs) )   ]]))
+	  ))
+ ))
 
 (defn show-history []
   (let 
       [qs (fetch :question)]
    [:table
-   [:tr [:th "count"] [:td (count qs) ] ]
-   [:tr [:th (get (first qs) :question)] [:td (get (first qs) :answer )]]
-   [:tr [:th (get (second qs) :question)] [:td (get (second qs) :answer )]]
    (show-history-rows qs)
    ]
   )

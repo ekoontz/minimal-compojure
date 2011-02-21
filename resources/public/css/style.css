@@ -4,6 +4,8 @@ body {
 
 div#content {
     width:100%;
+    border:0px dashed blue;
+    float:left;
 }
 
 div.http {
@@ -49,7 +51,8 @@ div.poweredby {
 }
 
 div.guess {
-    width:90%;
+    border:0px dashed red;
+    width:70%;
     float:left;
     padding-left:1em;
 }
@@ -68,7 +71,8 @@ div.guess i {
 }
 
 div.question {
-    width:100%;
+    display:block;
+    width:70%;
     float:left;
     border:0px dashed blue;
 }
@@ -78,12 +82,13 @@ div.question {
 }
 
 div.debug {
-    border:1px dashed green;
+    border:0px dashed green;
     margin:1px;
     padding:1px;
 }
 
 div.history {
-    border:1px dashed blue;
+    border:1px solid blue;
+    width:25%;
     float:right;
 }
