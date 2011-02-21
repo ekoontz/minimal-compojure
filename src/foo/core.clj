@@ -3,18 +3,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]))
 
-(def banner (str "<html><title>Welcome to Foo</title><body><div><h1>Welcome to the Foo app</h1></div>"))
-
-(defn message [msg] (str "<div style='width:40%;background:#ededed;border:2px solid #caecae'>" msg "</div>"))
-(defn sessiondata [data] (str "<div style='float:right;border:1px dashed #caecae'><pre>" (pr-str data) "</pre></div>"))
-
-(def footer "<div style='margin:1em;padding:0.5em;border:1px solid #ededed'>
-<p><a href='/'>Main</a></p>
-<p><a href='/test/'>Tests</a></p>
-<p><a href='/form/'>Form Processing</a></p>
-<p><a href='/session/set/'>Session set</a></p>
-<p><a href='/session/clear/'>Session clear</a></p>
-<div style='float:right'>Powered by Compojure</div></body></html>")
+(load-file "src/foo/html.clj")
 
 (defroutes main-routes
   (GET "/" 
@@ -24,7 +13,11 @@
        :body (str banner (message "Welcome.") (sessiondata session) footer)
        })
 
-  (GET "/test/" [] (str banner "<h2>Tests? Yeah, tests are good.</h2>" footer))
+  (GET "/test/" 
+       {session :session}
+       (str banner (message "Tests go here.")
+	    (sessiondata session)
+	    footer))
 
   (GET "/session/"
        {session :session}
@@ -47,7 +40,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (str banner "<h2>Sorry, page not found.</h2>" footer)))
+  (route/not-found (str banner (message "Sorry, page not found.") footer)))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function
