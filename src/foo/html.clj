@@ -10,20 +10,17 @@
   (html
    [:div.sessiondata
     [:h4 "Session"]
-    [:pre (pr-str data)]
+    [:div (pr-str data)]
     [:a {:href "/session/clear/"} "Clear"]
     [:a {:href "/session/set/"} "New"]]))
 
-(def footer 
+(defn footer [session]
      (html
       [:div.footer
-
         [:div 
 	  [:a {:href "/"} "Main"  ] ] 
-
-        [:div 
-	  [:a {:href "/quiz/"} "Quiz"]] 
-
+	  (if (get session :name)
+	      [:div [:a {:href "/quiz/"} "Quiz"]])
         [:div 
 	  [:a {:href "/lexicon/"} "Lexicon"  ] ] 
 
@@ -44,15 +41,18 @@
    [:title "Verbi italiani &#0187; " title]
    (include-css "/css/style.css")]
    [:body
-   [:div
-   [:h1 "Verbi italiani &#0187; " title]]
-   [:div#content content]
+     [:h1 "Verbi italiani &#0187; " title]
+     [:div#content content]
+
    (if request
        [:div.http
-         (sessiondata (get request :session))
-	 (foolib/reqdata (get request :request-method) 
-			 (get request :uri)
-			 (get request :query-string))])
-   footer ]))
+     (sessiondata (get request :session))
+     (foolib/reqdata (get request :request-method) 
+		     (get request :uri)
+		     (get request :query-string))
+     ])
+     (footer (get request :session))
+   ]))
+
 
 

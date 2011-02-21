@@ -6,6 +6,7 @@
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
 	    [italianverbs.quiz :as quiz]
+	    [italianverbs.session :as session]
 	    [italianverbs.lexicon :as lexicon]))
 
 (defroutes main-routes
@@ -19,9 +20,10 @@
 
        ;; response map
        { :session (get request :session)
-         :body (page "Welcome"
-		     "Welcome to Italian Verbs."
-		     request)
+         :body (let [username (get (get request :session) :name)]
+		    (page "Welcome"
+			  (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
+			  request))
        }
        )
 
@@ -54,7 +56,7 @@
   (GET "/session/set/"  
        request
        {
-       :session {:val 123 :fruit "grape"}
+       :session (session/new "Eugene")
        :status 302
        :headers {"Location" "/?msg=set"}
        })
