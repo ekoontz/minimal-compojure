@@ -1,15 +1,18 @@
-(ns foo.core)
+(ns foo.core
+    (:use [hiccup core page-helpers]))
+
 (defn reqdata [request-method & uri] 
-      (str 
-      "<div style='padding:3px;width:40%;background:#ededed;border:2px solid #caecae;margin-top:0.5em'>" 
-      "<table>"
-      "<tr>"
-      "<th>method</th>"
-      "<td>" request-method "</td>"
-      "</tr>"
-      "<tr>"
-      "<th>uri</th>"
-      "<td>" uri "</td>"
-      "</tr>"
-      "</table>"
-      "</div>"))
+  (html
+   [:div {:style "padding:3px;width:40%;background:#ededed;border:2px solid #caecae;margin-top:0.5em"}
+     [:table
+       [:tr
+         [:th "Method" ]
+	 [:td request-method ]
+       ]
+       [:tr
+         [:th "Uri" ]
+	 [:td uri ]
+       ]
+     ] 
+   ]))
+
