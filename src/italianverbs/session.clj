@@ -13,11 +13,16 @@
        (if found found
 	 (insert! :users {:name username :lastlogin "never"}))))
 
+(defn start-session [username]
+  (last-activity username)
+  (insert! :session {:user username :start "now"}))
+
+
 (defn new [username] ;; create a new session for the given user.
   (let [newuser (find-or-insert-user username)
-        newsession (insert! :session {:user username :start "now"})]
+        newsession (start-session username)]
        {:name (get newuser :name)}))
 
-(defn last-activity [userid])
-;  (update! :user my-robot (merge my-robot { :name "asimo" }))
-;  (update! :users {_id: userid},{$set:{:lastlogin "foo42"}}))
+(defn last-activity [username]
+  (let [my-user (fetch-one :users :where {:name username})]
+       (update! :users my-user (merge my-user {:lastlogin "reallynow"}))))
