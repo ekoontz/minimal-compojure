@@ -72,9 +72,13 @@ div.question {
     border:0px dashed blue;
 }
 
-div.debug {
+.debug {
     display:none;
+}
+
+div.debug {
     border:1px dashed green;
     margin:1px;
     padding:1px;
 }
+

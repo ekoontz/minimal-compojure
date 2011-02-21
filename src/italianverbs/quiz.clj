@@ -7,7 +7,7 @@
   (let [href_prefix "/quiz?"]
        (html [:div.guess 
 	       [:h3 [:a {:href (str href_prefix "guess=" word)} word]
-  	       (if istrue [:i true])
+  	       (if istrue [:i.debug true])
 	       ]])))
 
 
