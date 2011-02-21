@@ -7,26 +7,33 @@
 (load-file "src/foo/lib.clj")
 
 (defroutes main-routes
+
+;   "A handler processes the request map and returns a response map."
+; http://groups.google.com/group/compojure/browse_thread/thread/3c507da23540da6e
   (GET "/" 
-       ;; request map
-       { session :session 
-         uri :uri
-         request-method :request-method }
+       ;; request map: access it with (get request X),
+       ;; where X in {:session,:request-method,:uri,...}
+       request
 
        ;; response map
-       { :session session 
+       { :session (get request :session)
          :body (str banner (message "Welcome to Foo.") 
-		    (sessiondata session) 
-		    (reqdata request-method uri)
+		    (sessiondata (get request :session))
+		    (reqdata (get request :request-method)
+			     (get request :uri))
 		    footer)
        }
        )
 
   (GET "/test/" 
-       { session :session request-method :request-method }
-       :body (str banner (message "Tests go here.") 
-		  (sessiondata session) (reqdata request-method)
-		  footer))
+       request
+       { :session (get request :session)
+         :body (str banner (message "Tests go here.") 
+		  (sessiondata (get request :session)) 
+		  (reqdata (get request :request-method) 
+			   (get request :uri))
+		  footer)
+	 })
 
   (GET "/session/"
        {session :session}
@@ -35,7 +42,7 @@
        })
 
   (GET "/session/set/"  
-       {session :session}
+       request
        {
        :session {:val 123 :fruit "grape"}
        :status 302
