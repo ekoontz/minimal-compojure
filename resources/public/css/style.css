@@ -92,3 +92,11 @@ div.history {
     width:35%;
     float:right;
 }
+
+td.correct {
+    background:lightgreen;
+}
+
+td.incorrect {
+    background:red;
+}
