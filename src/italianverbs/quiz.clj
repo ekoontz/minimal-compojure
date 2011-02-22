@@ -44,11 +44,12 @@
 (defn show-history []
   (let 
       [qs (fetch :question)]
-   [:table
-   (show-history-rows qs 1)
-   ]
-  )
-)
+      (html
+       [:a {:href "/quiz/clear/"} "Clear"]
+       [:table
+       (show-history-rows qs 1)
+       ]
+       )))
 
 (defn next-question [index lexicon]
   (let 

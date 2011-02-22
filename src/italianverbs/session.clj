@@ -28,3 +28,7 @@
         newsession (start-session username)]
        {:name (get newuser :name)}))
 
+(defn clear-questions [session]
+  (destroy! :question {})
+  session
+)

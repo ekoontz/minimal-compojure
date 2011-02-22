@@ -48,6 +48,16 @@
        }
        )
 
+  (GET "/quiz/clear/" 
+       request
+       ;; response map
+       { :session (session/clear-questions (get request :session))
+         :status 302
+         :headers {"Location" "/quiz/"}
+       }
+       )
+
+
   (GET "/test/" 
        request
        { :session (get request :session)
