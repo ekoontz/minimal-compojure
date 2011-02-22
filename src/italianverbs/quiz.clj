@@ -12,7 +12,7 @@
   	       (if istrue [:i.debug true])
 	       ]])))
 
-(defn guess [lexicon remaining answer show-true-before]
+(defn show-choice [lexicon remaining answer show-true-before]
   (if (>= remaining 0)
       (str
        (if (= show-true-before remaining)
@@ -22,7 +22,7 @@
 		(str 
 		 (html [:div.debug (str "remaining: " remaining)])
 		 (wrapchoice (get lexicon (nth (keys lexicon) choice)))
-		 (guess (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
+		 (show-choice (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
 			answer show-true-before)))))))
 
 (defn store-question [index lexicon]
@@ -45,18 +45,20 @@
 	     [:td (if (not (= count last)) (get row :answer))]  
 	     [:td {:class correctness} (get row :guess)]
            ]
-	   (show-history-rows (rest qs) (+ 1 count) last) 
-	  ))
- ))
+	   (show-history-rows (rest qs) (+ 1 count) last)))))
 
 (defn show-history []
   (let 
-      [qs (fetch :question :sort {:_id 1} )]
+      [total (fetch-count :question)
+       skip (if (> total 10) (- total 10) 0)
+       qs (fetch :question :sort {:_id 1} :limit 10 :skip skip )]
       (html
        [:a {:href "/quiz/clear/"} "Clear"]
        [:div#stats
          [:table
-           [:tr [:th "Qs"] [:td (count qs) ]]
+           [:tr [:th "Qs"] [:td total ] ]
+;; not working yet: ask congomongo devs how to do this.
+;;           [:tr [:th "Correct"] [:td (fetch-count :question :where {["this.answer == this.guess"]} ) ] ]
          ]
        ]      
        [:table
@@ -66,7 +68,7 @@
           [:th "answer" ]
 	  [:th "guess" ]
 	]
-       (show-history-rows qs 1 (count qs))
+       (show-history-rows qs (+ 1 skip) total)
        ]
        )))
 
@@ -87,7 +89,7 @@
        [:div.debug (str "true@ :" true-before)]
        [:div.question
        [:h2 [:i italian-verb]]
-         (guess (dissoc lexicon italian-verb) 
+         (show-choice (dissoc lexicon italian-verb) 
 		number-of-guesses english-verb true-before) 
        ]
 
