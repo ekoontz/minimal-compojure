@@ -93,6 +93,10 @@ div.history {
     float:right;
 }
 
+div.history td {
+    padding:1px;
+}
+
 td.correct {
     background:lightgreen;
 }
