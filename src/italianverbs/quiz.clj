@@ -35,15 +35,15 @@
    (if (first qs)
        (let
 	  [row (first qs)
-	   correctness (if (= (get row :answer) (get row :guess))
-			   "correct"
-			 "incorrect")]
+	   correctness (if (and (get row :guess) (not (= (get row :guess) "")))
+			   (if (= (get row :answer) (get row :guess))
+			       "correct"
+			     "incorrect"))]
 	  (html
 	   [:tr 
 	     [:td count][:th (get row :question)  ] 
 	     [:td (if (not (= count last)) (get row :answer))]  
-	     [:td {:class correctness}
-	       (get row :guess)]
+	     [:td {:class correctness} (get row :guess)]
            ]
 	   (show-history-rows (rest qs) (+ 1 count) last) 
 	  ))
