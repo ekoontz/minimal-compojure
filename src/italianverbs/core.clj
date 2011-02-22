@@ -1,6 +1,5 @@
 (ns italianverbs.core
   (:use [compojure.core]
-	[italianverbs.mongo]
 	[somnium.congomongo]
 	[foo.html])
   (:require [compojure.route :as route]
@@ -61,7 +60,7 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "mongotest" (mongotest) request)
+         :body (page "test" "testing goes here" request)
 	 })
 
   (GET "/session/set/"  
