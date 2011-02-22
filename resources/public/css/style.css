@@ -72,7 +72,7 @@ div.guess i {
 
 div.question {
     display:block;
-    width:70%;
+    width:55%;
     float:left;
     border:0px dashed blue;
 }
@@ -89,6 +89,6 @@ div.debug {
 
 div.history {
     border:1px solid blue;
-    width:25%;
+    width:35%;
     float:right;
 }

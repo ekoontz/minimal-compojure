@@ -39,6 +39,7 @@
 	   [:tr 
 	     [:td count][:th (get row :question)  ] 
 	     [:td (if (not (= count last)) (get row :answer))]  
+	     [:td (get row :guess)]
            ]
 	   (show-history-rows (rest qs) (+ 1 count) last) 
 	  ))
@@ -49,7 +50,18 @@
       [qs (fetch :question)]
       (html
        [:a {:href "/quiz/clear/"} "Clear"]
+       [:div#stats
+         [:table
+           [:tr [:th "Qs"] [:td (count qs) ]]
+         ]
+       ]      
        [:table
+        [:tr
+	  [:td]
+	  [:th "question"]
+          [:th "answer" ]
+	  [:th "guess" ]
+	]
        (show-history-rows qs 1 (count qs))
        ]
        )))
@@ -84,11 +96,30 @@
  ) 
 )
 
-(defn quiz []
+(defn evaluate-guess [ guess ]
+  ;; get last question.
+  (let [question 
+    (if (not (= (fetch :question :sort {:_id -1}) '()))
+	(nth (fetch :question :sort {:_id -1}) 0))]
+	(if question
+	    (update! :question question (merge question {:guess guess})))
+	(if (= (get question :answer)
+	       guess)
+	    (str guess "(correct)")
+	  (str guess "(incorrect;correct=" (get question :answer) ")"  ))))
+
+(defn quiz [ last-guess]
+  (evaluate-guess last-guess)      
   (next-question (rand-int (count lexicon/lexicon)) lexicon/lexicon))
 
-(defn run []
-  (html  
-   [:div (quiz)]))
+(defn get-param-map [query-string]
+  {:guess query-string})
+
+(defn run [ query-string ]
+  (let [params (get-param-map query-string)]
+       (html  
+	;; get 'guess' from query-string (e.g. from "guess=to%20eat")
+	;; pass the users's guess to (quiz), which will evaluate it.
+	[:div (quiz (get params :guess))])))
 
 
