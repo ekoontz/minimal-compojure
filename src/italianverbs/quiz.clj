@@ -31,13 +31,16 @@
 	                  :answer (get lexicon (nth (keys lexicon) index))
                          }))
 
-(defn show-history-rows [qs count]
+(defn show-history-rows [qs count last]
    (if (first qs)
        (let
 	  [row (first qs)]
 	  (html
-	   [:tr [:td count] [:th (get row :question)  ] [:td (get row :answer)]  ]
-	   (show-history-rows (rest qs) (+ 1 count)) 
+	   [:tr 
+	     [:td count][:th (get row :question)  ] 
+	     [:td (if (not (= count last)) (get row :answer))]  
+           ]
+	   (show-history-rows (rest qs) (+ 1 count) last) 
 	  ))
  ))
 
@@ -47,7 +50,7 @@
       (html
        [:a {:href "/quiz/clear/"} "Clear"]
        [:table
-       (show-history-rows qs 1)
+       (show-history-rows qs 1 (count qs))
        ]
        )))
 
