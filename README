@@ -3,8 +3,8 @@ Usage:
 1. git clone git://github.com/ekoontz/minimal-compojure.git i2
 2. cd i2/
 3. lein deps
-4. lein ring server
-5. sudo mongod 
+4. sudo mongod 
+5. lein ring server
 
-  ..then start editing : src/italianverbs/core.clj. 
+  ..then start editing files in the src/italianverbs directory.
   That's all there is to it!
