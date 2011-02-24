@@ -9,25 +9,24 @@
 (defn show-answer [question] (get question :answer))
 
 (defn lex-row [question]
-  (str "<tr><td>" 
-       (get question :answer) 
-       "</td><td>" 
-       (get question :guess) 
-       "</td><td>" 
-       (if (= (get question :guess) (get question :answer)) "good!")
-       "</td></tr>"))
-
+  (let [correctness (if (= (get question :guess) (get question :answer)) "correct" "incorrect")]
+       (str "<tr><td>" 
+	    (get question :answer) 
+	    "</td><td>" 
+	    (get question :guess) 
+	    "</td><td class='" correctness "'>"
+	    correctness
+	    "</td></tr>")))
+  
 (defn each-correct [question]
   (if (= (get question :guess) (get question :answer)) '(true) nil))
 
-(defn test2 []
-  (string/join " " (map show-answer (fetch :question))))
-
-(defn test3 []
+(defn answertable []
   (str "<table>" (string/join " " (map lex-row (fetch :question))) "</table>"))
 
 (defn correct []
-  (str (count (mapcat each-correct (fetch :question)))))
+  (str "correct guesses: " (count (mapcat each-correct (fetch :question)))
+       " out of : " (count (fetch :question))))
 
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
