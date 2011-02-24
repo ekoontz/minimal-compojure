@@ -18,9 +18,6 @@
 	    correctness
 	    "</td></tr>")))
   
-(defn each-correct [question]
-  (if (= (get question :guess) (get question :answer)) '(true) nil))
-
 (defn answertable []
   (str "<table>" (string/join " " (map lex-row (fetch :question))) "</table>"))
 

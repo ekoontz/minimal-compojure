@@ -30,6 +30,8 @@
                           :question (nth (keys lexicon) index) 
 	                  :answer (get lexicon (nth (keys lexicon) index))
                          }))
+(defn each-correct [question]
+  (if (= (get question :guess) (get question :answer)) '(true) nil))
 
 (defn show-history-rows [qs count last]
    (if (first qs)
@@ -56,9 +58,8 @@
        [:a {:href "/quiz/clear/"} "Clear"]
        [:div#stats
          [:table
-           [:tr [:th "Qs"] [:td total ] ]
-;; not working yet: ask congomongo devs how to do this.
-;;           [:tr [:th "Correct"] [:td (fetch-count :question :where {["this.answer == this.guess"]} ) ] ]
+           [:tr [:th "Correct:"]
+	        [:td (count (mapcat each-correct (fetch :question))) "/" total ]]
          ]
        ]      
        [:table
