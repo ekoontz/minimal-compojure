@@ -22,6 +22,7 @@
        "<th>person</th>"
        "<th>cat</th>"
        "<th>infl</th>"
+       "<th>fn</th>"
        "</tr>"))
 
 (defn lex-row [lexeme]
@@ -31,6 +32,7 @@
        "<td>" (get (nth lexeme 1) :person) "</td>"
        "<td>" (get (nth lexeme 1) :cat) "</td>"
        "<td>" (get (nth lexeme 1) :infl) "</td>"
+       "<td>" (get (nth lexeme 1) :fn) "</td>"
        "</tr>"))
 
 (defn answer-row [question]

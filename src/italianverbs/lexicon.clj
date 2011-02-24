@@ -32,9 +32,13 @@
 (add-verb "smettere" "to quit")
 (add-verb "lunghi" "long")
 
+(defn intrans []) ;; e.g. "sleep"
+(defn trans []) ;; e.g. "forget"
+(defn trans2 []) ;; e.g. "give"
+
 ;; infinitive verbs
-(add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive})
-(add-lexeme "dire" "to say" {:cat :verb :infl :infinitive})
+(add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive :fn intrans})
+(add-lexeme "dire" "to say" {:cat :verb :infl :infinitive :fn trans})
 (add-lexeme "fare" "to do" {:cat :verb :infl :infinitive})
 (add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive})
 (add-lexeme "correggere" "to correct" {:cat :verb :infl :infinitive})
@@ -52,6 +56,12 @@
 (add-lexeme "voi" "you all" {:person "2nd" :number "plural" :cat :noun})
 (add-lexeme "loro" "they" {:person "3rd" :number "plural" :cat :noun})
 
+;; nouns
+(add-lexeme "uomo" "man"
+	    {:cat :adjective})
+(add-lexeme "donna" "woman"
+	    {:cat :adjective})
+
 ;; sentences
 
 (add-lexeme "ha gli occhi azzuri" "he has blue eyes"
@@ -60,8 +70,44 @@
 	    {:person "3rd" :number "singular" :cat :verb})
 (add-lexeme "ha il naso alla francese" "he has a french nose" 
 	    {:person "3rd" :number "singular" :cat :verb})
+(add-lexeme "non lo so" "i don't know"
+	    {:cat :verb})
+(add-lexeme "come sono?" "how?"
+	    {:cat :verb})
+(add-lexeme "cosa fa?" "what?"
+	    {:cat :verb})
 
-
+;; adjectives
+(add-lexeme "alto" "tall"
+	    {:cat :adjective})
+(add-lexeme "basso" "shortd"
+	    {:cat :adjective})
+(add-lexeme "giovano" "young"
+	    {:cat :adjective})
+(add-lexeme "anziano" "old"
+	    {:cat :adjective})
+(add-lexeme "margra" "lean"
+	    {:cat :adjective})
+(add-lexeme "grasso" "fat"
+	    {:cat :adjective})
+(add-lexeme "bello" "beautiful"
+	    {:cat :adjective})
+(add-lexeme "bruto" "ugly"
+	    {:cat :adjective})
+(add-lexeme "carino" "cute"
+	    {:cat :adjective})
+(add-lexeme "lunghi" "corti"
+	    {:cat :adjective})
+(add-lexeme "calvo" "bald"
+	    {:cat :adjective})
+(add-lexeme "bruno" "brown"
+	    {:cat :adjective})
+(add-lexeme "bianchi" "white"
+	    {:cat :adjective})
+(add-lexeme "di mezza eta" "middle-aged"
+	    {:cat :adjective})
+(add-lexeme "qui" "here"
+	    {:cat :adjective})
 
 (defn verb-table [lexicon]
   (html [:table 
