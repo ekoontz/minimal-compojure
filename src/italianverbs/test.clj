@@ -1,4 +1,15 @@
-(ns italianverbs.test)
+(ns italianverbs.test
+  (:use [compojure.core]
+	[hiccup core page-helpers]
+	[somnium.congomongo]
+	[clojure.string :as string]
+	[foo.html]))
 
-(defn test []
-  42)
+(mongo! :db "mydb")
+
+(defn show-answer [question] (get question :answer))
+
+(defn test2 []
+  (join " " (map show-answer (fetch :question))))
+
+

@@ -5,6 +5,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
+	    [clojure.string :as string]
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
@@ -61,7 +62,7 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "test" (test/test) request)
+         :body (page "test" (test/test2) request)
 	 })
 
 ;; TODO: make this a POST with 'username' and 'password' params.
