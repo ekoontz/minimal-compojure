@@ -5,11 +5,14 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
-	    [clojure.string :as string]
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
 	    [italianverbs.lexicon :as lexicon]))
+
+;; seems like i need to do this explicitly to get test.clj to be reloaded
+;; at page load.
+(load-file "src/italianverbs/test.clj")
 
 (defroutes main-routes
 
@@ -58,11 +61,10 @@
        }
        )
 
-
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "test" (test/test2) request)
+         :body (page "test" (test/test3) request)
 	 })
 
 ;; TODO: make this a POST with 'username' and 'password' params.
