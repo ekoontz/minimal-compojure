@@ -20,7 +20,7 @@
 
 (defn footer [session]
      (html
-      [:div.footer
+      [:div {:class "footer major"}
         [:div 
 	  [:a {:href "/"} "Main"  ] ] 
 	  (if (get session :name)
@@ -35,7 +35,7 @@
 	  [:a {:href "/form/"} "Forms"  ] ] 
 
       ] 
-      [:div.poweredby
+      [:div {:class "poweredby major"}
         "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
                       "Compojure" ] ] ))
 
@@ -45,11 +45,11 @@
    [:title "Verbi italiani &#0187; " title]
    (include-css "/css/style.css")]
    [:body
-     [:h1 "Verbi italiani &#0187; " title]
+     [:h1.major "Verbi italiani &#0187; " title]
      [:div#content content]
 
    (if request
-       [:div.http
+       [:div {:class "http major"}
      (sessiondata (get request :session))
      (if false ; probably removing this
 	 (foolib/reqdata (get request :request-method) 

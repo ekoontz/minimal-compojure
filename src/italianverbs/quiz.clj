@@ -7,7 +7,7 @@
 (defn wrapchoice [word & [ istrue ] ]
   ;; FIXME: url-encode word.
   (let [href_prefix "/quiz/?"]
-       (html [:div.guess 
+       (html [:div {:class "guess"}
 	       [:h3 [:a {:href (str href_prefix "guess=" word)} word]
   	       (if istrue [:i.debug true])
 	       ]])))
@@ -87,7 +87,7 @@
        [:div.debug (str "lexicon size:" (count lexicon))]
        [:div.debug (str "# guesses:" number-of-guesses)]
        [:div.debug (str "true@ :" true-before)]
-       [:div.question
+       [:div {:class "question major"}
        [:h2 [:i italian-verb]]
          (show-choice (dissoc lexicon italian-verb) 
 		number-of-guesses english-verb true-before) 
