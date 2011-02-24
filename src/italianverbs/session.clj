@@ -30,5 +30,4 @@
 
 (defn clear-questions [session]
   (destroy! :question {})
-  session
-)
+  session)
