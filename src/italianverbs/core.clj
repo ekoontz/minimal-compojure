@@ -6,6 +6,7 @@
             [compojure.handler :as handler]
 	    [foo.lib :as foolib]
 	    [italianverbs.quiz :as quiz]
+	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
 	    [italianverbs.lexicon :as lexicon]))
 
@@ -60,9 +61,10 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "test" "testing goes here" request)
+         :body (page "test" (test/test) request)
 	 })
 
+;; TODO: make this a POST with 'username' and 'password' params.
   (GET "/session/set/"  
        request
        {
