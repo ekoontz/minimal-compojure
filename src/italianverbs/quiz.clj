@@ -55,12 +55,12 @@
        skip (if (> total 10) (- total 10) 0)
        qs (fetch :question :sort {:_id 1} :limit 10 :skip skip )]
       (html
-       [:a {:href "/quiz/clear/"} "Clear"]
        [:div#stats
          [:table
            [:tr [:th "Correct:"]
 	        [:td (count (mapcat each-correct (fetch :question))) "/" total ]]
          ]
+	 [:div.controls [:a {:href "/quiz/clear/"} "Clear"]]
        ]      
        [:table
         [:tr

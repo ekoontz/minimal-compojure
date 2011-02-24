@@ -118,3 +118,11 @@ div.test {
     padding: 0.5em;
     margin-top:1em;
 }
+
+div.stats table {
+    float:left;width:80%;
+}
+
+div.controls {
+    float:right;width:18%;
+}
