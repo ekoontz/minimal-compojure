@@ -67,6 +67,7 @@
          :body (page "test" 
 		     (map test/wrap-div 
 			  (list 
+			   (test/lexicon)
 			   (test/correct)
 			   (test/answertable)))
 		     request)

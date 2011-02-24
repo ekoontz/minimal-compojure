@@ -44,12 +44,12 @@
 (add-lexeme "smettere" "to quit" {:cat :verb :infl :infinitive})
 
 ;; pronouns
-(add-lexeme "io" {:person "1st" :number "singular"})
-(add-lexeme "tu" {:person "2nd" :number "singular"})
-(add-lexeme "lui" {:person "3nd" :number "singular"})
-(add-lexeme "noi" {:person "1st" :number "plural"})
-(add-lexeme "voi" {:person "2nd" :number "plural"})
-(add-lexeme "loro" {:person "3nd" :number "plural"})
+(add-lexeme "io" "i" {:person "1st" :number "singular" :cat :noun})
+(add-lexeme "tu" "you" {:person "2nd" :number "singular"  :cat :noun})
+(add-lexeme "lui" "he" {:person "3rd" :number "singular" :cat :noun})
+(add-lexeme "noi" "we" {:person "1st" :number "plural" :cat :noun})
+(add-lexeme "voi" "you all" {:person "2nd" :number "plural" :cat :noun})
+(add-lexeme "loro" "they" {:person "3rd" :number "plural" :cat :noun})
 
 
 (defn verb-table [lexicon]
