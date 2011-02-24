@@ -64,7 +64,14 @@
   (GET "/test/" 
        request
        { :session (get request :session)
-         :body (page "test" (test/test3) request)
+         :body (page "test" 
+		     (map test/wrap-div 
+			  (list 
+			   (test/test2) 
+			   (test/test3) 
+			   (test/test4)
+			   (test/correct)))
+		     request)
 	 })
 
 ;; TODO: make this a POST with 'username' and 'password' params.

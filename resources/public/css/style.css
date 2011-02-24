@@ -112,3 +112,9 @@ td.correct {
 td.incorrect {
     background:red;
 }
+
+div.test {
+    border: 2px solid #cecece;
+    padding: 0.5em;
+    margin-top:1em;
+}
