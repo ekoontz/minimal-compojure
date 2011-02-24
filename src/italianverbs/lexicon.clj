@@ -30,6 +30,7 @@
 (add-verb "parlere" "to speak")
 (add-verb "pranzare" "to eat lunch")
 (add-verb "smettere" "to quit")
+(add-verb "lunghi" "long")
 
 ;; infinitive verbs
 (add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive})
@@ -50,6 +51,16 @@
 (add-lexeme "noi" "we" {:person "1st" :number "plural" :cat :noun})
 (add-lexeme "voi" "you all" {:person "2nd" :number "plural" :cat :noun})
 (add-lexeme "loro" "they" {:person "3rd" :number "plural" :cat :noun})
+
+;; sentences
+
+(add-lexeme "ha gli occhi azzuri" "he has blue eyes"
+	    {:person "3rd" :number "singular" :cat :verb})
+(add-lexeme "ha i cappelli non molte lunghi" "he has not very long hair"
+	    {:person "3rd" :number "singular" :cat :verb})
+(add-lexeme "ha il naso alla francese" "he has a french nose" 
+	    {:person "3rd" :number "singular" :cat :verb})
+
 
 
 (defn verb-table [lexicon]
