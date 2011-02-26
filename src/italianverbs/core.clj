@@ -67,6 +67,7 @@
          :body (page "test" 
 		     (map test/wrap-div 
 			  (list
+			   (test/io-scrivo)
 			   (test/lexicon-fs)
 			   (test/lexicon)
 			   (test/correct)

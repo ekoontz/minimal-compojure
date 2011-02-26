@@ -74,15 +74,27 @@
 	val (second key-val-pair)]
     (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
 
+;(defn fs-table [lex-struct]
+
 (defn fs [lexeme]
   (str "<table class='fs'>"
        "<tr> <th>italian</th>  <td>"
        (lexicon/italian lexeme)
        "</td></tr>"
        (string/join " " (seq (map fs-tr (getkeyvals (keys (lexicon/synsem lexeme))
-				   (lexicon/synsem lexeme)))))
+						    (lexicon/synsem lexeme)))))
        "</table>"))
 
 (defn lexicon-fs []
   (string/join " " (map fs lexicon/lexicon-i2e)))
- 
+
+(defn combine [subject verb]
+  (string/join (list "io" " " "scrivere")))
+
+(defn io-scrivo []
+  (let [result (combine (get lexicon/lexicon-i2e "io")
+			(get lexicon/lexicon-i2e "scrivere"))]
+    (string/join " "
+		 (list (fs (list "io" (get lexicon/lexicon-i2e "io")))
+		       (fs (list "scrivere" (get lexicon/lexicon-i2e "scrivere")))
+		       result))))
