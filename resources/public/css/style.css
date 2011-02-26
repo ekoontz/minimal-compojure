@@ -139,3 +139,7 @@ table.fs th {
     padding:2px;
     background: #cecece;
 }
+
+div.utterance {
+    font-style:italic;
+}

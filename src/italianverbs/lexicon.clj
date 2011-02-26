@@ -1,14 +1,13 @@
 (ns italianverbs.lexicon
     (:use [hiccup core page-helpers])
-    )
-
+    (:require [clojure.string :as string]))
 
 ;; figure out differences between hash-map and hash-set..
 ;; using hash-map since I'd expect that to have unit-time key lookup.
 (def lexicon-i2e (hash-map))
 
 (defn italian [lexeme]
-  (nth lexeme 0))
+  (get (nth lexeme 1) :lexicon))
 
 (defn synsem [lexeme]
   (nth lexeme 1))
@@ -26,17 +25,27 @@
   (def lexicon-i2e
     (assoc lexicon-i2e
       italian
-      (assoc featuremap :english english))))
+      (assoc featuremap :english english :italian italian))))
 
 (defn intrans []) ;; e.g. "sleep"
-(defn trans []) ;; e.g. "forget"
+
+(defn trans [arg]  ;; e.g. "forget"
+  (string/join " "
+	       (list (get arg :italian)
+		     (cond (= (get arg :person) :1st)
+			   "scrivo"
+			   (= (get arg :person) :2nd)
+			   "scrivi"
+			   true
+			   "??"))))
+
 (defn trans2 []) ;; e.g. "give"
 
 ;; verbs
 (add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive :fn intrans})
 (add-lexeme "dire" "to say" {:cat :verb :infl :infinitive :fn trans})
 (add-lexeme "fare" "to do" {:cat :verb :infl :infinitive})
-(add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive})
+(add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive :fn trans})
 (add-lexeme "correggere" "to correct" {:cat :verb :infl :infinitive})
 (add-lexeme "leggere" "to read" {:cat :verb :infl :infinitive})
 (add-lexeme "mangiere" "to eat" {:cat :verb :infl :infinitive})

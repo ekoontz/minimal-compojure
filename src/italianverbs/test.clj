@@ -1,6 +1,7 @@
 (ns italianverbs.test
     (:use 
      [hiccup core page-helpers]
+     [italianverbs.lexicon]
      [somnium.congomongo])
     (:require 
      [clojure.string :as string]
@@ -58,8 +59,8 @@
 
 (defn lexicon []
   (str "<table>" 
-       (string/join " " (map lex-thead (list (first lexicon/lexicon-i2e))))
-       (string/join " " (map lex-row lexicon/lexicon-i2e))
+       (string/join " " (map lex-thead (list (first lexicon-i2e))))
+       (string/join " " (map lex-row lexicon-i2e))
        "</table>"))
 
 (defn getkeyvals [keys lexeme-struct]
@@ -78,23 +79,23 @@
 
 (defn fs [lexeme]
   (str "<table class='fs'>"
-       "<tr> <th>italian</th>  <td>"
-       (lexicon/italian lexeme)
-       "</td></tr>"
-       (string/join " " (seq (map fs-tr (getkeyvals (keys (lexicon/synsem lexeme))
-						    (lexicon/synsem lexeme)))))
+       (string/join " " (seq (map fs-tr (getkeyvals (keys lexeme)
+						    lexeme))))
        "</table>"))
 
 (defn lexicon-fs []
-  (string/join " " (map fs lexicon/lexicon-i2e)))
+  (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
 (defn combine [subject verb]
-  (string/join (list "io" " " "scrivere")))
+  (apply (get verb :fn) (list subject)))
+;  (string/join (list "io" " " "scrivere")))
 
-(defn io-scrivo []
-  (let [result (combine (get lexicon/lexicon-i2e "io")
-			(get lexicon/lexicon-i2e "scrivere"))]
+(defn conjugate-scrivere []
+  (let [subject (get lexicon-i2e "tu")
+	result (combine subject
+			(get lexicon-i2e "scrivere"))]
     (string/join " "
-		 (list (fs (list "io" (get lexicon/lexicon-i2e "io")))
-		       (fs (list "scrivere" (get lexicon/lexicon-i2e "scrivere")))
-		       result))))
+		 (list
+		  "<div class='utterance'>" result "</div>"
+		  (fs subject)
+		  (fs (get lexicon-i2e "scrivere"))))))
