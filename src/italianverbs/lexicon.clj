@@ -67,6 +67,13 @@
 (add-lexeme "donna" "woman"
 	    {:cat :noun})
 
+;; nouns
+(add-lexeme "uomo" "man"
+	    {:cat :adjective})
+(add-lexeme "donna" "woman"
+	    {:cat :adjective})
+
+
 ;; sentences
 
 (add-lexeme "ha gli occhi azzuri" "he has blue eyes"
