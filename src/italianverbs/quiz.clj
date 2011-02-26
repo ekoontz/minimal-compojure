@@ -6,9 +6,11 @@
 
 (defn wrapchoice [word & [ istrue ] ]
   ;; FIXME: url-encode word.
-  (let [href_prefix "/quiz/?"]
+  (let [href_prefix "/quiz/?"
+;        english word]
+        english (get word :english)]
        (html [:div {:class "guess"}
-	       [:h3 [:a {:href (str href_prefix "guess=" word)} word]
+	       [:h3 [:a {:href (str href_prefix "guess=" english)} english]
   	       (if istrue [:i.debug true])
 	       ]])))
 
@@ -28,7 +30,7 @@
 (defn store-question [index lexicon]
       (insert! :question {:q-index index 
                           :question (nth (keys lexicon) index) 
-	                  :answer (get lexicon (nth (keys lexicon) index))
+	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)
                          }))
 (defn each-correct [question]
   (if (= (get question :guess) (get question :answer)) '(true) nil))
@@ -113,7 +115,7 @@
 
 (defn quiz [ last-guess]
   (evaluate-guess last-guess)      
-  (next-question (rand-int (count lexicon/lexicon)) lexicon/lexicon))
+  (next-question (rand-int (count lexicon/lexicon-i2e)) lexicon/lexicon-i2e))
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))

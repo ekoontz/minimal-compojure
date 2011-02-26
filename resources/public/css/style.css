@@ -114,6 +114,7 @@ td.incorrect {
 }
 
 div.test {
+    float:left;
     border: 2px solid #cecece;
     padding: 0.5em;
     margin-top:1em;
@@ -125,4 +126,16 @@ div.stats table {
 
 div.controls {
     float:right;width:18%;
+}
+
+table.fs {
+    float:left;
+    margin:3px;
+    border: 2px solid #cecece;
+    border-collapse:collapse;
+}
+
+table.fs th {
+    padding:2px;
+    background: #cecece;
 }

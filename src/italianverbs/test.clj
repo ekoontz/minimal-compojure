@@ -20,6 +20,7 @@
        "<th>italian</th>"
        "<th>english</th>"
        "<th>person</th>"
+       "<th>number</th>"
        "<th>cat</th>"
        "<th>infl</th>"
        "<th>fn</th>"
@@ -30,6 +31,7 @@
        "<td>" (nth lexeme 0) "</td>"
        "<td>" (get (nth lexeme 1) :english) "</td>"
        "<td>" (get (nth lexeme 1) :person) "</td>"
+       "<td>" (get (nth lexeme 1) :number) "</td>"
        "<td>" (get (nth lexeme 1) :cat) "</td>"
        "<td>" (get (nth lexeme 1) :infl) "</td>"
        "<td>" (get (nth lexeme 1) :fn) "</td>"
@@ -45,7 +47,7 @@
 	    correctness
 	    "</td></tr>")))
 
-;; tests  
+;; tests
 (defn answertable []
   (str "<table>" (string/join " " (map answer-row (fetch :question))) "</table>"))
 
@@ -60,6 +62,27 @@
        (string/join " " (map lex-row lexicon/lexicon-i2e))
        "</table>"))
 
+(defn getkeyvals [keys lexeme-struct]
+  (if (> (count keys) 0)
+    (cons
+     (list (first keys)
+	   (get lexeme-struct (first keys)))
+     (getkeyvals (rest keys) lexeme-struct))))
 
+(defn fs-tr [key-val-pair]
+  (let [key (first key-val-pair)
+	val (second key-val-pair)]
+    (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
 
+(defn fs [lexeme]
+  (str "<table class='fs'>"
+       "<tr> <th>italian</th>  <td>"
+       (lexicon/italian lexeme)
+       "</td></tr>"
+       (string/join " " (seq (map fs-tr (getkeyvals (keys (lexicon/synsem lexeme))
+				   (lexicon/synsem lexeme)))))
+       "</table>"))
+
+(defn lexicon-fs []
+  (string/join " " (map fs lexicon/lexicon-i2e)))
  

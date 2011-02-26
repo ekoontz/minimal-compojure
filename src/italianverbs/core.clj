@@ -37,7 +37,7 @@
        ;; response map
        { :session (get request :session)
          :body (page "Lexicon"
-		     (lexicon/verb-table lexicon/lexicon)
+		     (lexicon/verb-table lexicon/lexicon-i2e)
 		     request)
        }
        )
@@ -66,7 +66,8 @@
        { :session (get request :session)
          :body (page "test" 
 		     (map test/wrap-div 
-			  (list 
+			  (list
+			   (test/lexicon-fs)
 			   (test/lexicon)
 			   (test/correct)
 			   (test/answertable)))
