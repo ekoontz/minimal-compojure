@@ -87,15 +87,14 @@
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
 (defn combine [subject verb]
-  (apply (get verb :fn) (list subject)))
-;  (string/join (list "io" " " "scrivere")))
+  (apply (get verb :fn) (list verb subject)))
 
 (defn conjugate-scrivere []
-  (let [subject (get lexicon-i2e "tu")
+  (let [subject (get lexicon-i2e "io")
 	result (combine subject
 			(get lexicon-i2e "scrivere"))]
-    (string/join " "
-		 (list
-		  "<div class='utterance'>" result "</div>"
-		  (fs subject)
-		  (fs (get lexicon-i2e "scrivere"))))))
+    (str
+     "<table class='syntax'>"
+     "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
+     "<tr><td>" (fs subject) "</td><td>" (fs (get lexicon-i2e "scrivere")) "</td></tr>"
+     "</table>")))
