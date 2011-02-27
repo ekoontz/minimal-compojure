@@ -29,16 +29,30 @@
 
 (defn intrans []) ;; e.g. "sleep"
 
-(defn trans [arg]  ;; e.g. "forget"
-  (string/join " "
-	       (list (get arg :italian)
-		     (cond (= (get arg :person) :1st)
-			   "scrivo"
-			   (= (get arg :person) :2nd)
-			   "scrivi"
-			   true
-			   "??"))))
-
+(defn trans [head arg]  ;; e.g. "forget"
+  (assoc {}
+    :infl :present
+    :cat (get head :cat)
+    :english
+    (string/join " "
+		 (list (get arg :english)
+		       (cond (= (get arg :person) :1st)
+			     "write"
+			     (= (get arg :person) :2nd)
+			     "write"
+			     (= (get arg :person) :3rd)
+			     "writes"
+			     true "??")))
+    :italian
+    (string/join " "
+		 (list (get arg :italian)
+		       (cond (= (get arg :person) :1st)
+			     "scrivo"
+			     (= (get arg :person) :2nd)
+			     "scrivi"
+			     (= (get arg :person) :3rd)
+			     "scriva")))))
+  
 (defn trans2 []) ;; e.g. "give"
 
 ;; verbs
