@@ -56,6 +56,34 @@
 			     true
 			     "scrivere")))))
 
+(defn remove-to [english-verb-phrase]
+  ;; regexp goes here: /^to /
+  english-verb-phrase)
+
+(defn conjugate-english [verb subject]
+  ;; conjugate verb based on subject and eventually verb's features (such as tense)
+  (cond (= (get subject :person) :1st)
+	;; use regexp: "to write" -> "write"
+	(remove-to (str (get verb :english)))
+	(= (get subject :person) :2nd)
+	(remove-to (str (get verb :english)))
+	(= (get subject :person) :3rd)
+	(str (remove-to (str (get verb :english))) "s")
+	true
+	"to write"))
+
+(defn conjugate-italian [verb subject]
+  ;; conjugate verb based on subject and eventually verb's features (such as tense)
+  (cond (= (get subject :person) :1st)
+	;; use regexp: "scrivere" -> "scrivo"
+	(str (get verb :italian))
+	(= (get subject :person) :2nd)
+	(str (get verb :italian) "")
+	(= (get subject :person) :3rd)
+	(str (get verb :italian) "s")
+	true
+	"to write"))
+
 (defn trans-sv [head arg]  ;; e.g. "forget","writes a book"
   (assoc {}
     :infl :present
@@ -63,25 +91,11 @@
     :english
     (string/join " "
 		 (list (get arg :english)
-		       (cond (= (get arg :person) :1st)
-			     (str "write" (get head :english))
-			     (= (get arg :person) :2nd)
-			     (str "write" (get head :english))
-			     (= (get arg :person) :3rd)
-			     (str "writes" (get head :english))
-			     true
-			     "to write")))
+		       (conjugate-english head arg)))
     :italian
     (string/join " "
 		 (list (get arg :italian)
-		       (cond (= (get arg :person) :1st)
-			     "scrivo"
-			     (= (get arg :person) :2nd)
-			     "scrivi"
-			     (= (get arg :person) :3rd)
-			     "scriva"
-			     true
-			     "scrivere")))))
+		       (conjugate-italian head arg)))))
 
 (defn trans-vo [head arg]  ;; e.g. "forget","writes a book"
   (assoc {}

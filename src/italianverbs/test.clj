@@ -123,7 +123,7 @@
 
 (def tests
   (list
-;   (io-scrivo-il-libro)
+   (io-scrivo-il-libro)
    (scrivo-il-libro)
    (lexicon-fs)
    (lexicon)
