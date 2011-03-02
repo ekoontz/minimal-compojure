@@ -1,6 +1,7 @@
 (ns italianverbs.lexicon
     (:use [hiccup core page-helpers])
-    (:require [clojure.string :as string]))
+    (:require [clojure.string :as string]
+	      [clojure.contrib.str-utils2 :as str-utils]))
 
 ;; figure out differences between hash-map and hash-set..
 ;; using hash-map since I'd expect that to have unit-time key lookup.
@@ -58,7 +59,11 @@
 
 (defn remove-to [english-verb-phrase]
   ;; regexp goes here: /^to /
-  english-verb-phrase)
+  (str-utils/replace "<a href=\"www.foo.com/bar\">baz</a>"
+	     #"<a.*href=\"(.*)\">(.*)</a>"
+	     (fn [[_ url txt]]
+	       (str txt "\\\\footnote{" url "}"))))
+;  english-verb-phrase)
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
