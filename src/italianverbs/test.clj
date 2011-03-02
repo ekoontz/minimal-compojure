@@ -121,10 +121,20 @@
      "<tr><td>" (fs subject) "</td><td>" (scrivo-il-libro) "</td></tr>"
      "</table></div>")))
 
-
+(defn lui-scrivo-il-libro []
+  (let [subject (get lexicon-i2e "lui")
+	verb (combine-vo (get lexicon-i2e "scrivere")
+			 (get lexicon-i2e "il libro"))
+	result (combine-sv subject verb)]
+    (str
+     "<div class='syntax'><table class='syntax'>"
+     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
+     "<tr><td>" (fs subject) "</td><td>" (scrivo-il-libro) "</td></tr>"
+     "</table></div>")))
 
 (def tests
   (list
+   (lui-scrivo-il-libro)
    (io-scrivo-il-libro)
    (lexicon-fs)
    (lexicon)

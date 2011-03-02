@@ -63,14 +63,13 @@
     (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
-  (let [regex #"to (.*)"]
-    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
+  (let [regex #"^([^ ]*)([ ]?)(.*)"]
+    (str-utils/replace english-verb-phrase regex (fn [[_ word space rest]] (str word "s" space rest)))))
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb :english)]
     (cond (= (get subject :person) :1st)
-	  ;; use regexp: "to write" -> "write"
 	  (remove-to english)
 	  (= (get subject :person) :2nd)
 	  (remove-to english)
@@ -80,19 +79,24 @@
 	  "to write")))
 
 (defn ere-1st [italian-verb-phrase]
-;  (let [regex #"([^ 
-  (str italian-verb-phrase "o"))
+ (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "o" space rest)))))
+(defn ere-2nd [italian-verb-phrase]
+ (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
+(defn ere-3rd [italian-verb-phrase]
+ (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "e" space rest)))))
 
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [italian (get verb :italian)]
     (cond (= (get subject :person) :1st)
-	  ;; use regexp: "scrivere" -> "scrivo"
 	  (ere-1st italian)
 	  (= (get subject :person) :2nd)
-	  (str italian "")
+	  (ere-2nd italian)
 	  (= (get subject :person) :3rd)
-	  (str italian "s")
+	  (ere-3rd italian)
 	  true
 	  (str subject italian "<i>infinitivo</i>"))))
 
