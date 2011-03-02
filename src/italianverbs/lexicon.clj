@@ -42,7 +42,8 @@
 			     "write"
 			     (= (get arg :person) :3rd)
 			     "writes"
-			     true "??")))
+			     true
+			     "to write")))
     :italian
     (string/join " "
 		 (list (get arg :italian)
@@ -51,15 +52,78 @@
 			     (= (get arg :person) :2nd)
 			     "scrivi"
 			     (= (get arg :person) :3rd)
-			     "scriva")))))
-  
+			     "scriva"
+			     true
+			     "scrivere")))))
+
+(defn trans-sv [head arg]  ;; e.g. "forget","writes a book"
+  (assoc {}
+    :infl :present
+    :cat (get head :cat)
+    :english
+    (string/join " "
+		 (list (get arg :english)
+		       (cond (= (get arg :person) :1st)
+			     (str "write" (get head :english))
+			     (= (get arg :person) :2nd)
+			     (str "write" (get head :english))
+			     (= (get arg :person) :3rd)
+			     (str "writes" (get head :english))
+			     true
+			     "to write")))
+    :italian
+    (string/join " "
+		 (list (get arg :italian)
+		       (cond (= (get arg :person) :1st)
+			     "scrivo"
+			     (= (get arg :person) :2nd)
+			     "scrivi"
+			     (= (get arg :person) :3rd)
+			     "scriva"
+			     true
+			     "scrivere")))))
+
+(defn trans-vo [head arg]  ;; e.g. "forget","writes a book"
+  (assoc {}
+    :infl :present
+    :cat (get head :cat)
+    :english
+    (string/join " "
+		 (list 
+		       (cond (= (get arg :person) :1st)
+			     "write"
+			     (= (get arg :person) :2nd)
+			     "write"
+			     (= (get arg :person) :3rd)
+			     "writes"
+			     true
+			     (str "to write " (get arg :english)))))
+
+    :italian
+    (string/join " "
+		 (list (get arg :italian)
+		       (cond (= (get arg :person) :1st)
+			     "scrivo"
+			     (= (get arg :person) :2nd)
+			     "scrivi"
+			     (= (get arg :person) :3rd)
+			     "scriva"
+			     true
+			     "scrivere")))))
+
+
 (defn trans2 []) ;; e.g. "give"
 
 ;; verbs
 (add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive :fn intrans})
 (add-lexeme "dire" "to say" {:cat :verb :infl :infinitive :fn trans})
 (add-lexeme "fare" "to do" {:cat :verb :infl :infinitive})
-(add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive :fn trans})
+
+
+(add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive :fn trans-vo})
+
+(add-lexeme "scrivere il libro" "to write the book" {:cat :verb :infl :sv :fn trans-sv})
+
 (add-lexeme "correggere" "to correct" {:cat :verb :infl :infinitive})
 (add-lexeme "leggere" "to read" {:cat :verb :infl :infinitive})
 (add-lexeme "mangiere" "to eat" {:cat :verb :infl :infinitive})
@@ -81,7 +145,7 @@
 (add-lexeme "donna" "woman"
 	    {:cat :noun})
 
-(add-lexeme "il libro" "book"
+(add-lexeme "il libro" "the book"
 	    {:cat :noun,
 	     :writable true})
 

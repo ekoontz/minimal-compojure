@@ -100,28 +100,30 @@
     {:cat :error :note
      (str "null pointer: no function for this verb :" verb  )}))
 
-(defn io-scrivo []
+(defn io-scrivo-il-libro []
   (let [subject (get lexicon-i2e "io")
-	result (combine subject
-			(get lexicon-i2e "scrivere"))]
+	verb (get lexicon-i2e "scrivere il libro")
+	result (combine-sv subject verb)]
     (str
-     "<table class='syntax'>"
+     "<div class='syntax'><table class='syntax'>"
      "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
-     "<tr><td>" (fs subject) "</td><td>" (fs (get lexicon-i2e "scrivere")) "</td></tr>"
-     "</table>")))
+     "<tr><td>" (fs subject) "</td><td>" (fs verb) "</td></tr>"
+     "</table></div>")))
 
 (defn scrivo-il-libro []
   (let [verb (get lexicon-i2e "scrivere")
-	result (combine-vo verb (get lexicon-i2e "il libro"))]
+	object (get lexicon-i2e "il libro")
+	result (combine-vo verb object)]
+;	result object]
     (str
-     "<table class='syntax'>"
+     "<div class='syntax'><table class='syntax'>"
      "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
-     "<tr><td>" (fs verb) "</td><td>" (fs (get lexicon-i2e "il libro")) "</td></tr>"
-     "</table>")))
+     "<tr><td>" (fs verb) "</td><td>" (fs object) "</td></tr>"
+     "</table></div>")))
 
 (def tests
   (list
-   (io-scrivo)
+;   (io-scrivo-il-libro)
    (scrivo-il-libro)
    (lexicon-fs)
    (lexicon)
