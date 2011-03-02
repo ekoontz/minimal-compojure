@@ -68,27 +68,33 @@
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (cond (= (get subject :person) :1st)
-	;; use regexp: "to write" -> "write"
-	(remove-to (str (get verb :english)))
-	(= (get subject :person) :2nd)
-	(remove-to (str (get verb :english)))
-	(= (get subject :person) :3rd)
-	(add-s-to-first-word (remove-to (str (get verb :english))))
-	true
-	"to write"))
+  (let [english (get verb :english)]
+    (cond (= (get subject :person) :1st)
+	  ;; use regexp: "to write" -> "write"
+	  (remove-to english)
+	  (= (get subject :person) :2nd)
+	  (remove-to english)
+	  (= (get subject :person) :3rd)
+	  (add-s-to-first-word (remove-to english))
+	  true
+	  "to write")))
+
+(defn ere-1st [italian-verb-phrase]
+;  (let [regex #"([^ 
+  (str italian-verb-phrase "o"))
 
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (cond (= (get subject :person) :1st)
-	;; use regexp: "scrivere" -> "scrivo"
-	(str (get verb :italian))
-	(= (get subject :person) :2nd)
-	(str (get verb :italian) "")
-	(= (get subject :person) :3rd)
-	(str (get verb :italian) "s")
-	true
-	"to write"))
+  (let [italian (get verb :italian)]
+    (cond (= (get subject :person) :1st)
+	  ;; use regexp: "scrivere" -> "scrivo"
+	  (ere-1st italian)
+	  (= (get subject :person) :2nd)
+	  (str italian "")
+	  (= (get subject :person) :3rd)
+	  (str italian "s")
+	  true
+	  (str subject italian "<i>infinitivo</i>"))))
 
 (defn trans-sv [head arg]  ;; e.g. "forget","writes a book"
   (assoc {}
