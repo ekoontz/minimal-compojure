@@ -66,12 +66,7 @@
        { :session (get request :session)
          :body (page "test" 
 		     (map test/wrap-div 
-			  (list
-			   (test/conjugate-scrivere)
-			   (test/lexicon-fs)
-			   (test/lexicon)
-			   (test/correct)
-			   (test/answertable)))
+			  test/tests)
 		     request)
 	 })
 

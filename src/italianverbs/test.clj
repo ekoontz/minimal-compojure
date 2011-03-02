@@ -98,3 +98,13 @@
      "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
      "<tr><td>" (fs subject) "</td><td>" (fs (get lexicon-i2e "scrivere")) "</td></tr>"
      "</table>")))
+
+(def tests
+  (list
+   (conjugate-scrivere)
+   (lexicon-fs)
+   (lexicon)
+   (correct)
+   (answertable)))
+
+  
