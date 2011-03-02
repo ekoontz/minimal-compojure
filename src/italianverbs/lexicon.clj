@@ -81,12 +81,15 @@
 (add-lexeme "donna" "woman"
 	    {:cat :noun})
 
-;; nouns
-(add-lexeme "uomo" "man"
-	    {:cat :adjective})
-(add-lexeme "donna" "woman"
-	    {:cat :adjective})
+(add-lexeme "il libro" "book"
+	    {:cat :noun,
+	     :writable true})
 
+;; adjectives
+(add-lexeme "bianco" "white"
+	    {:cat :adjective})
+(add-lexeme "noro" "black"
+	    {:cat :adjective})
 
 ;; sentences
 
