@@ -100,6 +100,16 @@
     {:cat :error :note
      (str "null pointer: no function for this verb :" verb  )}))
 
+(defn scrivo-il-libro []
+  (let [object (get lexicon-i2e "il libro")
+	verb (get lexicon-i2e "scrivere")
+	result (combine-vo verb object)]
+    (str
+     "<div class='syntax'><table class='syntax'>"
+     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
+     "<tr><td>" (fs verb) "</td><td>" (fs object) "</td></tr>"
+     "</table></div>")))
+
 (defn io-scrivo-il-libro []
   (let [subject (get lexicon-i2e "io")
 	verb (combine-vo (get lexicon-i2e "scrivere")
@@ -107,9 +117,10 @@
 	result (combine-sv subject verb)]
     (str
      "<div class='syntax'><table class='syntax'>"
-     "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
+     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
      "<tr><td>" (fs subject) "</td><td>" (scrivo-il-libro) "</td></tr>"
      "</table></div>")))
+
 
 
 (def tests
