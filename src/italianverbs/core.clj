@@ -8,11 +8,14 @@
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
+	    [italianverbs.grammar :as grammar]
 	    [italianverbs.lexicon :as lexicon]))
 
-;; seems like i need to do this explicitly to get test.clj to be reloaded
+;; seems like i need to do this explicitly to get certain things to be reloaded
 ;; at page load.
+(load-file "src/italianverbs/grammar.clj")
 (load-file "src/italianverbs/test.clj")
+
 
 (defroutes main-routes
 

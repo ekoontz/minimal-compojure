@@ -57,76 +57,43 @@
        " out of : " (count (fetch :question))))
 
 
-(defn lexicon []
+(defn show-lexicon-as-table []
   (str "<table>" 
        (string/join " " (map lex-thead (list (first lexicon-i2e))))
        (string/join " " (map lex-row lexicon-i2e))
        "</table>"))
 
-(defn getkeyvals [keys lexeme-struct]
-  (if (> (count keys) 0)
-    (cons
-     (list (first keys)
-	   (get lexeme-struct (first keys)))
-     (getkeyvals (rest keys) lexeme-struct))))
-
-(defn fs-tr [key-val-pair]
-  (let [key (first key-val-pair)
-	val (second key-val-pair)]
-    (if (= key :fn)
-      (str "<tr> <th> " key "</th>  <td>" "(fn)" "</td></tr>")
-      (str "<tr> <th> " key "</th>  <td>" val "</td></tr>"))))
-
-;(defn fs-table [lex-struct]
-
-(defn fs [lexeme]
-  (str "<table class='fs'>"
-       (string/join " " (seq (map fs-tr (getkeyvals (keys lexeme)
-						    lexeme))))
-       "</table>"))
-
-(defn lexicon-fs []
+(defn show-lexicon-as-feature-structures []
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
-
-
-(defn scrivo-il-libro []
-  (let [object (get lexicon-i2e "il libro")
-	verb (get lexicon-i2e "scrivere")
-	result (combine-vo verb object)]
-    (str
-     "<div class='syntax'><table class='syntax'>"
-     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
-     "<tr><td>" (fs verb) "</td><td>" (fs object) "</td></tr>"
-     "</table></div>")))
 
 (defn io-scrivo-il-libro []
   (let [subject (get lexicon-i2e "io")
-	verb (combine-vo (get lexicon-i2e "scrivere")
-			 (get lexicon-i2e "il libro"))
-	result (combine-sv subject verb)]
-    (str
-     "<div class='syntax'><table class='syntax'>"
-     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
-     "<tr><td>" (fs subject) "</td><td>" (scrivo-il-libro) "</td></tr>"
-     "</table></div>")))
+	verb-phrase (combine (get lexicon-i2e "scrivere")
+			     (get lexicon-i2e "il libro"))
+	parent (combine verb-phrase subject)]
+    (tablize parent
+	     (list subject
+		   (tablize verb-phrase
+			    (list (get lexicon-i2e "scrivere")
+				  (get lexicon-i2e "il libro")))))))
 
 (defn lui-scrivo-il-libro []
   (let [subject (get lexicon-i2e "lui")
-	verb (combine-vo (get lexicon-i2e "scrivere")
-			 (get lexicon-i2e "il libro"))
-	result (combine-sv subject verb)]
-    (str
-     "<div class='syntax'><table class='syntax'>"
-     "<tr><td style='padding-left:5%' colspan='2'>" (fs result) "</td></tr>"
-     "<tr><td>" (fs subject) "</td><td>" (scrivo-il-libro) "</td></tr>"
-     "</table></div>")))
-
+	verb-phrase (combine (get lexicon-i2e "scrivere")
+			     (get lexicon-i2e "il libro"))
+	parent (combine verb-phrase subject)]
+    (tablize parent
+	     (list subject
+		   (tablize verb-phrase
+			    (list (get lexicon-i2e "scrivere")
+				  (get lexicon-i2e "il libro")))))))
+							     
 (def tests
   (list
    (lui-scrivo-il-libro)
    (io-scrivo-il-libro)
-   (lexicon-fs)
-   (lexicon)
+   (show-lexicon-as-feature-structures)
+   (show-lexicon-as-table)
    (correct)
    (answertable)))
 

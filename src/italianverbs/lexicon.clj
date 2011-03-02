@@ -32,7 +32,6 @@
 
 (defn trans [head arg]  ;; e.g. "forget"
   (assoc {}
-    :infl :present
     :cat (get head :cat)
     :english
     (string/join " "
@@ -102,7 +101,6 @@
 
 (defn trans-sv [head arg]  ;; e.g. "forget","writes a book"
   (assoc {}
-    :infl :present
     :cat (get head :cat)
     :english
     (string/join " "
@@ -115,35 +113,18 @@
 
 (defn trans-vo [head arg]  ;; e.g. "forget","writes a book"
   (assoc {}
-    :infl :present
     :cat (get head :cat)
-    :infl :sv
     :fn trans-sv
     :english
     (string/join " "
 		 (list 
-		  (cond (= (get arg :person) :1st)
-			"write"
-			(= (get arg :person) :2nd)
-			"write"
-			(= (get arg :person) :3rd)
-			"writes"
-			true
-			(str "to write "))
+		  (get head :english)
 		  (get arg :english)))
 
     :italian
     (string/join " "
 		 (list 
-
-		  (cond (= (get arg :person) :1st)
-			"scrivo"
-			(= (get arg :person) :2nd)
-			"scrivi"
-			(= (get arg :person) :3rd)
-			"scriva"
-			true
-			(str "scrivere "))
+		  (get head :italian)
 		  (get arg :italian)))))
 
 
@@ -156,8 +137,6 @@
 
 
 (add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive :fn trans-vo})
-
-(add-lexeme "scrivere il libro" "to write the book" {:cat :verb :infl :sv :fn trans-sv})
 
 (add-lexeme "correggere" "to correct" {:cat :verb :infl :infinitive})
 (add-lexeme "leggere" "to read" {:cat :verb :infl :infinitive})
@@ -188,6 +167,8 @@
 (add-lexeme "bianco" "white"
 	    {:cat :adjective})
 (add-lexeme "noro" "black"
+	    {:cat :adjective})
+(add-lexeme "forte" "strong"
 	    {:cat :adjective})
 
 ;; sentences
