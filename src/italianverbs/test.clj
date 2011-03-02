@@ -86,10 +86,19 @@
 (defn lexicon-fs []
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
-(defn combine [subject verb]
-  (apply (get verb :fn) (list verb subject)))
+(defn combine-sv [subject verb]
+  (if (get verb :fn)
+    (apply (get verb :fn) (list verb subject))
+    {:cat :error :note
+     (str "null pointer: no function for this verb :" verb  )}))
 
-(defn conjugate-scrivere []
+(defn combine-vo [verb object]
+  (if (get verb :fn)
+    (apply (get verb :fn) (list verb object))
+    {:cat :error :note
+     (str "null pointer: no function for this verb :" verb  )}))
+
+(defn io-scrivo []
   (let [subject (get lexicon-i2e "io")
 	result (combine subject
 			(get lexicon-i2e "scrivere"))]
@@ -99,9 +108,19 @@
      "<tr><td>" (fs subject) "</td><td>" (fs (get lexicon-i2e "scrivere")) "</td></tr>"
      "</table>")))
 
+(defn scrivo-il-libro []
+  (let [verb (get lexicon-i2e "scrivere")
+	result (combine-vo verb (get lexicon-i2e "il libro"))]
+    (str
+     "<table class='syntax'>"
+     "<tr><td style='padding-left:25%' colspan='2'>" (fs result) "</td></tr>"
+     "<tr><td>" (fs verb) "</td><td>" (fs (get lexicon-i2e "il libro")) "</td></tr>"
+     "</table>")))
+
 (def tests
   (list
-   (conjugate-scrivere)
+   (io-scrivo)
+   (scrivo-il-libro)
    (lexicon-fs)
    (lexicon)
    (correct)
