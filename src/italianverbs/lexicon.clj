@@ -58,10 +58,13 @@
 			     "scrivere")))))
 
 
-(def replace-to-regex #"to (.*)")
 (defn remove-to [english-verb-phrase]
-  (str 
-   (str-utils/replace english-verb-phrase replace-to-regex (fn [[_ rest]] (str rest)))))
+  (let [regex #"to (.*)"]
+    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
+
+(defn add-s-to-first-word [english-verb-phrase]
+  (let [regex #"to (.*)"]
+    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
@@ -71,7 +74,7 @@
 	(= (get subject :person) :2nd)
 	(remove-to (str (get verb :english)))
 	(= (get subject :person) :3rd)
-	(str (remove-to (str (get verb :english))) "s")
+	(add-s-to-first-word (remove-to (str (get verb :english))))
 	true
 	"to write"))
 
@@ -104,6 +107,8 @@
   (assoc {}
     :infl :present
     :cat (get head :cat)
+    :infl :sv
+    :fn trans-sv
     :english
     (string/join " "
 		 (list 
