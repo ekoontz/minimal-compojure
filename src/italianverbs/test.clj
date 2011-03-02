@@ -73,7 +73,9 @@
 (defn fs-tr [key-val-pair]
   (let [key (first key-val-pair)
 	val (second key-val-pair)]
-    (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
+    (if (= key :fn)
+      (str "<tr> <th> " key "</th>  <td>" "(fn)" "</td></tr>")
+      (str "<tr> <th> " key "</th>  <td>" val "</td></tr>"))))
 
 ;(defn fs-table [lex-struct]
 
