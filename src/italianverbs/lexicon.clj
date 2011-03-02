@@ -57,13 +57,11 @@
 			     true
 			     "scrivere")))))
 
+
+(def replace-to-regex #"to (.*)")
 (defn remove-to [english-verb-phrase]
-  ;; regexp goes here: /^to /
-  (str-utils/replace "<a href=\"www.foo.com/bar\">baz</a>"
-	     #"<a.*href=\"(.*)\">(.*)</a>"
-	     (fn [[_ url txt]]
-	       (str txt "\\\\footnote{" url "}"))))
-;  english-verb-phrase)
+  (str 
+   (str-utils/replace english-verb-phrase replace-to-regex (fn [[_ rest]] (str rest)))))
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
