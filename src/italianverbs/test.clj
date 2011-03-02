@@ -1,11 +1,11 @@
 (ns italianverbs.test
     (:use 
      [hiccup core page-helpers]
+     [italianverbs.grammar]
      [italianverbs.lexicon]
      [somnium.congomongo])
     (:require 
      [clojure.string :as string]
-     [italianverbs.lexicon :as lexicon]
      [italianverbs.quiz :as quiz]))
 
 (mongo! :db "mydb")
@@ -88,17 +88,6 @@
 (defn lexicon-fs []
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
-(defn combine-sv [subject verb]
-  (if (get verb :fn)
-    (apply (get verb :fn) (list verb subject))
-    {:cat :error :note
-     (str "null pointer: no function for this verb :" verb  )}))
-
-(defn combine-vo [verb object]
-  (if (get verb :fn)
-    (apply (get verb :fn) (list verb object))
-    {:cat :error :note
-     (str "null pointer: no function for this verb :" verb  )}))
 
 (defn scrivo-il-libro []
   (let [object (get lexicon-i2e "il libro")
