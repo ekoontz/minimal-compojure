@@ -90,26 +90,29 @@
     :english
     (string/join " "
 		 (list 
-		       (cond (= (get arg :person) :1st)
-			     "write"
-			     (= (get arg :person) :2nd)
-			     "write"
-			     (= (get arg :person) :3rd)
-			     "writes"
-			     true
-			     (str "to write " (get arg :english)))))
+		  (cond (= (get arg :person) :1st)
+			"write"
+			(= (get arg :person) :2nd)
+			"write"
+			(= (get arg :person) :3rd)
+			"writes"
+			true
+			(str "to write "))
+		  (get arg :english)))
 
     :italian
     (string/join " "
-		 (list (get arg :italian)
-		       (cond (= (get arg :person) :1st)
-			     "scrivo"
-			     (= (get arg :person) :2nd)
-			     "scrivi"
-			     (= (get arg :person) :3rd)
-			     "scriva"
-			     true
-			     "scrivere")))))
+		 (list 
+
+		  (cond (= (get arg :person) :1st)
+			"scrivo"
+			(= (get arg :person) :2nd)
+			"scrivi"
+			(= (get arg :person) :3rd)
+			"scriva"
+			true
+			(str "scrivere "))
+		  (get arg :italian)))))
 
 
 (defn trans2 []) ;; e.g. "give"
