@@ -24,6 +24,7 @@
        "<th>number</th>"
        "<th>cat</th>"
        "<th>infl</th>"
+       "<th>writable</th>"
        "<th>fn</th>"
        "</tr>"))
 
@@ -35,6 +36,7 @@
        "<td>" (get (nth lexeme 1) :number) "</td>"
        "<td>" (get (nth lexeme 1) :cat) "</td>"
        "<td>" (get (nth lexeme 1) :infl) "</td>"
+       "<td>" (get (nth lexeme 1) :writable) "</td>"
        "<td>" (get (nth lexeme 1) :fn) "</td>"
        "</tr>"))
 
@@ -66,6 +68,14 @@
 (defn show-lexicon-as-feature-structures []
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
+(defn io-pranzare []
+  (let [subject (get lexicon-i2e "io")
+	verb-phrase (get lexicon-i2e "pranzare")
+	parent (combine verb-phrase subject)]
+    (tablize parent
+	     (list subject
+		   verb-phrase))))
+
 (defn io-scrivo-il-libro []
   (let [subject (get lexicon-i2e "io")
 	verb-phrase (combine (get lexicon-i2e "scrivere")
@@ -90,6 +100,7 @@
 							     
 (def tests
   (list
+   (io-pranzare)
    (lui-scrivo-il-libro)
    (io-scrivo-il-libro)
    (show-lexicon-as-feature-structures)

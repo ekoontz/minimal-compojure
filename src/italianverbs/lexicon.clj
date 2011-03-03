@@ -77,25 +77,25 @@
 	  true
 	  "to write")))
 
-(defn ere-1st [italian-verb-phrase]
- (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+(defn regular-1st [italian-verb-phrase]
+ (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "o" space rest)))))
-(defn ere-2nd [italian-verb-phrase]
- (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+(defn regular-2nd [italian-verb-phrase]
+ (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
-(defn ere-3rd [italian-verb-phrase]
- (let [regex #"^([^ ]*)ere([ ]?)(.*)"]
+(defn regular-3rd [italian-verb-phrase]
+ (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "e" space rest)))))
 
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [italian (get verb :italian)]
     (cond (= (get subject :person) :1st)
-	  (ere-1st italian)
+	  (regular-1st italian)
 	  (= (get subject :person) :2nd)
-	  (ere-2nd italian)
+	  (regular-2nd italian)
 	  (= (get subject :person) :3rd)
-	  (ere-3rd italian)
+	  (regular-3rd italian)
 	  true
 	  (str subject italian "<i>infinitivo</i>"))))
 
@@ -131,19 +131,28 @@
 (defn trans2 []) ;; e.g. "give"
 
 ;; verbs
-(add-lexeme "dimenticare" "to forget" {:cat :verb :infl :infinitive :fn intrans})
-(add-lexeme "dire" "to say" {:cat :verb :infl :infinitive :fn trans})
-(add-lexeme "fare" "to do" {:cat :verb :infl :infinitive})
+(add-lexeme "dimenticare" "to forget"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "dire" "to say"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "fare" "to do"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "scrivere" "to write"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "correggere" "to correct"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "leggere" "to read"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "mangiere" "to eat"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "parlere" "to speak"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
+(add-lexeme "smettere" "to quit"
+	    {:cat :verb :infl :infinitive :fn trans-vo})
 
+(add-lexeme "pranzare" "to eat lunch"
+	    {:cat :verb :infl :infinitive :fn trans-sv})
 
-(add-lexeme "scrivere" "to write" {:cat :verb :infl :infinitive :fn trans-vo})
-
-(add-lexeme "correggere" "to correct" {:cat :verb :infl :infinitive})
-(add-lexeme "leggere" "to read" {:cat :verb :infl :infinitive})
-(add-lexeme "mangiere" "to eat" {:cat :verb :infl :infinitive})
-(add-lexeme "parlere" "to speak" {:cat :verb :infl :infinitive})
-(add-lexeme "pranzare" "to eat lunch" {:cat :verb :infl :infinitive})
-(add-lexeme "smettere" "to quit" {:cat :verb :infl :infinitive})
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :noun})
@@ -153,20 +162,31 @@
 (add-lexeme "voi" "you all" {:person :2nd :number :plural :cat :noun})
 (add-lexeme "loro" "they" {:person :3rd :number :plural :cat :noun})
 
+;; determiners
+(add-lexeme "il" "the" {:gender :masc :number :singular :cat :det})
+(add-lexeme "i" "the" {:gender :masc :number :plural :cat :det})
+(add-lexeme "gli" "the" {:gender :masc :number :plural :cat :det})
+
+(add-lexeme "la" "the" {:gender :fem :number :singular :cat :det})
+(add-lexeme "le" "the" {:gender :fem :number :plural :cat :det})
+
 ;; nouns
 (add-lexeme "uomo" "man"
 	    {:cat :noun})
 (add-lexeme "donna" "woman"
 	    {:cat :noun})
+(add-lexeme "libro" "book"
+	    {:cat :noun
+	     :writable true})
 
 (add-lexeme "il libro" "the book"
-	    {:cat :noun,
+	    {:cat :noun
 	     :writable true})
 
 ;; adjectives
 (add-lexeme "bianco" "white"
 	    {:cat :adjective})
-(add-lexeme "noro" "black"
+(add-lexeme "nero" "black"
 	    {:cat :adjective})
 (add-lexeme "forte" "strong"
 	    {:cat :adjective})

@@ -13,6 +13,7 @@
 
 ;; seems like i need to do this explicitly to get certain things to be reloaded
 ;; at page load.
+(load-file "src/italianverbs/lexicon.clj")
 (load-file "src/italianverbs/grammar.clj")
 (load-file "src/italianverbs/test.clj")
 
