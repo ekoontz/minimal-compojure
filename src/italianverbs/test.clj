@@ -68,6 +68,14 @@
 (defn show-lexicon-as-feature-structures []
   (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
 
+(defn io-andare []
+  (let [subject (get lexicon-i2e "io")
+	verb-phrase (get lexicon-i2e "andare")
+	parent (combine verb-phrase subject)]
+    (tablize parent
+	     (list subject
+		   verb-phrase))))
+
 (defn io-pranzare []
   (let [subject (get lexicon-i2e "io")
 	verb-phrase (get lexicon-i2e "pranzare")
@@ -97,12 +105,25 @@
 		   (tablize verb-phrase
 			    (list (get lexicon-i2e "scrivere")
 				  (get lexicon-i2e "il libro")))))))
-							     
+
+(defn il-libro []
+  (let [comp (get lexicon-i2e "il")
+	head (get lexicon-i2e "libro")
+	parent (combine head comp)]
+    (tablize parent
+	     (list comp
+		   head))))
+
 (def tests
   (list
-   (io-pranzare)
+   (il-libro)
    (lui-scrivo-il-libro)
+   (io-andare)
+   (io-pranzare)
    (io-scrivo-il-libro)
+   (fs (get lexicon-i2e "vado"))
+   (fs (get lexicon-i2e "vai"))
+   (fs (get lexicon-i2e "va"))
    (show-lexicon-as-feature-structures)
    (show-lexicon-as-table)
    (correct)

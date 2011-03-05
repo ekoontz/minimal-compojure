@@ -39,14 +39,18 @@
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb :english)]
-    (cond (= (get subject :person) :1st)
-	  (remove-to english)
-	  (= (get subject :person) :2nd)
-	  (remove-to english)
-	  (= (get subject :person) :3rd)
-	  (add-s-to-first-word (remove-to english))
-	  true
-	  "to write")))
+    (cond
+     (not (= (get subject :cat) :noun))
+     {:cat :error
+      :note  (str ":cat (wtf2) != :noun for " subject)}
+     (= (get subject :person) :1st)
+     (remove-to english)
+     (= (get subject :person) :2nd)
+     (remove-to english)
+     (= (get subject :person) :3rd)
+     (add-s-to-first-word (remove-to english))
+     true
+     "to eh write")))
 
 (defn regular-1st [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
@@ -62,17 +66,24 @@
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [italian (get verb :italian)]
     (cond (= (get subject :person) :1st)
+	  ;; look for irregular form:
+	  ;; (:cat :verb :infinitive (get verb :italian)
+	  ;;  :person :1st :number :singular)
 	  (regular-1st italian)
 	  (= (get subject :person) :2nd)
 	  (regular-2nd italian)
 	  (= (get subject :person) :3rd)
 	  (regular-3rd italian)
+	  (nil? (get subject :person))
+	  {:cat :error
+	   :note  (str "no :person for " subject)}
 	  true
 	  (str subject italian "<i>infinitivo</i>"))))
 
-(defn trans-sv [head arg]  ;; e.g. "forget","writes a book"
+(defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
     :cat (get head :cat)
+    :infl :present
     :english
     (string/join " "
 		 (list (get arg :english)
@@ -82,8 +93,9 @@
 		 (list (get arg :italian)
 		       (conjugate-italian head arg)))))
 
-(defn trans-vo [head arg]  ;; e.g. "forget","writes a book"
+(defn trans-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
   (assoc {}
+    :infl :infinitive
     :cat (get head :cat)
     :fn trans-sv
     :english
@@ -123,7 +135,15 @@
 
 (add-lexeme "pranzare" "to eat lunch"
 	    {:cat :verb :infl :infinitive :fn trans-sv})
-
+(add-lexeme "andare" "to go"
+	    {:cat :verb :infl :infinitive :fn trans-sv})
+;; exceptions
+(add-lexeme "vado" "go"
+	    {:cat :verb :infl :present :person :1st :number :singular})
+(add-lexeme "vai" "go"
+	    {:cat :verb :infl :present :person :2nd :number :singular})
+(add-lexeme "va" "go"
+	    {:cat :verb :infl :present :person :3rd :number :singular})
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :noun})
@@ -148,7 +168,8 @@
 	    {:cat :noun})
 (add-lexeme "libro" "book"
 	    {:cat :noun
-	     :writable true})
+	     :writable true
+	     :fn trans-sv})
 
 (add-lexeme "il libro" "the book"
 	    {:cat :noun
