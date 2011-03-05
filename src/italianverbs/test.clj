@@ -84,43 +84,48 @@
 	     (list subject
 		   verb-phrase))))
 
-(defn io-scrivo-il-libro []
-  (let [subject (get lexicon-i2e "io")
-	verb-phrase (combine (get lexicon-i2e "scrivere")
-			     (get lexicon-i2e "il libro"))
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   (tablize verb-phrase
-			    (list (get lexicon-i2e "scrivere")
-				  (get lexicon-i2e "il libro")))))))
 
 (defn lui-scrivo-il-libro []
   (let [subject (get lexicon-i2e "lui")
+	object (combine
+		(get lexicon-i2e "libro")
+		(get lexicon-i2e "il"))
 	verb-phrase (combine (get lexicon-i2e "scrivere")
-			     (get lexicon-i2e "il libro"))
+			     object)
 	parent (combine verb-phrase subject)]
     (tablize parent
 	     (list subject
 		   (tablize verb-phrase
 			    (list (get lexicon-i2e "scrivere")
-				  (get lexicon-i2e "il libro")))))))
+				  (tablize object
+					   (list
+					    (get lexicon-i2e "il")
+					    (get lexicon-i2e "libro")))))))))
 
-(defn il-libro []
-  (let [comp (get lexicon-i2e "il")
-	head (get lexicon-i2e "libro")
-	parent (combine head comp)]
+(defn io-scrivo-il-libro []
+  (let [subject (get lexicon-i2e "io")
+	object (combine
+		(get lexicon-i2e "libro")
+		(get lexicon-i2e "il"))
+	verb-phrase (combine (get lexicon-i2e "scrivere")
+			     object)
+	parent (combine verb-phrase subject)]
     (tablize parent
-	     (list comp
-		   head))))
+	     (list subject
+		   (tablize verb-phrase
+			    (list (get lexicon-i2e "scrivere")
+				  (tablize object
+					   (list
+					    (get lexicon-i2e "il")
+					    (get lexicon-i2e "libro")))))))))
+
 
 (def tests
   (list
-   (il-libro)
+   (io-scrivo-il-libro)
    (lui-scrivo-il-libro)
    (io-andare)
    (io-pranzare)
-   (io-scrivo-il-libro)
    (fs (get lexicon-i2e "vado"))
    (fs (get lexicon-i2e "vai"))
    (fs (get lexicon-i2e "va"))

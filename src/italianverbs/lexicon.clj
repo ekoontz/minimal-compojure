@@ -42,7 +42,7 @@
     (cond
      (not (= (get subject :cat) :noun))
      {:cat :error
-      :note  (str ":cat (wtf2) != :noun for " subject)}
+      :note  (str ":cat != :noun for " subject)}
      (= (get subject :person) :1st)
      (remove-to english)
      (= (get subject :person) :2nd)
@@ -55,13 +55,36 @@
 (defn regular-1st [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "o" space rest)))))
+
 (defn regular-2nd [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
+
 (defn regular-3rd [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
    (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "e" space rest)))))
 
+(defn plural-masc [italian]
+ (let [regex #"^([^ ]*)o([ ]?)(.*)"]
+   (str-utils/replace
+    italian
+    regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
+
+(defn conjugate-it [head]
+  (cond (= (get head :cat) :noun)
+	(cond (= (get head :masc))
+	      (cond (= (get head :number) :plural)
+		    (plural-masc (get head :italian))
+		    true
+		    (get head :italian))
+	      true
+	      "??")
+	true
+	"??"))
+
+(defn conjugate-en [head arg]
+  "the book")
+  
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [italian (get verb :italian)]
@@ -92,6 +115,32 @@
     (string/join " "
 		 (list (get arg :italian)
 		       (conjugate-italian head arg)))))
+
+(defn unify [head arg]
+  (if (and
+       (= (get head :gender)
+	  (get arg :gender))
+       (= (get head :number)
+	  (get arg :number)))
+    (assoc {}
+      :number (get head :number)
+      :cat (get head :cat)
+      :gender (get head :gender)
+      :writable (get head :writable))
+    (assoc {}
+      :cat :fail
+      :note (str (get head :gender) " != " (get arg :gender)))))
+
+(defn noun-fn [head arg]  ;; e.g. "il libro"
+  (merge
+   (unify head arg)
+   (assoc {}
+    :english
+    (conjugate-en head arg)
+    :italian
+    (string/join " "
+		 (list (get arg :italian)
+		       (conjugate-it head))))))
 
 (defn trans-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
   (assoc {}
@@ -168,12 +217,14 @@
 	    {:cat :noun})
 (add-lexeme "libro" "book"
 	    {:cat :noun
+	     :number :singular
+	     :gender :masc
 	     :writable true
-	     :fn trans-sv})
+	     :fn noun-fn})
 
-(add-lexeme "il libro" "the book"
-	    {:cat :noun
-	     :writable true})
+;(add-lexeme "il libro" "the book"
+;	    {:cat :noun
+;	     :writable true})
 
 ;; adjectives
 (add-lexeme "bianco" "white"
