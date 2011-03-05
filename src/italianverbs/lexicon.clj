@@ -28,35 +28,6 @@
       italian
       (assoc featuremap :english english :italian italian))))
 
-(defn intrans []) ;; e.g. "sleep"
-
-(defn trans [head arg]  ;; e.g. "forget"
-  (assoc {}
-    :cat (get head :cat)
-    :english
-    (string/join " "
-		 (list (get arg :english)
-		       (cond (= (get arg :person) :1st)
-			     "write"
-			     (= (get arg :person) :2nd)
-			     "write"
-			     (= (get arg :person) :3rd)
-			     "writes"
-			     true
-			     "to write")))
-    :italian
-    (string/join " "
-		 (list (get arg :italian)
-		       (cond (= (get arg :person) :1st)
-			     "scrivo"
-			     (= (get arg :person) :2nd)
-			     "scrivi"
-			     (= (get arg :person) :3rd)
-			     "scriva"
-			     true
-			     "scrivere")))))
-
-
 (defn remove-to [english-verb-phrase]
   (let [regex #"to (.*)"]
     (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
