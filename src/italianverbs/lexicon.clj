@@ -1,7 +1,10 @@
 (ns italianverbs.lexicon
-    (:use [hiccup core page-helpers])
-    (:require [clojure.string :as string]
-	      [clojure.contrib.str-utils2 :as str-utils]))
+  (:use [hiccup core page-helpers]
+	[somnium.congomongo])
+  (:require [clojure.string :as string]
+	    [clojure.contrib.str-utils2 :as str-utils]))
+
+(mongo! :db "mydb")
 
 ;; figure out differences between hash-map and hash-set..
 ;; using hash-map since I'd expect that to have unit-time key lookup.
@@ -22,11 +25,20 @@
    [:th italian] [:td (get (get lexicon-i2e italian) :english)] 
    ]))
 
+(defn clear-lexicon []
+  (destroy! :lexicon {}))
+
 (defn add-lexeme [italian english & [featuremap]]
-  (def lexicon-i2e
-    (assoc lexicon-i2e
-      italian
-      (assoc featuremap :english english :italian italian))))
+  (let [featuremap
+	(merge featuremap
+	       (assoc {} :italian italian :english english))]
+    (def lexicon-i2e
+      (assoc lexicon-i2e
+	italian
+	(assoc featuremap :english english :italian italian)))
+    (let ;[function-to-symbol (dissoc featuremap :fn)]
+	[function-to-symbol featuremap]
+      (insert! :lexicon function-to-symbol))))
 
 (defn remove-to [english-verb-phrase]
   (let [regex #"to (.*)"]
@@ -162,30 +174,32 @@
 
 (defn trans2 []) ;; e.g. "give"
 
+;; BEGIN LEXICON
 ;; verbs
+(clear-lexicon)
 (add-lexeme "dimenticare" "to forget"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "dire" "to say"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "fare" "to do"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "scrivere" "to write"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "correggere" "to correct"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "leggere" "to read"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "mangiere" "to eat"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "parlere" "to speak"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "smettere" "to quit"
-	    {:cat :verb :infl :infinitive :fn trans-vo})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 
 (add-lexeme "pranzare" "to eat lunch"
-	    {:cat :verb :infl :infinitive :fn trans-sv})
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 (add-lexeme "andare" "to go"
-	    {:cat :verb :infl :infinitive :fn trans-sv})
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 ;; exceptions
 (add-lexeme "vado" "go"
 	    {:cat :verb :infl :present :person :1st :number :singular})
@@ -220,11 +234,7 @@
 	     :number :singular
 	     :gender :masc
 	     :writable true
-	     :fn noun-fn})
-
-;(add-lexeme "il libro" "the book"
-;	    {:cat :noun
-;	     :writable true})
+	     :fn "noun-fn"})
 
 ;; adjectives
 (add-lexeme "bianco" "white"

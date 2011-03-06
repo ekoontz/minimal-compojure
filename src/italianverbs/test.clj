@@ -119,11 +119,34 @@
 					    (get lexicon-i2e "il")
 					    (get lexicon-i2e "libro")))))))))
 
+(defn scrivo-il-libro []
+  (let [object (combine
+		(get lexicon-i2e "libro")
+		(get lexicon-i2e "il"))
+	verb-phrase (combine (get lexicon-i2e "scrivere")
+			     object)]
+    (tablize verb-phrase
+	     (list (get lexicon-i2e "scrivere")
+		   (tablize object
+			    (list
+			     (get lexicon-i2e "il")
+			     (get lexicon-i2e "libro")))))))
+
+(defn generate []
+  (let [the (assoc {}
+             :cat :det
+             :number :singular)
+       book (assoc {}
+              :cat :noun
+              :english "book")]
+    (fs book)))
 
 (def tests
   (list
+;   (scrivo-il-libro)
    (io-scrivo-il-libro)
    (lui-scrivo-il-libro)
+   (generate)
    (io-andare)
    (io-pranzare)
    (fs (get lexicon-i2e "vado"))
