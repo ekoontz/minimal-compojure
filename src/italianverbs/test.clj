@@ -15,7 +15,9 @@
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
 
-
+(defn get-from-lexicon [italian]
+  (fetch-one :lexicon :where {:italian italian}))
+  
 (defn lex-thead [lexeme]
   (str "<tr>"
        "<th>italian</th>"
@@ -58,79 +60,83 @@
   (str "correct guesses: " (count (mapcat quiz/each-correct (fetch :question)))
        " out of : " (count (fetch :question))))
 
-
-(defn show-lexicon-as-table []
-  (str "<table>" 
-       (string/join " " (map lex-thead (list (first lexicon-i2e))))
-       (string/join " " (map lex-row lexicon-i2e))
-       "</table>"))
-
 (defn show-lexicon-as-feature-structures []
-  (string/join " " (map (fn [x] (fs (synsem x))) lexicon-i2e)))
+  (string/join " "
+	       (map (fn [lexeme]
+		      (fs lexeme))
+		    (fetch :lexicon))))
 
 (defn io-andare []
-  (let [subject (get lexicon-i2e "io")
-	verb-phrase (get lexicon-i2e "andare")
+  (let [subject (get-from-lexicon "io")
+	verb-phrase (get-from-lexicon "andare")
 	parent (combine verb-phrase subject)]
     (tablize parent
 	     (list subject
 		   verb-phrase))))
 
 (defn io-pranzare []
-  (let [subject (get lexicon-i2e "io")
-	verb-phrase (get lexicon-i2e "pranzare")
+  (let [subject (get-from-lexicon "io")
+	verb-phrase (get-from-lexicon "pranzare")
 	parent (combine verb-phrase subject)]
     (tablize parent
 	     (list subject
 		   verb-phrase))))
 
-
 (defn lui-scrivo-il-libro []
-  (let [subject (get lexicon-i2e "lui")
+  (let [subject (get-from-lexicon "lui")
 	object (combine
-		(get lexicon-i2e "libro")
-		(get lexicon-i2e "il"))
-	verb-phrase (combine (get lexicon-i2e "scrivere")
+		(get-from-lexicon "libro")
+		(get-from-lexicon "il"))
+	verb-phrase (combine (get-from-lexicon "scrivere")
 			     object)
 	parent (combine verb-phrase subject)]
     (tablize parent
 	     (list subject
 		   (tablize verb-phrase
-			    (list (get lexicon-i2e "scrivere")
+			    (list (get-from-lexicon "scrivere")
 				  (tablize object
 					   (list
-					    (get lexicon-i2e "il")
-					    (get lexicon-i2e "libro")))))))))
+					    (get-from-lexicon "il")
+					    (get-from-lexicon "libro")))))))))
 
 (defn io-scrivo-il-libro []
-  (let [subject (get lexicon-i2e "io")
+  (let [subject (get-from-lexicon "io")
 	object (combine
-		(get lexicon-i2e "libro")
-		(get lexicon-i2e "il"))
-	verb-phrase (combine (get lexicon-i2e "scrivere")
+		(get-from-lexicon "libro")
+		(get-from-lexicon "il"))
+	verb-phrase (combine (get-from-lexicon "scrivere")
 			     object)
 	parent (combine verb-phrase subject)]
     (tablize parent
 	     (list subject
 		   (tablize verb-phrase
-			    (list (get lexicon-i2e "scrivere")
+			    (list (get-from-lexicon "scrivere")
 				  (tablize object
 					   (list
-					    (get lexicon-i2e "il")
-					    (get lexicon-i2e "libro")))))))))
+					    (get-from-lexicon "il")
+					    (get-from-lexicon "libro")))))))))
 
 (defn scrivo-il-libro []
   (let [object (combine
-		(get lexicon-i2e "libro")
-		(get lexicon-i2e "il"))
-	verb-phrase (combine (get lexicon-i2e "scrivere")
+		(get-from-lexicon "libro")
+		(get-from-lexicon "il"))
+	verb-phrase (combine (get-from-lexicon "scrivere")
 			     object)]
     (tablize verb-phrase
-	     (list (get lexicon-i2e "scrivere")
+	     (list (get-from-lexicon "scrivere")
 		   (tablize object
 			    (list
-			     (get lexicon-i2e "il")
-			     (get lexicon-i2e "libro")))))))
+			     (get-from-lexicon "il")
+			     (get-from-lexicon "libro")))))))
+
+(defn il-libro []
+  (let [object (combine
+		(get-from-lexicon "libro")
+		(get-from-lexicon "il"))]
+	(tablize object
+		 (list
+		  (get-from-lexicon "il")
+		  (get-from-lexicon "libro")))))
 
 (defn generate []
   (let [the (assoc {}
@@ -143,18 +149,17 @@
 
 (def tests
   (list
-;   (scrivo-il-libro)
+   (io-andare)
+   (il-libro)
+   (scrivo-il-libro)
    (io-scrivo-il-libro)
    (lui-scrivo-il-libro)
    (generate)
-   (io-andare)
    (io-pranzare)
-   (fs (get lexicon-i2e "vado"))
-   (fs (get lexicon-i2e "vai"))
-   (fs (get lexicon-i2e "va"))
    (show-lexicon-as-feature-structures)
-   (show-lexicon-as-table)
-   (correct)
-   (answertable)))
+
+;   (correct)
+					;   (answertable))
+   ))
 
   

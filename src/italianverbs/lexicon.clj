@@ -6,10 +6,6 @@
 
 (mongo! :db "mydb")
 
-;; figure out differences between hash-map and hash-set..
-;; using hash-map since I'd expect that to have unit-time key lookup.
-(def lexicon-i2e (hash-map))
-
 (defn italian [lexeme]
   (get (nth lexeme 1) :lexicon))
 
@@ -32,12 +28,7 @@
   (let [featuremap
 	(merge featuremap
 	       (assoc {} :italian italian :english english))]
-    (def lexicon-i2e
-      (assoc lexicon-i2e
-	italian
-	(assoc featuremap :english english :italian italian)))
-    (let ;[function-to-symbol (dissoc featuremap :fn)]
-	[function-to-symbol featuremap]
+    (let [function-to-symbol featuremap]
       (insert! :lexicon function-to-symbol))))
 
 (defn remove-to [english-verb-phrase]
@@ -52,14 +43,14 @@
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb :english)]
     (cond
-     (not (= (get subject :cat) :noun))
+     (not (= (get subject :cat) "noun"))
      {:cat :error
       :note  (str ":cat != :noun for " subject)}
-     (= (get subject :person) :1st)
+     (= (get subject :person) "1st")
      (remove-to english)
-     (= (get subject :person) :2nd)
+     (= (get subject :person) "2nd")
      (remove-to english)
-     (= (get subject :person) :3rd)
+     (= (get subject :person) "3rd")
      (add-s-to-first-word (remove-to english))
      true
      "to eh write")))
@@ -83,37 +74,44 @@
     regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
 
 (defn conjugate-it [head]
-  (cond (= (get head :cat) :noun)
-	(cond (= (get head :masc))
-	      (cond (= (get head :number) :plural)
+  (cond (= (get head :cat) "noun")
+	(cond (= (get head :gender) "masc")
+	      (cond (= (get head :number) "plural")
 		    (plural-masc (get head :italian))
 		    true
 		    (get head :italian))
 	      true
-	      "??")
+	      "??(not masc)")
 	true
-	"??"))
+	(str "??(cat != noun)"
+	     (get head :cat)
+	     (= (get head :cat) "noun"))))
 
 (defn conjugate-en [head arg]
   "the book")
   
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (let [italian (get verb :italian)]
-    (cond (= (get subject :person) :1st)
-	  ;; look for irregular form:
-	  ;; (:cat :verb :infinitive (get verb :italian)
-	  ;;  :person :1st :number :singular)
-	  (regular-1st italian)
-	  (= (get subject :person) :2nd)
-	  (regular-2nd italian)
-	  (= (get subject :person) :3rd)
-	  (regular-3rd italian)
-	  (nil? (get subject :person))
-	  {:cat :error
-	   :note  (str "no :person for " subject)}
-	  true
-	  (str subject italian "<i>infinitivo</i>"))))
+  (let [italian (get verb :italian)
+	irregular
+	(fetch-one :lexicon
+		   :where {:cat :verb
+			   :person (get subject :person)
+			   :number (get subject :number)
+			   :italian-root (get verb :italian)})]
+    (if irregular
+      (get irregular :italian)
+      (cond (= (get subject :person) "1st")
+	    (regular-1st italian)
+	    (= (get subject :person) "2nd")
+	    (regular-2nd italian)
+	    (= (get subject :person) "3rd")
+	    (regular-3rd italian)
+	    (nil? (get subject :person))
+	    {:cat :error
+	     :note  (str "no :person for " subject)}
+	    true
+	    (str subject italian "<i>infinitivo</i>")))))
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
@@ -202,11 +200,14 @@
 	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 ;; exceptions
 (add-lexeme "vado" "go"
-	    {:cat :verb :infl :present :person :1st :number :singular})
+	    {:cat :verb :infl :present :person :1st :number :singular
+	     :italian-root "andare"})
 (add-lexeme "vai" "go"
-	    {:cat :verb :infl :present :person :2nd :number :singular})
+	    {:cat :verb :infl :present :person :2nd :number :singular
+	     :italian-root "andare"})
 (add-lexeme "va" "go"
-	    {:cat :verb :infl :present :person :3rd :number :singular})
+	    {:cat :verb :infl :present :person :3rd :number :singular
+	     :italian-root "andare"})
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :noun})

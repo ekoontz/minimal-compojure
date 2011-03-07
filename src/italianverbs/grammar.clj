@@ -13,8 +13,11 @@
   (str "<table class='fs'>"
        (string/join " " (seq (map fs-tr
 				  (map (fn [key]
-					 (list key
-					       (get lexeme key)))
+					 (cond
+					  (= key :_id) nil
+					  true
+					  (list key
+						(get lexeme key))))
 				       (keys lexeme)))))
        "</table>"))
 
