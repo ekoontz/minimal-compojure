@@ -6,6 +6,9 @@
 
 (mongo! :db "mydb")
 
+(defn get-from-lexicon [italian]
+  (fetch-one :lexicon :where {:italian italian}))
+
 (defn italian [lexeme]
   (get (nth lexeme 1) :lexicon))
 
@@ -18,7 +21,7 @@
 (defn verb-row [italian]
   (html  
    [:tr 
-   [:th italian] [:td (get (get lexicon-i2e italian) :english)] 
+   [:th italian] [:td (get (get-from-lexicon italian) :english)] 
    ]))
 
 (defn clear-lexicon []
@@ -36,24 +39,36 @@
     (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
-  (let [regex #"^([^ ]*)([ ]?)(.*)"]
-    (str-utils/replace english-verb-phrase regex (fn [[_ word space rest]] (str word "s" space rest)))))
+  (let [regex #"^([^ ]*)([o])([ ]?)(.*)"
+	with-e
+	(str-utils/replace
+	 english-verb-phrase
+	 regex
+	 (fn [[_ word vowel space rest]] (str word vowel "e" space rest)))]
+    (let [regex #"^([^ ]*)([ ]?)(.*)"]
+      (str-utils/replace
+       with-e
+       regex
+       (fn [[_ word space rest]] (str word "s" space rest))))))
 
 (defn conjugate-english [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb :english)]
     (cond
-     (not (= (get subject :cat) "noun"))
+     (and (not (= (get subject :cat) "noun"))
+	  (not (= (get subject :cat) "pronoun")))
      {:cat :error
       :note  (str ":cat != :noun for " subject)}
      (= (get subject :person) "1st")
      (remove-to english)
      (= (get subject :person) "2nd")
      (remove-to english)
-     (= (get subject :person) "3rd")
+     (and
+      (= (get subject :person) "3rd")
+      (= (get subject :number) "singular")) 
      (add-s-to-first-word (remove-to english))
      true
-     "to eh write")))
+     (remove-to english))))
 
 (defn regular-1st [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
@@ -169,7 +184,6 @@
 		  (get head :italian)
 		  (get arg :italian)))))
 
-
 (defn trans2 []) ;; e.g. "give"
 
 ;; BEGIN LEXICON
@@ -208,28 +222,50 @@
 (add-lexeme "va" "go"
 	    {:cat :verb :infl :present :person :3rd :number :singular
 	     :italian-root "andare"})
+(add-lexeme "andamo" "go"
+	    {:cat :verb :infl :present :person :1st :number :plural 
+	     :italian-root "andare"})
+(add-lexeme "andate" "go"
+	    {:cat :verb :infl :present :person :2nd :number :plural 
+	     :italian-root "andare"})
+(add-lexeme "vanno" "go"
+	    {:cat :verb :infl :present :person :3rd :number :plural 
+	     :italian-root "andare"})
 
 ;; pronouns
-(add-lexeme "io" "i" {:person :1st :number :singular :cat :noun})
-(add-lexeme "tu" "you" {:person :2nd :number :singular  :cat :noun})
-(add-lexeme "lui" "he" {:person :3rd :number :singular :cat :noun})
-(add-lexeme "noi" "we" {:person :1st :number :plural :cat :noun})
-(add-lexeme "voi" "you all" {:person :2nd :number :plural :cat :noun})
-(add-lexeme "loro" "they" {:person :3rd :number :plural :cat :noun})
+(add-lexeme "io" "i" {:person :1st :number :singular :cat :pronoun})
+(add-lexeme "tu" "you" {:person :2nd :number :singular :cat :pronoun})
+(add-lexeme "lui" "he" {:person :3rd :number :singular :cat :pronoun})
+(add-lexeme "noi" "we" {:person :1st :number :plural :cat :pronoun})
+(add-lexeme "voi" "you all" {:person :2nd :number :plural :cat :pronoun})
+(add-lexeme "loro" "they" {:person :3rd :number :plural :cat :pronoun})
 
 ;; determiners
-(add-lexeme "il" "the" {:gender :masc :number :singular :cat :det})
-(add-lexeme "i" "the" {:gender :masc :number :plural :cat :det})
-(add-lexeme "gli" "the" {:gender :masc :number :plural :cat :det})
+(add-lexeme "il" "the" {:gender :masc :number :singular :cat :det
+			:def :def})
+(add-lexeme "i" "the" {:gender :masc :number :plural :cat :det
+		       :def :def})
+(add-lexeme "gli" "the" {:gender :masc :number :plural :cat :det
+			 :def :def})
 
-(add-lexeme "la" "the" {:gender :fem :number :singular :cat :det})
-(add-lexeme "le" "the" {:gender :fem :number :plural :cat :det})
+(add-lexeme "la" "the" {:gender :fem :number :singular :cat :det
+			:def :def})
+(add-lexeme "le" "the" {:gender :fem :number :plural :cat :det
+			:def :def})
 
 ;; nouns
 (add-lexeme "uomo" "man"
-	    {:cat :noun})
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc
+	     :fn "noun-fn"})
+	     
 (add-lexeme "donna" "woman"
-	    {:cat :noun})
+	    {:cat :noun
+	     :number :singular
+	     :gender :fem
+	     :fn "noun-fn"})
+	     
 (add-lexeme "libro" "book"
 	    {:cat :noun
 	     :number :singular

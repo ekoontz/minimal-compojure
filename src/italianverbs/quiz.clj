@@ -115,7 +115,7 @@
 
 (defn quiz [ last-guess]
   (evaluate-guess last-guess)      
-  (next-question (rand-int (count lexicon/lexicon-i2e)) lexicon/lexicon-i2e))
+  (next-question (rand-int (count (fetch :lexicon)) (fetch :lexicon))))
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))
