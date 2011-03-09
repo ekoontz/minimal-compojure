@@ -23,13 +23,10 @@
 
 (defn combine [head comp]
   (cond
-   (symbol? (get head :fn))
-   (apply (eval (get head :fn)) (list head comp))
    (nil? (get head :fn))
    {:cat :error :note
     (str "no function for this head :" head )}
    (string? (get head :fn))
-;   {:cat :debug :note (str "it's a string.." (get head :fn))}
    (apply (eval (symbol (get head :fn))) (list head comp))
    true
    (apply (get head :fn) (list head comp))))

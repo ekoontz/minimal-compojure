@@ -41,7 +41,7 @@
        ;; response map
        { :session (get request :session)
          :body (page "Lexicon"
-		     (lexicon/verb-table lexicon/lexicon-i2e)
+		     (lexicon/verb-table (fetch :lexicon))
 		     request)
        }
        )
