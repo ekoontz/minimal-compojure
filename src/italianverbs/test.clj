@@ -14,6 +14,30 @@
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
+  
+(defn lex-thead [lexeme]
+  (str "<tr>"
+       "<th>italian</th>"
+       "<th>english</th>"
+       "<th>person</th>"
+       "<th>number</th>"
+       "<th>cat</th>"
+       "<th>infl</th>"
+       "<th>writable</th>"
+       "<th>fn</th>"
+       "</tr>"))
+
+(defn lex-row [lexeme]
+  (str "<tr>"
+       "<td>" (nth lexeme 0) "</td>"
+       "<td>" (get (nth lexeme 1) :english) "</td>"
+       "<td>" (get (nth lexeme 1) :person) "</td>"
+       "<td>" (get (nth lexeme 1) :number) "</td>"
+       "<td>" (get (nth lexeme 1) :cat) "</td>"
+       "<td>" (get (nth lexeme 1) :infl) "</td>"
+       "<td>" (get (nth lexeme 1) :writable) "</td>"
+       "<td>" (get (nth lexeme 1) :fn) "</td>"
+       "</tr>"))
 
 (defn answer-row [question]
   (let [correctness (if (= (get question :guess) (get question :answer)) "correct" "incorrect")]
