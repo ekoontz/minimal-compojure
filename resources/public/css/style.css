@@ -155,3 +155,7 @@ div.syntax table {
     float:left;
     width:100%;
 }
+
+div.syntax td {
+    vertical-align:top;
+}
