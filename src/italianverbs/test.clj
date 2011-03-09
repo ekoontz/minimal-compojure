@@ -135,7 +135,7 @@
 			     (get-from-lexicon "il")
 			     (get-from-lexicon "libro")))))))
 
-(defn choose-determiner [struct]
+(defn choose-lexeme [struct]
   ;; do a query based on the given struct,
   ;; and choose a random element that satisfies the query.
   (let [results (fetch :lexicon :where struct)]
@@ -143,17 +143,19 @@
 
 (defn det-libro []
   (let [determiner
-	(choose-determiner
+	(choose-lexeme
 	 (assoc {}
 	   :cat :det
 	   :def :def))
-	object (combine
-		(get-from-lexicon "libro")
-		determiner)]
+	noun
+	(choose-lexeme
+	 (assoc {}
+	   :cat :noun))
+	object (combine	noun determiner)]
     (tablize object
 	     (list
 	      determiner
-	      (get-from-lexicon "libro")))))
+	      noun))))
 
 (defn il-libro []
   (let [object (combine

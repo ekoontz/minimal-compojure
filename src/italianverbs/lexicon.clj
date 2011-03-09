@@ -103,7 +103,17 @@
 	     (= (get head :cat) "noun"))))
 
 (defn conjugate-en [head arg]
-  "the book")
+  (str (get arg :english)
+       " "
+       (cond (= (get head :cat) "noun")
+	     (cond (= (get head :number) "plural")
+		   (str (get head :english) "s")
+		   true
+		   (get head :english))
+	     true
+	     (str "??(cat != noun)"
+		  (get head :cat)
+		  (= (get head :cat) "noun")))))
   
 (defn conjugate-italian [verb subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
