@@ -139,7 +139,7 @@
   ;; do a query based on the given struct,
   ;; and choose a random element that satisfies the query.
   (let [results (fetch :lexicon :where struct)]
-    (nth results (rand-int (count results) 0))))
+    (nth results (rand-int (count results)))))
 
 (defn det-libro []
   (let [determiner
