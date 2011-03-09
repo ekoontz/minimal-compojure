@@ -154,7 +154,10 @@
       :writable (get head :writable))
     (assoc {}
       :cat :fail
-      :note (str (get head :gender) " != " (get arg :gender)))))
+      ;; FIXME: rewrite as (defn diagnosis [head arg])
+      :note (str (get head :gender) " != " (get arg :gender)
+		 " or "
+		 (get head :number) " != " (get arg :number)))))
 
 (defn noun-fn [head arg]  ;; e.g. "il libro"
   (merge
