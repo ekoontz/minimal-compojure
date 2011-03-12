@@ -88,6 +88,12 @@
     italian
     regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
 
+(defn plural-fem [italian]
+ (let [regex #"^([^ ]*)a([ ]?)(.*)"]
+   (str-utils/replace
+    italian
+    regex (fn [[_ stem space rest]] (str stem "e" space rest)))))
+
 (defn conjugate-it [head]
   (cond (= (get head :cat) "noun")
 	(cond (= (get head :gender) "masc")
@@ -95,8 +101,13 @@
 		    (plural-masc (get head :italian))
 		    true
 		    (get head :italian))
+	      (= (get head :gender) "fem")
+	      (cond (= (get head :number) "plural")
+		    (plural-fem (get head :italian))
+		    true
+		    (get head :italian))
 	      true
-	      "??(not masc)")
+	      "??(not masc or fem)")
 	true
 	(str "??(cat != noun)"
 	     (get head :cat)
@@ -206,8 +217,15 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "dire" "to say"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+
 (add-lexeme "fare" "to do"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+(add-lexeme "facio" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :1st :number :singular
+	     :italian-root "fare"})
+
+
 (add-lexeme "scrivere" "to write"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "correggere" "to correct"
