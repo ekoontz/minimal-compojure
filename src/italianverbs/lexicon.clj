@@ -350,6 +350,12 @@
 	     :gender :masc
 	     :writable true
 	     :fn "noun-fn"})
+(add-lexeme "abito" "dress"
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc
+	     :writable true
+	     :fn "noun-fn"})
 
 ;; adjectives
 (add-lexeme "bianco" "white"
@@ -357,6 +363,11 @@
 (add-lexeme "nero" "black"
 	    {:cat :adjective})
 (add-lexeme "forte" "strong"
+	    {:cat :adjective})
+
+(add-lexeme "sinistra" "left"
+	    {:cat :adjective})
+(add-lexeme "destra" "right"
 	    {:cat :adjective})
 
 ;; sentences

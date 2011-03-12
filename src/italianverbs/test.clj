@@ -180,7 +180,7 @@
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
-   (bugs)
+  ; (bugs)
    "<div> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
    (tablize (generate-sentence))
