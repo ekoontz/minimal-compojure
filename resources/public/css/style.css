@@ -140,7 +140,9 @@ table.fs {
 }
 
 table.fs th {
+    text-align:right;
     padding:2px;
+    padding-right:0.25em;
     background: #cecece;
 }
 
