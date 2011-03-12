@@ -72,7 +72,9 @@
 
 (defn regular-1st [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
-   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "o" space rest)))))
+   (str-utils/replace italian-verb-phrase regex
+		      (fn [[_ stem space rest]]
+			(str stem "o" space rest)))))
 
 (defn regular-2nd [italian-verb-phrase]
  (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
@@ -125,18 +127,22 @@
 	     (str "??(cat != noun)"
 		  (get head :cat)
 		  (= (get head :cat) "noun")))))
-  
-(defn conjugate-italian [verb subject]
+
+(defn conjugate-italian [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (let [italian (get verb :italian)
+  (let [italian (get verb-phrase :italian)
 	irregular
 	(fetch-one :lexicon
 		   :where {:cat :verb
+			   :infl :present
 			   :person (get subject :person)
 			   :number (get subject :number)
-			   :italian-root (get verb :italian)})]
+			   :italian-root (get (get verb-phrase :head) :italian)
+			   }
+		  )]
     (if irregular
-      (get irregular :italian)
+      (str (get irregular :italian) " "
+	   (get (get verb-phrase :comp) :italian))
       (cond (= (get subject :person) "1st")
 	    (regular-1st italian)
 	    (= (get subject :person) "2nd")
@@ -162,7 +168,7 @@
 		 (list (get arg :italian)
 		       (conjugate-italian head arg)))))
 
-(defn unify [head arg]
+(defn unify-np [head arg]
   (if (and
        (= (get head :gender)
 	  (get arg :gender))
@@ -172,7 +178,8 @@
       :number (get head :number)
       :cat (get head :cat)
       :gender (get head :gender)
-      :writable (get head :writable))
+      :writable (get head :writable)
+      :head head)
     (assoc {}
       :cat :fail
       ;; FIXME: rewrite as (defn diagnosis [head arg])
@@ -182,7 +189,7 @@
 
 (defn noun-fn [head arg]  ;; e.g. "il libro"
   (merge
-   (unify head arg)
+   (unify-np head arg)
    (assoc {}
     :english
     (conjugate-en head arg)
@@ -196,6 +203,8 @@
     :infl :infinitive
     :cat (get head :cat)
     :fn trans-sv
+    :head head
+    :comp arg
     :english
     (string/join " "
 		 (list 
@@ -223,6 +232,10 @@
 (add-lexeme "facio" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :1st :number :singular
+	     :italian-root "fare"})
+(add-lexeme "fanno" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :3rd :number :plural
 	     :italian-root "fare"})
 
 

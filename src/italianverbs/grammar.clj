@@ -14,6 +14,8 @@
 					 (cond
 					  (= key :_id) nil
 					  (= key :children) nil
+					  (= key :head) nil
+					  (= key :comp) nil
 					  true
 					  (list key
 						(get lexeme key))))

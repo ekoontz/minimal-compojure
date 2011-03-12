@@ -112,17 +112,21 @@
 
 (defn generate-np []
   (let [noun
-	(choose-lexeme
-	 (assoc {}
-	   :cat :noun))]
+	(merge {:left 1
+		:right 2}
+	       (choose-lexeme
+		(assoc {}
+		  :cat :noun)))]
     ;; choose a determiner that agrees with the noun in number and gender.
     (let [determiner
-	  (choose-lexeme
-	   (assoc {}
-	     :gender (get noun :gender)
-	     :number (get noun :number)
-	     :cat :det
-	     :def :def))]
+	  (merge {:left 0
+		  :right 1}
+		 (choose-lexeme
+		  (assoc {}
+		    :gender (get noun :gender)
+		    :number (get noun :number)
+		    :cat :det
+		    :def :def)))]
       (combine noun determiner))))
 
 (defn generate-vp []
@@ -148,7 +152,6 @@
 	(nth (fetch :lexicon :where {:cat :pronoun})
 	     (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))]
     (combine (generate-vp) subject)))
-;        (combine (generate-vp) (generate-np))))
 
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
@@ -157,6 +160,7 @@
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
    "<div> <h2>random sentences</h2></div>"
+;   (tablize (io-facio-la-donna))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
