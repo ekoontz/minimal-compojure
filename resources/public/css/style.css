@@ -132,6 +132,8 @@ div.controls {
 
 table.fs {
     float:left;
+    padding-right:1em;
+    margin-right:1em;
     margin:3px;
     border: 2px solid #cecece;
     border-collapse:collapse;
@@ -140,6 +142,10 @@ table.fs {
 table.fs th {
     padding:2px;
     background: #cecece;
+}
+
+table.fs td {
+    padding-right:1em;
 }
 
 div.utterance {
