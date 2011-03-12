@@ -5,9 +5,7 @@
 (defn fs-tr [key-val-pair]
   (let [key (first key-val-pair)
 	val (second key-val-pair)]
-    (if (= key :fn)
-      (str "<tr> <th>" key "</th>  <td>" "(fn)" "</td></tr>")
-      (str "<tr> <th> " key "</th>  <td>" val "</td></tr>"))))
+    (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
 
 (defn fs [lexeme]
   (str "<table class='fs'>"
@@ -15,6 +13,7 @@
 				  (map (fn [key]
 					 (cond
 					  (= key :_id) nil
+					  (= key :children) nil
 					  true
 					  (list key
 						(get lexeme key))))
@@ -22,25 +21,45 @@
        "</table>"))
 
 (defn combine [head comp]
-  (cond
-   (nil? (get head :fn))
-   {:cat :error :note
-    (str "no function for this head :" head )}
-   (string? (get head :fn))
-   (apply (eval (symbol (get head :fn))) (list head comp))
-   true
-   (apply (get head :fn) (list head comp))))
-
-(defn tablize [parent children]
-  (str
-   "<div class='syntax'><table class='syntax'>"
-   "<tr><td style='padding-left:5%;width:90%' colspan='" (count children) "'>" (fs parent) "</td></tr>"
-   "<tr>"
-   (string/join " " (map (fn [child] (str "<td>"
-					  (cond (string? child)
-						child
-						true
-						(fs child))
-					  "</td>")) children))
-   "</tr>"
-   "</table></div>"))
+  (let [ls (if (= (get head :left)
+		  (get comp :right))
+	     (list head comp)
+	     (list comp head))]
+    (cond
+     (nil? (get head :fn))
+     {:cat :error :note
+      (str "no function for this head :" head )}
+     (string? (get head :fn))
+     (merge
+      (apply (eval (symbol (get head :fn))) (list head comp))
+      {:left (get head :left)
+       :right (get comp :right)
+       :children (list head comp)}) 
+     true
+     (merge
+      (apply (get head :fn) (list head comp))
+      {:left (get head :left)
+       :right (get comp :right)
+       :children (list head comp)}))))
+  
+(defn tablize [parent]
+  (let
+      [children (get parent :children)]
+      (str
+     "<div class='syntax'><table class='syntax'>"
+     "<tr><td style='padding-left:5%;width:90%' colspan='" (count children) "'>"
+       (fs parent)
+     "</td></tr>"
+     "<tr>"
+     ;; now show syntactic children for this parent.
+     (string/join " " (map (fn [child] (str "<td>"
+					    (cond (string? child)
+						  child
+						  (get child :children)
+						  (tablize child)
+						  true
+						  (fs child))
+					    "</td>")) children))
+     "</tr>"
+     "</table></div>")))
+  
