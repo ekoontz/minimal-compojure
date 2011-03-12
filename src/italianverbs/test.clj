@@ -65,28 +65,18 @@
 
 (defn io-andare []
   (let [subject (get-from-lexicon "io")
-	verb-phrase (get-from-lexicon "andare")
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   verb-phrase))))
+	verb-phrase (get-from-lexicon "andare")]
+    (combine verb-phrase subject)))
 
 (defn tu-andare []
   (let [subject (get-from-lexicon "tu")
-	verb-phrase (get-from-lexicon "andare")
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   verb-phrase))))
-
+	verb-phrase (get-from-lexicon "andare")]
+    (combine verb-phrase subject)))
 
 (defn io-pranzare []
   (let [subject (get-from-lexicon "io")
-	verb-phrase (get-from-lexicon "pranzare")
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   verb-phrase))))
+	verb-phrase (get-from-lexicon "pranzare")]
+    (combine verb-phrase subject)))
 
 (defn lui-scrivo-il-libro []
   (let [subject (get-from-lexicon "lui")
@@ -94,16 +84,8 @@
 		(get-from-lexicon "libro")
 		(get-from-lexicon "il"))
 	verb-phrase (combine (get-from-lexicon "scrivere")
-			     object)
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   (tablize verb-phrase
-			    (list (get-from-lexicon "scrivere")
-				  (tablize object
-					   (list
-					    (get-from-lexicon "il")
-					    (get-from-lexicon "libro")))))))))
+			     object)]
+    (combine verb-phrase subject)))
 
 (defn io-scrivo-il-libro []
   (let [subject (get-from-lexicon "io")
@@ -111,16 +93,8 @@
 		(get-from-lexicon "libro")
 		(get-from-lexicon "il"))
 	verb-phrase (combine (get-from-lexicon "scrivere")
-			     object)
-	parent (combine verb-phrase subject)]
-    (tablize parent
-	     (list subject
-		   (tablize verb-phrase
-			    (list (get-from-lexicon "scrivere")
-				  (tablize object
-					   (list
-					    (get-from-lexicon "il")
-					    (get-from-lexicon "libro")))))))))
+			     object)]
+    (combine verb-phrase subject)))
 
 (defn scrivo-il-libro []
   (let [object (combine
@@ -128,12 +102,7 @@
 		(get-from-lexicon "il"))
 	verb-phrase (combine (get-from-lexicon "scrivere")
 			     object)]
-    (tablize verb-phrase
-	     (list (get-from-lexicon "scrivere")
-		   (tablize object
-			    (list
-			     (get-from-lexicon "il")
-			     (get-from-lexicon "libro")))))))
+    verb-phrase))
 
 (defn choose-lexeme [struct]
   ;; do a query based on the given struct,
@@ -141,76 +110,69 @@
   (let [results (fetch :lexicon :where struct)]
     (nth results (rand-int (count results)))))
 
-(defn det-libro []
-  (let [determiner
-	(choose-lexeme
-	 (assoc {}
-	   :cat :det
-	   :def :def))
-	noun
-	(choose-lexeme
-	 (assoc {}
-	   :cat :noun))
-	object (combine	noun determiner)]
-    (tablize object
-	     (list
-	      determiner
-	      noun))))
-
-(defn il-libro []
-  (let [object (combine
-		(get-from-lexicon "libro")
-		(get-from-lexicon "il"))]
-	(tablize object
-		 (list
-		  (get-from-lexicon "il")
-		  (get-from-lexicon "libro")))))
-
-(defn generate-noun-phrase []
+(defn generate-np []
   (let [noun
-	(nth (fetch :lexicon :where {:cat :noun})
-	     (rand-int (count (fetch :lexicon :where {:cat :noun}))))
-	article-unif
-	(assoc {}
-	  :cat :det
-	  :def :def)
-	article
-	(nth (fetch :lexicon :where {:cat :det})
-	     (rand-int (count (fetch :lexicon :where {:cat :det}))))
-	parent (combine noun article)]
-    (tablize parent
-	     (list article noun))))
+	(choose-lexeme
+	 (assoc {}
+	   :cat :noun))]
+    ;; choose a determiner that agrees with the noun in number and gender.
+    (let [determiner
+	  (choose-lexeme
+	   (assoc {}
+	     :gender (get noun :gender)
+	     :number (get noun :number)
+	     :cat :det
+	     :def :def))]
+      (combine noun determiner))))
 
+(defn generate-vp []
+  (let [verb-fs {:cat :verb
+		 :infl :infinitive
+		 :fn "trans-vo"}
+	verb
+	(nth (fetch :lexicon :where verb-fs)
+	     (rand-int (count (fetch :lexicon :where verb-fs))))
+	parent (combine
+		(merge
+		 {:left 0
+		  :right 1}
+		 verb)
+		(merge
+		 {:left 1
+		  :right 2}
+		 (generate-np)))]
+    parent))
+ 
 (defn generate-sentence []
   (let [subject
 	(nth (fetch :lexicon :where {:cat :pronoun})
-	     (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
-	verb
-	(nth (fetch :lexicon :where {:cat :verb :infl :infinitive
-				     :fn "trans-sv"}) 
-	     (rand-int (count (fetch :lexicon :where {:cat :verb :infl :infinitive :fn "trans-sv"}))))
-	parent (combine verb subject)]
-    (tablize parent
-	     (list subject 
-		   verb))))
+	     (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))]
+    (combine (generate-vp) subject)))
+;        (combine (generate-vp) (generate-np))))
+
+(defn reload-button []
+  (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
 
 (def tests
   (list
-   (det-libro)
-   (il-libro)
-   (generate-sentence)
-;   (generate-noun-phrase)
-;   (io-andare)
-;   (tu-andare)
-;   (scrivo-il-libro)
-   (io-scrivo-il-libro)
-;   (lui-scrivo-il-libro)
+;   (reload-button) ; reload button does not work yet (results are still cached)
+   "<div> <h2>random sentences</h2></div>"
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   "<div> <h2>fixed sentences</h2></div>"
+   (tablize (io-andare))
+   (tablize (tu-andare))
+   (tablize (io-pranzare))
+   (tablize (scrivo-il-libro))
+   (tablize (lui-scrivo-il-libro))
 
-;   (io-pranzare)
-;   (show-lexicon-as-feature-structures)
 
-;   (correct)
-					;   (answertable))
+   (show-lexicon-as-feature-structures)
+
+   (correct)
+   (answertable)
    ))
 
   
