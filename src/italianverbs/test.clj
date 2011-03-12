@@ -110,23 +110,24 @@
   (let [results (fetch :lexicon :where struct)]
     (nth results (rand-int (count results)))))
 
-(defn generate-np []
+(defn generate-np [offset ]
   (let [noun
-	(merge {:left 1
-		:right 2}
-	       (choose-lexeme
-		(assoc {}
-		  :cat :noun)))]
+	(positionalize 
+	 (choose-lexeme
+	  (assoc {} :cat :noun))
+	  (+ offset 1)
+	  (+ offset 2))]
     ;; choose a determiner that agrees with the noun in number and gender.
     (let [determiner
-	  (merge {:left 0
-		  :right 1}
-		 (choose-lexeme
-		  (assoc {}
-		    :gender (get noun :gender)
-		    :number (get noun :number)
-		    :cat :det
-		    :def :def)))]
+	  (positionalize
+	   (choose-lexeme
+	    (assoc {}
+	      :gender (get noun :gender)
+	      :number (get noun :number)
+	      :cat :det
+	      :def :def))
+	   offset
+	   (+ offset 1))]
       (combine noun determiner))))
 
 (defn generate-vp []
@@ -144,33 +145,53 @@
 		(merge
 		 {:left 1
 		  :right 2}
-		 (generate-np)))]
+		 (generate-np 2)))]
     parent))
  
 (defn generate-sentence []
   (let [subject
-	(nth (fetch :lexicon :where {:cat :pronoun})
-	     (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))]
+	(positionalize
+	 (nth (fetch :lexicon :where {:cat :pronoun})
+	      (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
+	 0 1)] ;; fixme: left is always 0, but right (1)
+    ;; varies depending on length of subject.
     (combine (generate-vp) subject)))
+
+(defn positionalize [node left right]
+  (merge {:left left :right right}
+	 node))
 
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
 
+;; current thing I'm debugging..
+(defn bugs []
+   "<div> <h2>bugs</h2></div>"
+   (let [subject (positionalize (get-from-lexicon "tu") 0 1)
+	 object (combine
+		 (positionalize (get-from-lexicon "libro") 3 4)
+		 (positionalize (get-from-lexicon "il") 2 3))
+	 verb-phrase (combine
+		      (positionalize (get-from-lexicon "scrivere") 1 2)
+		      object)]
+     (tablize (combine verb-phrase subject))))
+
 (def tests
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
+
+   (bugs)
    "<div> <h2>random sentences</h2></div>"
-;   (tablize (io-facio-la-donna))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    "<div> <h2>fixed sentences</h2></div>"
-   (tablize (io-andare))
-   (tablize (tu-andare))
-   (tablize (io-pranzare))
-   (tablize (scrivo-il-libro))
-   (tablize (lui-scrivo-il-libro))
+;   (tablize (io-andare))
+;   (tablize (tu-andare))
+;   (tablize (io-pranzare))
+;   (tablize (scrivo-il-libro))
+ ;  (tablize (lui-scrivo-il-libro))
 
 
    (show-lexicon-as-feature-structures)

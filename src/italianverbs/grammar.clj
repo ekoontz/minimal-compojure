@@ -21,14 +21,19 @@
 					  true
 					  (list key
 						(get lexeme key))))
-				       (keys lexeme)))))
+				       (sort (keys lexeme))))))
        "</table>"))
 
 (defn combine [head comp]
-  (let [ls (if (= (get head :left)
-		  (get comp :right))
-	     (list head comp)
-	     (list comp head))]
+  (let [linear-order (cond
+		      (= (get head :right)
+			 (get comp :left))
+		      (list head comp)
+		      (= (get head :left)
+			 (get comp :right))
+		      (list comp head)
+		      true
+		      (list {:cat :error :note "head and comp not adjacent"}))]
     (cond
      (nil? (get head :fn))
      {:cat :error :note
@@ -37,16 +42,16 @@
      (merge
       (apply (eval (symbol (get head :fn))) (list head comp))
       {:head (if (get head :head) (get head :head) head)
-       :left (get head :left)
-       :right (get comp :right)
-       :children (list head comp)}) 
+       :left (get (first linear-order) :left)
+       :right (get (second linear-order) :right)
+       :children linear-order})
      true
      (merge
       (apply (get head :fn) (list head comp))
       {:head (if (get head :head) (get head :head) head)
-       :left (get head :left)
-       :right (get comp :right)
-       :children (list head comp)}))))
+       :left (get (first linear-order) :left)
+       :right (get (second linear-order) :right)
+       :children linear-order}))))
   
 (defn tablize [parent]
   (let
