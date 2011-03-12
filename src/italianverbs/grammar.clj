@@ -1,5 +1,6 @@
 (ns italianverbs.grammar
   (:require
+   [clojure.set :as set]
    [clojure.string :as string]))
 
 (defn fs-tr [key-val-pair]
@@ -14,6 +15,8 @@
 					 (cond
 					  (= key :_id) nil
 					  (= key :children) nil
+					  (= key :left) nil
+					  (= key :right) nil
 					  (= key :head)
 					  (list key
 						(fs (get lexeme key)))
@@ -21,7 +24,12 @@
 					  true
 					  (list key
 						(get lexeme key))))
-				       (sort (keys lexeme))))))
+				       (cons
+					:italian
+					(cons :english
+					      (set/difference
+					       (set (keys lexeme))
+					       #{:english :italian})))))))
        "</table>"))
 
 (defn combine [head comp]
