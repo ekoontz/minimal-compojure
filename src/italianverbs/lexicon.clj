@@ -70,20 +70,45 @@
      true
      (remove-to english))))
 
-(defn regular-1st [italian-verb-phrase]
- (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
-   (str-utils/replace italian-verb-phrase regex
-		      (fn [[_ stem space rest]]
-			(str stem "o" space rest)))))
+ (defn conjugate-verb-it [italian-verb-phrase subject]
+   (let [head (get italian-verb-phrase :head)
+	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
+     (cond
 
-(defn regular-2nd [italian-verb-phrase]
- (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
-   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "i" space rest)))))
+      (and (= (get subject :person) "1st")
+	   (= (get subject :number) "singular"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem "o" space rest)))
 
-(defn regular-3rd [italian-verb-phrase]
- (let [regex #"^([^ ]*)[aei]re([ ]?)(.*)"]
-   (str-utils/replace italian-verb-phrase regex (fn [[_ stem space rest]] (str stem "e" space rest)))))
+      (and (= (get subject :person) "1st")
+	   (= (get subject :number) "plural"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem "i" "amo" space rest)))
 
+
+      (and (= (get subject :person) "2nd")
+	   (= (get subject :number) "singular"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem "i" space rest)))
+
+      (and (= (get subject :person) "2nd")
+	   (= (get subject :number) "plural"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem vowel "te" space rest)))
+
+      
+      (and (= (get subject :person) "3rd")
+	   (= (get subject :number) "singular"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem "e" space rest)))
+
+      (and (= (get subject :person) "3rd")
+	   (= (get subject :number) "plural"))
+      (str-utils/replace italian-verb-phrase regex
+			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
+      true
+      "(conjugate-verb-it=>??)")))
+ 
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
    (str-utils/replace
@@ -143,17 +168,7 @@
     (if irregular
       (str (get irregular :italian) " "
 	   (get (get verb-phrase :comp) :italian))
-      (cond (= (get subject :person) "1st")
-	    (regular-1st italian)
-	    (= (get subject :person) "2nd")
-	    (regular-2nd italian)
-	    (= (get subject :person) "3rd")
-	    (regular-3rd italian)
-	    (nil? (get subject :person))
-	    {:cat :error
-	     :note  (str "no :person for " subject)}
-	    true
-	    (str subject italian "<i>infinitivo</i>")))))
+      (conjugate-verb-it italian subject))))
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
@@ -175,10 +190,6 @@
        (= (get head :number)
 	  (get arg :number)))
     (assoc {}
-      :number (get head :number)
-      :cat (get head :cat)
-      :gender (get head :gender)
-      :writable (get head :writable)
       :head head)
     (assoc {}
       :cat :fail
@@ -201,7 +212,6 @@
 (defn trans-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
   (assoc {}
     :infl :infinitive
-    :cat (get head :cat)
     :fn trans-sv
     :head head
     :comp arg
@@ -226,12 +236,36 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "dire" "to say"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+(add-lexeme "dico" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :1st :number :singular
+	     :italian-root "dire"})
+(add-lexeme "dici" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :2nd :number :singular
+	     :italian-root "dire"})
+(add-lexeme "dice" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :3rd :number :singular
+	     :italian-root "dire"})
 
 (add-lexeme "fare" "to do"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "facio" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :1st :number :singular
+	     :italian-root "fare"})
+(add-lexeme "fai" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :2nd :number :singular
+	     :italian-root "fare"})
+(add-lexeme "fate" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :2nd :number :plural
+	     :italian-root "fare"})
+(add-lexeme "fà" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :3rd :number :singular
 	     :italian-root "fare"})
 (add-lexeme "fanno" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
@@ -245,7 +279,7 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "leggere" "to read"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
-(add-lexeme "mangiere" "to eat"
+(add-lexeme "mangiare" "to eat"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "parlere" "to speak"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
