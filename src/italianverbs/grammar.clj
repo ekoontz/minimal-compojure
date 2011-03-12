@@ -14,7 +14,9 @@
 					 (cond
 					  (= key :_id) nil
 					  (= key :children) nil
-					  (= key :head) nil
+					  (= key :head)
+					  (list key
+						(fs (get lexeme key)))
 					  (= key :comp) nil
 					  true
 					  (list key
@@ -34,13 +36,15 @@
      (string? (get head :fn))
      (merge
       (apply (eval (symbol (get head :fn))) (list head comp))
-      {:left (get head :left)
+      {:head (if (get head :head) (get head :head) head)
+       :left (get head :left)
        :right (get comp :right)
        :children (list head comp)}) 
      true
      (merge
       (apply (get head :fn) (list head comp))
-      {:left (get head :left)
+      {:head (if (get head :head) (get head :head) head)
+       :left (get head :left)
        :right (get comp :right)
        :children (list head comp)}))))
   
