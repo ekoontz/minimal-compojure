@@ -39,12 +39,13 @@
     (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
+  ;; FIXME: look at (get english-verb-phrase :head)
   (let [regex #"^([^ ]*)([o])([ ]?)(.*)"
 	with-e
 	(str-utils/replace
 	 english-verb-phrase
 	 regex
-	 (fn [[_ word vowel space rest]] (str word vowel "e" space rest)))]
+	 (fn [[_ word vowel space rest]] (str word vowel space rest)))]
     (let [regex #"^([^ ]*)([ ]?)(.*)"]
       (str-utils/replace
        with-e
@@ -172,7 +173,6 @@
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
-    :cat (get head :cat)
     :infl :present
     :english
     (string/join " "

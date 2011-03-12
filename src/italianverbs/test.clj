@@ -10,11 +10,16 @@
 
 (mongo! :db "mydb")
 
-;; useful library functions
+;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
-  
+(defn pos [node left right]
+  (positionalize node left right))
+(defn positionalize [node left right]
+  (merge {:left left :right right}
+	 node))
+
 (defn lex-thead [lexeme]
   (str "<tr>"
        "<th>italian</th>"
@@ -64,27 +69,28 @@
 		    (fetch :lexicon))))
 
 (defn io-andare []
-  (let [subject (get-from-lexicon "io")
-	verb-phrase (get-from-lexicon "andare")]
+  (let [subject (pos (get-from-lexicon "io") 0 1)
+	verb-phrase (pos (get-from-lexicon "andare") 1 2)]
     (combine verb-phrase subject)))
 
 (defn tu-andare []
-  (let [subject (get-from-lexicon "tu")
-	verb-phrase (get-from-lexicon "andare")]
+  (let [subject (pos (get-from-lexicon "tu") 0 1)
+	verb-phrase (pos (get-from-lexicon "andare") 1 2)]
     (combine verb-phrase subject)))
 
 (defn io-pranzare []
-  (let [subject (get-from-lexicon "io")
-	verb-phrase (get-from-lexicon "pranzare")]
+  (let [subject (pos (get-from-lexicon "io") 0 1)
+	verb-phrase (pos (get-from-lexicon "pranzare") 1 2)]
     (combine verb-phrase subject)))
 
 (defn lui-scrivo-il-libro []
-  (let [subject (get-from-lexicon "lui")
+  (let [subject (pos (get-from-lexicon "lui") 0 1)
 	object (combine
-		(get-from-lexicon "libro")
-		(get-from-lexicon "il"))
-	verb-phrase (combine (get-from-lexicon "scrivere")
-			     object)]
+		(pos (get-from-lexicon "libro") 3 4)
+		(pos (get-from-lexicon "il") 2 3))
+	verb-phrase (combine
+		     (pos (get-from-lexicon "scrivere") 1 2)
+		     object)]
     (combine verb-phrase subject)))
 
 (defn io-scrivo-il-libro []
@@ -110,7 +116,7 @@
   (let [results (fetch :lexicon :where struct)]
     (nth results (rand-int (count results)))))
 
-(defn generate-np [offset ]
+(defn generate-np [offset]
   (let [noun
 	(positionalize 
 	 (choose-lexeme
@@ -130,22 +136,19 @@
 	   (+ offset 1))]
       (combine noun determiner))))
 
-(defn generate-vp []
+(defn generate-vp [offset]
   (let [verb-fs {:cat :verb
 		 :infl :infinitive
 		 :fn "trans-vo"}
 	verb
-	(nth (fetch :lexicon :where verb-fs)
-	     (rand-int (count (fetch :lexicon :where verb-fs))))
+	(positionalize
+	 (nth (fetch :lexicon :where verb-fs)
+	      (rand-int (count (fetch :lexicon :where verb-fs))))
+	 offset
+	 (+ offset 1))
 	parent (combine
-		(merge
-		 {:left 0
-		  :right 1}
-		 verb)
-		(merge
-		 {:left 1
-		  :right 2}
-		 (generate-np 2)))]
+		 verb
+		 (generate-np 2))]
     parent))
  
 (defn generate-sentence []
@@ -155,11 +158,7 @@
 	      (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
 	 0 1)] ;; fixme: left is always 0, but right (1)
     ;; varies depending on length of subject.
-    (combine (generate-vp) subject)))
-
-(defn positionalize [node left right]
-  (merge {:left left :right right}
-	 node))
+    (combine (generate-vp 1) subject)))
 
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
@@ -167,13 +166,14 @@
 ;; current thing I'm debugging..
 (defn bugs []
    "<div> <h2>bugs</h2></div>"
-   (let [subject (positionalize (get-from-lexicon "tu") 0 1)
+   (let [subject (positionalize (get-from-lexicon "lui") 0 1)
 	 object (combine
-		 (positionalize (get-from-lexicon "libro") 3 4)
-		 (positionalize (get-from-lexicon "il") 2 3))
+		 (positionalize (get-from-lexicon "donna") 3 4)
+		 (positionalize (get-from-lexicon "la") 2 3))
 	 verb-phrase (combine
-		      (positionalize (get-from-lexicon "scrivere") 1 2)
+		      (positionalize (get-from-lexicon "correggere") 1 2)
 		      object)]
+;     (tablize verb-phrase)))
      (tablize (combine verb-phrase subject))))
 
 (def tests
@@ -187,11 +187,11 @@
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    "<div> <h2>fixed sentences</h2></div>"
-;   (tablize (io-andare))
-;   (tablize (tu-andare))
-;   (tablize (io-pranzare))
+   (tablize (io-andare))
+   (tablize (tu-andare))
+   (tablize (io-pranzare))
 ;   (tablize (scrivo-il-libro))
- ;  (tablize (lui-scrivo-il-libro))
+   (tablize (lui-scrivo-il-libro))
 
 
    (show-lexicon-as-feature-structures)
