@@ -17,7 +17,7 @@
 					  (= key :children) nil
 					  (= key :left) nil
 					  (= key :right) nil
-					  (= key :fn) nil
+;					  (= key :fn) nil
 					  (= key :head)
 					  (list key
 						(fs (get lexeme key)))
