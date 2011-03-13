@@ -177,7 +177,6 @@
 		       )]
 	(if irregular
 	  (str (get irregular :italian) " "
-	       (get verb-phrase :head)
 	       (get (get verb-phrase :comp) :italian))
 	  (str
 ;	   (conjugate-italian-verb-regular (get verb-phrase :head) subject)
@@ -258,10 +257,8 @@
 
 (add-lexeme "dire" "to say"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
-(add-lexeme "dico" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :1st :number :singular
-	     :italian-root "dire"})
+(add-lex2 "dico" (list firstp sing present
+		       {:italian-root "dire"}))
 (add-lexeme "dici" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :2nd :number :singular

@@ -165,10 +165,10 @@
    "<div> <h2>bugs</h2></div>"
    (let [subject (pos (get-from-lexicon "io") 0 1)
 	 object (combine
-		 (pos (get-from-lexicon "pane") 3 4)
-		 (pos (get-from-lexicon "il") 2 3))
+		 (pos (get-from-lexicon "donna") 3 4)
+		 (pos (get-from-lexicon "la") 2 3))
 	 verb-phrase (combine
-		      (pos (get-from-lexicon "mangiare") 1 2)
+		      (pos (get-from-lexicon "dire") 1 2)
 		      object)]
      (tablize (combine verb-phrase subject))))
 
@@ -221,7 +221,7 @@
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
-   (bugs)
+;   (bugs)
    "<div class='section'> <h2>conjugations</h2></div>"
    (conjugation (get-from-lexicon "andare"))
    (conjugation (get-from-lexicon "volare"))
