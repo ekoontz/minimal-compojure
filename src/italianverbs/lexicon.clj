@@ -234,6 +234,7 @@
 (clear-lexicon)
 (add-lexeme "dimenticare" "to forget"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+
 (add-lexeme "dire" "to say"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "dico" "to do"
@@ -244,6 +245,11 @@
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :2nd :number :singular
 	     :italian-root "dire"})
+(add-lexeme "dicono" "to do"
+	    {:cat :verb :infl :present :fn "trans-vo"
+	     :person :3rd :number :plural
+	     :italian-root "dire"})
+
 (add-lexeme "dice" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :3rd :number :singular
@@ -279,8 +285,21 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "leggere" "to read"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+
 (add-lexeme "mangiare" "to eat"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+
+;; FIXME: hacks until italian morphology works better: mangiare
+;; is a regular -are verb.
+(add-lexeme "mangi" "to eat"
+	    {:italian-root "mangiare"
+	     :cat :verb :infl :present
+	     :person :2nd :number :singular})
+(add-lexeme "mangia" "to eat"
+	    {:italian-root "mangiare"
+	     :cat :verb :infl :present
+	     :person :3rd :number :singular})
+
 (add-lexeme "parlere" "to speak"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "smettere" "to quit"
