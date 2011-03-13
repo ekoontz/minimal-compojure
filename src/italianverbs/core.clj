@@ -73,6 +73,14 @@
 			  test/tests)
 		     request)
 	 })
+  (POST "/test/" 
+       request
+       { :session (get request :session)
+         :body (page "test" 
+		     (map test/wrap-div 
+			  test/tests)
+		     request)
+	 })
 
 ;; TODO: make this a POST with 'username' and 'password' params.
   (GET "/session/set/"  
