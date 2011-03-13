@@ -264,7 +264,7 @@
 	     :italian-root "dire"})
 
 (add-lexeme "fare" "to do"
-	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 (add-lexeme "facio" "to do"
 	    {:cat :verb :infl :present :fn "trans-vo"
 	     :person :1st :number :singular

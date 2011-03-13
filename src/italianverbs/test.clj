@@ -68,6 +68,7 @@
 		      (fs lexeme))
 		    (fetch :lexicon :sort {"italian" 1}))))
 
+;; fixme: change name to "compose-sv-sentence" or something.
 (defn conjugate [pronoun infinitive]
   (let [subject (pos pronoun 0 1)
 	verb-phrase (pos infinitive 1 2)]
@@ -171,45 +172,45 @@
 ;     (tablize verb-phrase)))
      (tablize (combine verb-phrase subject))))
 
-(defn conjugation [infinitive]
+(defn conjugation [verb] ;; verb should be the infinitive form of a verb.
   (str
    "<div class='conjugation'>"
-   (tablize infinitive)
+   (tablize verb)
    "<table class='fs conjugation'>"
    "<tr>"
    "<th>io</th>"
    "<td>"
-   (get (conjugate (get-from-lexicon "io") infinitive) :italian)
+   (get (conjugate (get-from-lexicon "io") verb) :italian)
    "</td>"
    "</tr>"
    "<tr>"
        "<th>tu</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "tu") infinitive) :italian)
+       (get (conjugate (get-from-lexicon "tu") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>lui/lei</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "lui") infinitive) :italian)
+       (get (conjugate (get-from-lexicon "lui") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>noi</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "noi") infinitive) :italian)
+       (get (conjugate (get-from-lexicon "noi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>voi</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "voi") infinitive) :italian)
+       (get (conjugate (get-from-lexicon "voi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>loro</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "loro") infinitive) :italian)
+       (get (conjugate (get-from-lexicon "loro") verb) :italian)
        "</td>"
        "</tr>"
        "</table>"
