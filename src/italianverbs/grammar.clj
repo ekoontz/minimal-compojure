@@ -17,6 +17,7 @@
 					  (= key :children) nil
 					  (= key :left) nil
 					  (= key :right) nil
+					  (= key :fn) nil
 					  (= key :head)
 					  (list key
 						(fs (get lexeme key)))
@@ -41,25 +42,21 @@
 			 (get comp :right))
 		      (list comp head)
 		      true
-		      (list {:cat :error :note "head and comp not adjacent"}))]
-    (cond
-     (nil? (get head :fn))
-     {:cat :error :note
-      (str "no function for this head :" head )}
-     (string? (get head :fn))
-     (merge
-      (apply (eval (symbol (get head :fn))) (list head comp))
-      {:head (if (get head :head) (get head :head) head)
-       :left (get (first linear-order) :left)
-       :right (get (second linear-order) :right)
-       :children linear-order})
-     true
-     (merge
-      (apply (get head :fn) (list head comp))
-      {:head (if (get head :head) (get head :head) head)
-       :left (get (first linear-order) :left)
-       :right (get (second linear-order) :right)
-       :children linear-order}))))
+		      (list
+		       {:cat :error :note "head and comp not adjacent"}))
+	fn (cond
+	    (nil? (get head :fn))
+	    {:cat :error :note
+	     (str "no function for this head :" head )}
+	    (string? (get head :fn))
+	    (eval (symbol (get head :fn)))
+	    true (get head :fn))]
+    (merge
+     (apply fn (list head comp))
+     {:head (if (get head :head) (get head :head) head)
+      :left (get (first linear-order) :left)
+      :right (get (second linear-order) :right)
+      :children linear-order})))
   
 (defn tablize [parent]
   (let
