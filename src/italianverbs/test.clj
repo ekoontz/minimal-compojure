@@ -186,8 +186,8 @@
        "<tr>"
          "<th>io</th>"
 	 "<td>"
-	 (tablize (conjugate-andare "io"))
-	;	 (get (conjugate-andare "io") :italian)
+;	 (tablize (conjugate-andare "io"))
+	 (get (conjugate-andare "io") :italian)
 	 "</td>"
 	 "</tr>"
        "<tr>"
