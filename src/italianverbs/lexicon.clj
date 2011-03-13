@@ -160,20 +160,24 @@
 
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
+  ;; takes two feature structures and returns a string.
   (let [italian (get verb-phrase :italian)
-	irregular
-	(fetch-one :lexicon
-		   :where {:cat :verb
-			   :infl :present
-			   :person (get subject :person)
-			   :number (get subject :number)
-			   :italian-root (get (get verb-phrase :head) :italian)
-			   }
-		  )]
-    (if irregular
-      (str (get irregular :italian) " "
-	   (get (get verb-phrase :comp) :italian))
-      (conjugate-verb-it italian subject))))
+	italian-head (get (get verb-phrase :head) :italian)]
+    (let [italian (if italian-head italian-head italian)]
+      (let [irregular
+	    (fetch-one :lexicon
+		       :where {:cat :verb
+			       :infl :present
+			       :person (get subject :person)
+			       :number (get subject :number)
+			       :italian-root italian
+			       }
+		       )]
+	(if irregular
+	  (str (get irregular :italian) " "
+	       (get verb-phrase :head)
+	       (get (get verb-phrase :comp) :italian))
+	  (conjugate-verb-it italian subject))))))
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
