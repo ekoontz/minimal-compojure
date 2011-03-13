@@ -177,7 +177,7 @@
 	  (str (get irregular :italian) " "
 	       (get verb-phrase :head)
 	       (get (get verb-phrase :comp) :italian))
-	  (conjugate-verb-it italian subject))))))
+	  (conjugate-italian-verb-regular italian subject))))))
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
@@ -336,6 +336,66 @@
 (add-lexeme "vanno" "go"
 	    {:cat :verb :infl :present :person :3rd :number :plural 
 	     :italian-root "andare"})
+
+(defn add-lex2 [italian & [types result]]
+  (if (first types)
+    (add-lex2
+     italian
+     (rest types)
+     (merge (first types) result))
+    (add-lexeme italian nil result)))
+
+
+;; useful abbreviations
+(def firstp
+  {:person :1st})
+(def secondp
+  {:person :2nd})
+(def thirdp
+  {:person :3rd})
+(def sing
+  {:number :singular})
+(def plural
+  {:number :plural})
+(def present
+  {:cat :verb :infl :present :fn "trans-vo"})
+
+(add-lexeme "volare" "to want"
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+(add-lex2 "voglio" (list firstp sing present
+			 {:italian-root "volare"}))
+(add-lex2 "vogli" (list secondp sing present
+			 {:italian-root "volare"}))
+(add-lex2 "voglie" (list thirdp sing present
+			 {:italian-root "volare"}))
+(add-lex2 "vogliamo" (list firstp plural sing present
+			 {:italian-root "volare"}))
+(add-lex2 "vogliete" (list secondp plural plural present
+			 {:italian-root "volare"}))
+(add-lex2 "vogliono" (list thirdp plural plural present
+			 {:italian-root "volare"}))
+
+(defn add-lex2 [italian & [types result]]
+  (if (first types)
+    (add-lex2
+     italian
+     (rest types)
+     (merge (first types) result))
+    (add-lexeme italian nil result)))
+
+;; useful abbreviations
+(def firstp
+  {:person :1st})
+(def secondp
+  {:person :2nd})
+(def thirdp
+  {:person :3rd})
+(def sing
+  {:number :singular})
+(def plural
+  {:number :plural})
+(def present
+  {:cat :verb :infl :present :fn "trans-vo"})
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :pronoun})
