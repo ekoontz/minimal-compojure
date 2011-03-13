@@ -66,18 +66,12 @@
   (string/join " "
 	       (map (fn [lexeme]
 		      (fs lexeme))
-		    (fetch :lexicon))))
+		    (fetch :lexicon :sort {"italian" 1}))))
 
-(defn conjugate-andare [pronoun]
-  (let [subject (pos (get-from-lexicon pronoun) 0 1)
-	verb-phrase (pos (get-from-lexicon "andare") 1 2)]
+(defn conjugate [pronoun infinitive]
+  (let [subject (pos pronoun 0 1)
+	verb-phrase (pos infinitive 1 2)]
     (combine verb-phrase subject)))
-
-(defn io-andare []
-  (conjugate-andare "io"))
-
-(defn tu-andare []
-  (conjugate-andare "tu"))
 
 (defn io-pranzare []
   (let [subject (pos (get-from-lexicon "io") 0 1)
@@ -178,73 +172,68 @@
      (tablize (combine verb-phrase subject))))
 
 (defn conjugation [infinitive]
-  (let [fs (get-from-lexicon infinitive)]
-    (str
-     "<div class='conjugation'>"
-     (tablize fs)
-     "<table class='fs conjugation'>"
-       "<tr>"
-         "<th>io</th>"
-	 "<td>"
-;	 (tablize (conjugate-andare "io"))
-	 (get (conjugate-andare "io") :italian)
-	 "</td>"
-	 "</tr>"
-       "<tr>"
+  (str
+   "<div class='conjugation'>"
+   (tablize infinitive)
+   "<table class='fs conjugation'>"
+   "<tr>"
+   "<th>io</th>"
+   "<td>"
+   (get (conjugate (get-from-lexicon "io") infinitive) :italian)
+   "</td>"
+   "</tr>"
+   "<tr>"
        "<th>tu</th>"
-       	 "<td>"
-	 (get (conjugate-andare "tu") :italian)
-	 "</td>"
-        "</tr>"
+       "<td>"
+       (get (conjugate (get-from-lexicon "tu") infinitive) :italian)
+       "</td>"
+       "</tr>"
        "<tr>"
        "<th>lui/lei</th>"
-       	 "<td>"
-	 (get (conjugate-andare "lui") :italian)
-	 "</td>"
-
-        "</tr>"
+       "<td>"
+       (get (conjugate (get-from-lexicon "lui") infinitive) :italian)
+       "</td>"
+       "</tr>"
        "<tr>"
        "<th>noi</th>"
-       	 "<td>"
-	 (get (conjugate-andare "noi") :italian)
-	 "</td>"
-
-        "</tr>"
+       "<td>"
+       (get (conjugate (get-from-lexicon "noi") infinitive) :italian)
+       "</td>"
+       "</tr>"
        "<tr>"
        "<th>voi</th>"
-       	 "<td>"
-	 (get (conjugate-andare "voi") :italian)
-	 "</td>"
-
-        "</tr>"
+       "<td>"
+       (get (conjugate (get-from-lexicon "voi") infinitive) :italian)
+       "</td>"
+       "</tr>"
        "<tr>"
        "<th>loro</th>"
-       	 "<td>"
-	 (get (conjugate-andare "loro") :italian)
-	 "</td>"
-
-        "</tr>"
-     "</table>"
-     "</div>"
-       )))
+       "<td>"
+       (get (conjugate (get-from-lexicon "loro") infinitive) :italian)
+       "</td>"
+       "</tr>"
+       "</table>"
+       "</div>"
+       ))
 
 (def tests
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
   ; (bugs)
-   "<div> <h2>conjugations</h2></div>"
-   (conjugation "andare")
-   "<div> <h2>random sentences</h2></div>"
+   "<div class='section'> <h2>conjugations</h2></div>"
+   (conjugation (get-from-lexicon "andare"))
+   (conjugation (get-from-lexicon "volare"))
+   (conjugation (get-from-lexicon "fare"))
+   (conjugation (get-from-lexicon "venire"))
+   "<div class='section'> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    (tablize (generate-sentence))
-   "<div> <h2>fixed sentences</h2></div>"
-   (tablize (io-andare))
-   (tablize (tu-andare))
+   "<div class='section'> <h2>fixed sentences</h2></div>"
    (tablize (io-pranzare))
-;   (tablize (scrivo-il-libro))
+   (tablize (scrivo-il-libro))
    (tablize (lui-scrivo-il-libro))
 
 
