@@ -89,7 +89,7 @@
 		     object)]
     (combine verb-phrase subject)))
 
-(defn io-scrivo-il-libro []
+(defn io-mangio-il-pane []
   (let [subject (get-from-lexicon "io")
 	object (combine
 		(get-from-lexicon "libro")
@@ -98,13 +98,14 @@
 			     object)]
     (combine verb-phrase subject)))
 
-(defn scrivo-il-libro []
-  (let [object (combine
+(defn io-scrivo-il-libro []
+  (let [subject (get-from-lexicon "io")
+	object (combine
 		(get-from-lexicon "libro")
 		(get-from-lexicon "il"))
 	verb-phrase (combine (get-from-lexicon "scrivere")
 			     object)]
-    verb-phrase))
+    (combine verb-phrase subject)))
 
 (defn choose-lexeme [struct]
   ;; do a query based on the given struct,
@@ -162,14 +163,13 @@
 ;; current thing I'm debugging..
 (defn bugs []
    "<div> <h2>bugs</h2></div>"
-   (let [subject (pos (get-from-lexicon "lui") 0 1)
+   (let [subject (pos (get-from-lexicon "io") 0 1)
 	 object (combine
-		 (pos (get-from-lexicon "donna") 3 4)
-		 (pos (get-from-lexicon "la") 2 3))
+		 (pos (get-from-lexicon "pane") 3 4)
+		 (pos (get-from-lexicon "il") 2 3))
 	 verb-phrase (combine
-		      (pos (get-from-lexicon "correggere") 1 2)
+		      (pos (get-from-lexicon "mangiare") 1 2)
 		      object)]
-;     (tablize verb-phrase)))
      (tablize (combine verb-phrase subject))))
 
 (defn conjugation [verb] ;; verb should be the infinitive form of a verb.
@@ -221,7 +221,7 @@
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
-  ; (bugs)
+   (bugs)
    "<div class='section'> <h2>conjugations</h2></div>"
    (conjugation (get-from-lexicon "andare"))
    (conjugation (get-from-lexicon "volare"))
@@ -233,8 +233,8 @@
    (tablize (generate-sentence))
    (tablize (generate-sentence))
    "<div class='section'> <h2>fixed sentences</h2></div>"
+   (tablize (io-mangio-il-pane))
    (tablize (io-pranzare))
-   (tablize (scrivo-il-libro))
    (tablize (lui-scrivo-il-libro))
 
 

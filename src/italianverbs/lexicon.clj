@@ -74,46 +74,46 @@
      true
      (remove-to english))))
 
- (defn conjugate-italian-verb-regular [italian-verb-phrase subject]
-   (let [head (get italian-verb-phrase :head)
+(defn conjugate-italian-verb-regular [italian-verb-head subject]
+   (let [root-form (get italian-verb-head :italian)
 	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
      (cond
 
       (and (= (get subject :person) "1st")
 	   (= (get subject :number) "singular"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "o" space rest)))
 
       (and (= (get subject :person) "1st")
 	   (= (get subject :number) "plural"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "i" "amo" space rest)))
 
 
       (and (= (get subject :person) "2nd")
 	   (= (get subject :number) "singular"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "i" space rest)))
 
       (and (= (get subject :person) "2nd")
 	   (= (get subject :number) "plural"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "te" space rest)))
 
       
       (and (= (get subject :person) "3rd")
 	   (= (get subject :number) "singular"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "e" space rest)))
 
       (and (= (get subject :person) "3rd")
 	   (= (get subject :number) "plural"))
-      (str-utils/replace italian-verb-phrase regex
+      (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
       (str
        "(conjugate-italian-verb-regular=>(can't conjugate this..))"
-       (tablize italian-verb-phrase)
+       (tablize italian-verb-head)
        (tablize subject)))))
  
 (defn plural-masc [italian]
@@ -179,7 +179,18 @@
 	  (str (get irregular :italian) " "
 	       (get verb-phrase :head)
 	       (get (get verb-phrase :comp) :italian))
-	  (conjugate-italian-verb-regular italian subject))))))
+	  (str
+;	   (conjugate-italian-verb-regular (get verb-phrase :head) subject)
+	   (conjugate-italian-verb-regular
+	    (get verb-phrase :head)
+	    subject)
+					;	    (get (get verb-phrase :head) :italian)
+;	    (get verb-phrase :head)
+;	    "foo"
+;	    subject)
+	   " "
+	   (get (get verb-phrase :comp) :italian)
+))))))
 
 (defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
   (assoc {}
@@ -291,8 +302,11 @@
 (add-lexeme "smettere" "to quit"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 
+;; FIXME: null pointer if :fn "trans-sv".
+;; FIXME2: catch error before null pointer occurs.
 (add-lexeme "pranzare" "to eat lunch"
-	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+
 (add-lexeme "andare" "to go"
 	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 ;; exceptions
@@ -408,7 +422,13 @@
 	     :number :singular
 	     :gender :fem
 	     :fn "noun-fn"})
-	     
+
+(add-lexeme "pane" "bread"
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc
+	     :fn "noun-fn"})
+
 (add-lexeme "libro" "book"
 	    {:cat :noun
 	     :number :singular
