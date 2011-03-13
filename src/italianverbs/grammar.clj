@@ -17,6 +17,7 @@
 					  (= key :children) nil
 					  (= key :left) nil
 					  (= key :right) nil
+; uncomment for debugging.
 ;					  (= key :fn) nil
 					  (= key :head)
 					  (list key
@@ -27,10 +28,14 @@
 						(get lexeme key))))
 				       (cons
 					:italian
-					(cons :english
-					      (set/difference
-					       (set (keys lexeme))
-					       #{:english :italian})))))))
+					(if (get lexeme :english)
+					  (cons :english
+						(set/difference
+						 (set (keys lexeme))
+						 #{:english :italian}))
+					  (set/difference
+					   (set (keys lexeme))
+					   #{:english :italian})))))))
        "</table>"))
 
 (defn combine [head comp]

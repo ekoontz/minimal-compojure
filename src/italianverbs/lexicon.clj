@@ -31,7 +31,9 @@
 (defn add-lexeme [italian english & [featuremap]]
   (let [featuremap
 	(merge featuremap
-	       (assoc {} :italian italian :english english))]
+	       (if english
+		 (assoc {} :italian italian :english english)
+		 (assoc {} :italian italian)))]
     (let [function-to-symbol featuremap]
       (insert! :lexicon function-to-symbol))))
 
@@ -321,7 +323,6 @@
      (merge (first types) result))
     (add-lexeme italian nil result)))
 
-
 ;; useful abbreviations
 (def firstp
   {:person :1st})
@@ -351,7 +352,9 @@
 (add-lex2 "vogliono" (list thirdp plural plural present
 			 {:italian-root "volare"}))
 
-(add-lexeme "fare" "make"
+(add-lexeme "fare" "to make"
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+(add-lexeme "fare" "to do"
 	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 
 (add-lex2 "facio" (list firstp sing present
@@ -368,6 +371,8 @@
 			 {:italian-root "fare"}))
 (add-lex2 "fanno" (list thirdp plural plural present
 			 {:italian-root "fare"}))
+
+
 
 
 ;; pronouns
