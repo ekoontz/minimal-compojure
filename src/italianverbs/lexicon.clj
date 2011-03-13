@@ -263,30 +263,6 @@
 	     :person :3rd :number :singular
 	     :italian-root "dire"})
 
-(add-lexeme "fare" "to do"
-	    {:cat :verb :infl :infinitive :fn "trans-sv"})
-(add-lexeme "facio" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :1st :number :singular
-	     :italian-root "fare"})
-(add-lexeme "fai" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :2nd :number :singular
-	     :italian-root "fare"})
-(add-lexeme "fate" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :2nd :number :plural
-	     :italian-root "fare"})
-(add-lexeme "fà" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :3rd :number :singular
-	     :italian-root "fare"})
-(add-lexeme "fanno" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :3rd :number :plural
-	     :italian-root "fare"})
-
-
 (add-lexeme "scrivere" "to write"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "correggere" "to correct"
@@ -375,27 +351,24 @@
 (add-lex2 "vogliono" (list thirdp plural plural present
 			 {:italian-root "volare"}))
 
-(defn add-lex2 [italian & [types result]]
-  (if (first types)
-    (add-lex2
-     italian
-     (rest types)
-     (merge (first types) result))
-    (add-lexeme italian nil result)))
+(add-lexeme "fare" "make"
+	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 
-;; useful abbreviations
-(def firstp
-  {:person :1st})
-(def secondp
-  {:person :2nd})
-(def thirdp
-  {:person :3rd})
-(def sing
-  {:number :singular})
-(def plural
-  {:number :plural})
-(def present
-  {:cat :verb :infl :present :fn "trans-vo"})
+(add-lex2 "facio" (list firstp sing present
+			{:italian-root "fare"}))
+(add-lex2 "fai" (list secondp sing present
+		      {:italian-root "fare"}))
+
+(add-lex2 "fà" (list thirdp sing present
+		      {:italian-root "fare"}))
+
+(add-lex2 "facciamo" (list firstp plural sing present
+			 {:italian-root "fare"}))
+(add-lex2 "fate" (list secondp plural plural present
+			 {:italian-root "fare"}))
+(add-lex2 "fanno" (list thirdp plural plural present
+			 {:italian-root "fare"}))
+
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :pronoun})
