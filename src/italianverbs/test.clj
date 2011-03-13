@@ -14,9 +14,9 @@
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
+
+;; return a feature structure just like node, but with :left and :right set.
 (defn pos [node left right]
-  (positionalize node left right))
-(defn positionalize [node left right]
   (merge {:left left :right right}
 	 node))
 

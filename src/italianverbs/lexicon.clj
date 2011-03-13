@@ -1,6 +1,7 @@
 (ns italianverbs.lexicon
   (:use [hiccup core page-helpers]
-	[somnium.congomongo])
+	[somnium.congomongo]
+	[italianverbs.grammar])
   (:require [clojure.string :as string]
 	    [clojure.contrib.str-utils2 :as str-utils]))
 
@@ -71,7 +72,7 @@
      true
      (remove-to english))))
 
- (defn conjugate-verb-it [italian-verb-phrase subject]
+ (defn conjugate-italian-verb-regular [italian-verb-phrase subject]
    (let [head (get italian-verb-phrase :head)
 	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
      (cond
@@ -108,7 +109,10 @@
       (str-utils/replace italian-verb-phrase regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
-      "(conjugate-verb-it=>??)")))
+      (str
+       "(conjugate-italian-verb-regular=>(can't conjugate this..))"
+       (tablize italian-verb-phrase)
+       (tablize subject)))))
  
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
@@ -154,7 +158,7 @@
 		  (get head :cat)
 		  (= (get head :cat) "noun")))))
 
-(defn conjugate-italian [verb-phrase subject]
+(defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [italian (get verb-phrase :italian)
 	irregular
@@ -181,7 +185,7 @@
     :italian
     (string/join " "
 		 (list (get arg :italian)
-		       (conjugate-italian head arg)))))
+		       (conjugate-italian-verb head arg)))))
 
 (defn unify-np [head arg]
   (if (and
