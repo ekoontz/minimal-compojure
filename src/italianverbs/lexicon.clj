@@ -278,35 +278,34 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 
 (def dire (add-lexeme "dire" "to say"
-		      {:cat :verb :infl :infinitive :fn "trans-vo"}))
+		      {:cat :verb :infl :infinitive :fn "trans-sv"}))
 (add-lex2 "dico" (list firstp sing present
 		       {:root dire}))
-(add-lex2 "dici" (list firstp sing present
+(add-lex2 "dici" (list secondp sing present
 		       {:root dire}))
-(add-lex2 "dice" (list firstp sing present
+(add-lex2 "dice" (list thirdp sing present
 		       {:root dire}))
 (add-lex2 "diciamo" (list firstp plural present
 		       {:root dire}))
-(add-lex2 "dite" (list firstp plural present
+(add-lex2 "dite" (list secondp plural present
 		       {:root dire}))
-(add-lex2 "dicono" (list firstp plural present
+(add-lex2 "dicono" (list thirdp plural present
 		       {:root dire}))
 
 (def venire (add-lexeme "venire" "to come"
-			{:cat :verb :infl :infinitive :fn "trans-vo"}))
+			{:cat :verb :infl :infinitive :fn "trans-sv"}))
 (add-lex2 "vengo" (list firstp sing present
 		       {:root venire}))
-(add-lex2 "vieni" (list firstp sing present
+(add-lex2 "vieni" (list secondp present
 		       {:root venire}))
-(add-lex2 "viene" (list firstp sing present
+(add-lex2 "viene" (list thirdp sing present
 		       {:root venire}))
 (add-lex2 "veniamo" (list firstp plural present
 		       {:root venire}))
-(add-lex2 "venite" (list firstp plural present
+(add-lex2 "venite" (list secondp plural present
 		       {:root venire}))
-(add-lex2 "vengono" (list firstp plural present
+(add-lex2 "vengono" (list thirdp plural present
 		       {:root venire}))
-
 
 (add-lexeme "scrivere" "to write"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
@@ -369,9 +368,7 @@
 			 {:root volare}))
 
 (def fare (add-lexeme "fare" "to make"
-		      {:cat :verb :infl :infinitive :fn "trans-sv"}))
-(add-lexeme "fare" "to do"
-	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+			    {:cat :verb :infl :infinitive :fn "trans-sv"}))
 
 (add-lex2 "facio" (list firstp sing present
 			{:root fare}))
