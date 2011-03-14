@@ -15,8 +15,8 @@
 					 (cond
 					  (= key :_id) nil
 					  (= key :children) nil
-					  (= key :left) nil
-					  (= key :right) nil
+;					  (= key :left) nil
+;					  (= key :right) nil
 ; uncomment for debugging.
 ;					  (= key :fn) nil
 					  (= key :head)
@@ -51,7 +51,10 @@
 		      (list comp head)
 		      true
 		      (list
-		       {:cat :error :note "head and comp not adjacent"}))
+		       {:cat :error
+			:note (str "head and comp not adjacent:"
+				   (get head :right) "!=" (get comp :left))
+				   }))
 	fn (cond
 	    (nil? (get head :fn))
 	    {:cat :error :note

@@ -17,8 +17,7 @@
 
 ;; return a feature structure just like node, but with :left and :right set.
 (defn pos [node left right]
-  (merge {:left left :right right}
-	 node))
+  (merge node {:left left :right right}))
 
 (defn lex-thead [lexeme]
   (str "<tr>"
@@ -74,7 +73,7 @@
 	verb-phrase (pos infinitive 1 2)]
     (combine verb-phrase subject)))
 
-(defn io-pranzare []
+(defn io-pranzo []
   (let [subject (pos (get-from-lexicon "io") 0 1)
 	verb-phrase (pos (get-from-lexicon "pranzare") 1 2)]
     (combine verb-phrase subject)))
@@ -89,14 +88,42 @@
 		     object)]
     (combine verb-phrase subject)))
 
+(def in-italia
+  (let [prep (get-from-lexicon "in")
+	noun (get-from-lexicon "Italia")]
+    (combine prep noun)))
+
+(def andare-in-italia
+  (let [verb (pos (get-from-lexicon "andare") 0 1)]
+    (combine verb
+	     (pos in-italia 1 3))))
+
+(defn lui-vado-in-italia []
+  (combine
+   (combine
+    (pos (get-from-lexicon "andare") 1 2)
+    (pos in-italia 2 4))
+   (pos (get-from-lexicon "lui") 0 1)))
+
 (defn io-mangio-il-pane []
-  (let [subject (get-from-lexicon "io")
+  (let [subject (pos (get-from-lexicon "io") 0 1)
 	object (combine
-		(get-from-lexicon "pane")
-		(get-from-lexicon "il"))
-	verb-phrase (combine (get-from-lexicon "mangiare")
+		(pos (get-from-lexicon "pane") 3 4)
+		(pos (get-from-lexicon "il") 2 3))
+	verb-phrase (combine (pos (get-from-lexicon "mangiare") 1 2)
 			     object)]
     (combine verb-phrase subject)))
+
+(defn lui-mangio-la-pasta []
+  (let [subject (pos (get-from-lexicon "lui") 0 1)
+	object (combine
+		(pos (get-from-lexicon "pasta") 3 4)
+		(pos (get-from-lexicon "la") 2 3))
+	verb-phrase (combine (pos (get-from-lexicon "mangiare") 1 2)
+			     object)]
+    (combine 
+     (combine verb-phrase subject)
+     (pos in-italia 4 6))))
 
 (defn io-scrivo-il-libro []
   (let [subject (get-from-lexicon "io")
@@ -136,7 +163,7 @@
 (defn generate-vp [offset]
   (let [verb-fs {:cat :verb
 		 :infl :infinitive
-		 :fn "trans-vo"}
+		 :fn "verb-vo"}
 	verb
 	(pos
 	 (nth (fetch :lexicon :where verb-fs)
@@ -227,12 +254,14 @@
    (conjugation (get-from-lexicon "dire"))
    "<div class='section'> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
-   (tablize (generate-sentence))
-   (tablize (generate-sentence))
-   (tablize (generate-sentence))
+;   (tablize (generate-sentence))
+;   (tablize (generate-sentence))
+;   (tablize (generate-sentence))
    "<div class='section'> <h2>fixed sentences</h2></div>"
+   (tablize (lui-vado-in-italia))
    (tablize (io-mangio-il-pane))
-   (tablize (io-pranzare))
+   (tablize (lui-mangio-la-pasta))
+   (tablize (io-pranzo))
    (tablize (lui-scrivo-il-libro))
 
    (show-lexicon-as-feature-structures)
