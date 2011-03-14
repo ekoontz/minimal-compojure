@@ -22,6 +22,9 @@
 					  (= key :head)
 					  (list key
 						(fs (get lexeme key)))
+					  (= key :root)
+					  (list key
+						(fs (get lexeme key)))
 					  (= key :comp) nil
 					  true
 					  (list key

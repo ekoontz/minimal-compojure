@@ -92,9 +92,9 @@
 (defn io-mangio-il-pane []
   (let [subject (get-from-lexicon "io")
 	object (combine
-		(get-from-lexicon "libro")
+		(get-from-lexicon "pane")
 		(get-from-lexicon "il"))
-	verb-phrase (combine (get-from-lexicon "scrivere")
+	verb-phrase (combine (get-from-lexicon "mangiare")
 			     object)]
     (combine verb-phrase subject)))
 
@@ -164,14 +164,11 @@
 (defn bugs []
    "<div> <h2>bugs</h2></div>"
    (let [subject (pos (get-from-lexicon "io") 0 1)
-	 object (combine
-		 (pos (get-from-lexicon "donna") 3 4)
-		 (pos (get-from-lexicon "la") 2 3))
-	 verb-phrase (combine
-		      (pos (get-from-lexicon "dire") 1 2)
-		      object)]
-     (tablize (combine verb-phrase subject))))
-
+	 verb-phrase (pos (get-from-lexicon "andare") 1 2)]
+     (str
+      (tablize (combine verb-phrase subject))
+      (tablize (combine (pos (get-from-lexicon "pranzare") 1 2) subject)))))
+      
 (defn conjugation [verb] ;; verb should be the infinitive form of a verb.
   (str
    "<div class='conjugation'>"
@@ -227,6 +224,7 @@
    (conjugation (get-from-lexicon "volare"))
    (conjugation (get-from-lexicon "fare"))
    (conjugation (get-from-lexicon "venire"))
+   (conjugation (get-from-lexicon "dire"))
    "<div class='section'> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
    (tablize (generate-sentence))
@@ -236,7 +234,6 @@
    (tablize (io-mangio-il-pane))
    (tablize (io-pranzare))
    (tablize (lui-scrivo-il-libro))
-
 
    (show-lexicon-as-feature-structures)
 

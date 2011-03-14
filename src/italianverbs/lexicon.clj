@@ -35,7 +35,16 @@
 		 (assoc {} :italian italian :english english)
 		 (assoc {} :italian italian)))]
     (let [function-to-symbol featuremap]
-      (insert! :lexicon function-to-symbol))))
+      (insert! :lexicon function-to-symbol)
+      featuremap)))
+
+(defn add-lex2 [italian & [types result]]
+  (if (first types)
+    (add-lex2
+     italian
+     (rest types)
+     (merge (first types) result))
+    (add-lexeme italian nil result)))
 
 (defn remove-to [english-verb-phrase]
   (let [regex #"to (.*)"]
@@ -111,10 +120,9 @@
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
-      (str
-       "(conjugate-italian-verb-regular=>(can't conjugate this..))"
-       (tablize italian-verb-head)
-       (tablize subject)))))
+      (str "(conjugate-italian-verb-regular=>(can't conjugate this..)"
+	   (tablize italian-verb-head)
+	   (tablize subject)))))
  
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
@@ -160,6 +168,11 @@
 		  (get head :cat)
 		  (= (get head :cat) "noun")))))
 
+(defn get-head [sign]
+  (if (get sign :head)
+    (get sign :head)
+    sign))
+
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   ;; takes two feature structures and returns a string.
@@ -172,36 +185,17 @@
 			       :infl :present
 			       :person (get subject :person)
 			       :number (get subject :number)
-			       :italian-root italian
+			       :root.italian (get (get-head verb-phrase) :italian)
 			       }
 		       )]
 	(if irregular
-	  (str (get irregular :italian) " "
+	  (str (get irregular :italian)
+	       " "
 	       (get (get verb-phrase :comp) :italian))
 	  (str
-;	   (conjugate-italian-verb-regular (get verb-phrase :head) subject)
 	   (conjugate-italian-verb-regular
-	    (get verb-phrase :head)
-	    subject)
-					;	    (get (get verb-phrase :head) :italian)
-;	    (get verb-phrase :head)
-;	    "foo"
-;	    subject)
-	   " "
-	   (get (get verb-phrase :comp) :italian)
-))))))
-
-(defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
-  (assoc {}
-    :infl :present
-    :english
-    (string/join " "
-		 (list (get arg :english)
-		       (conjugate-english head arg)))
-    :italian
-    (string/join " "
-		 (list (get arg :italian)
-		       (conjugate-italian-verb head arg)))))
+	    (get-head verb-phrase) subject) " "
+	   (get (get verb-phrase :comp) :italian)))))))
 
 (defn unify-np [head arg]
   (if (and
@@ -229,6 +223,19 @@
 		 (list (get arg :italian)
 		       (conjugate-it head))))))
 
+(defn trans-sv [head arg]  ;; e.g. "i [sleep]","he [writes a book]"
+  (assoc {}
+    :english
+    (string/join " "
+		 (list 
+		  (get arg :english)
+		  (conjugate-english head arg)))
+    :italian
+    (string/join " "
+		 (list
+		  (get arg :italian)
+		  (conjugate-italian-verb head arg)))))
+
 (defn trans-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
   (assoc {}
     :infl :infinitive
@@ -249,29 +256,57 @@
 
 (defn trans2 []) ;; e.g. "give"
 
+;; useful abbreviations
+(def firstp
+  {:person :1st})
+(def secondp
+  {:person :2nd})
+(def thirdp
+  {:person :3rd})
+(def sing
+  {:number :singular})
+(def plural
+  {:number :plural})
+(def present
+  {:cat :verb :infl :present})
+
 ;; BEGIN LEXICON
 ;; verbs
 (clear-lexicon)
+
 (add-lexeme "dimenticare" "to forget"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 
-(add-lexeme "dire" "to say"
-	    {:cat :verb :infl :infinitive :fn "trans-vo"})
+(def dire (add-lexeme "dire" "to say"
+		      {:cat :verb :infl :infinitive :fn "trans-vo"}))
 (add-lex2 "dico" (list firstp sing present
-		       {:italian-root "dire"}))
-(add-lexeme "dici" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :2nd :number :singular
-	     :italian-root "dire"})
-(add-lexeme "dicono" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :3rd :number :plural
-	     :italian-root "dire"})
+		       {:root dire}))
+(add-lex2 "dici" (list firstp sing present
+		       {:root dire}))
+(add-lex2 "dice" (list firstp sing present
+		       {:root dire}))
+(add-lex2 "diciamo" (list firstp plural present
+		       {:root dire}))
+(add-lex2 "dite" (list firstp plural present
+		       {:root dire}))
+(add-lex2 "dicono" (list firstp plural present
+		       {:root dire}))
 
-(add-lexeme "dice" "to do"
-	    {:cat :verb :infl :present :fn "trans-vo"
-	     :person :3rd :number :singular
-	     :italian-root "dire"})
+(def venire (add-lexeme "venire" "to come"
+			{:cat :verb :infl :infinitive :fn "trans-vo"}))
+(add-lex2 "vengo" (list firstp sing present
+		       {:root venire}))
+(add-lex2 "vieni" (list firstp sing present
+		       {:root venire}))
+(add-lex2 "viene" (list firstp sing present
+		       {:root venire}))
+(add-lex2 "veniamo" (list firstp plural present
+		       {:root venire}))
+(add-lex2 "venite" (list firstp plural present
+		       {:root venire}))
+(add-lex2 "vengono" (list firstp plural present
+		       {:root venire}))
+
 
 (add-lexeme "scrivere" "to write"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
@@ -298,93 +333,58 @@
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
 (add-lexeme "smettere" "to quit"
 	    {:cat :verb :infl :infinitive :fn "trans-vo"})
-
-;; FIXME: null pointer if :fn "trans-sv".
-;; FIXME2: catch error before null pointer occurs.
 (add-lexeme "pranzare" "to eat lunch"
-	    {:cat :verb :infl :infinitive :fn "trans-vo"})
-
-(add-lexeme "andare" "to go"
 	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+
+(def andare
+  (add-lexeme "andare" "to go"
+	      {:cat :verb :infl :infinitive :fn "trans-sv"}))
 ;; exceptions
-(add-lexeme "vado" "go"
-	    {:cat :verb :infl :present :person :1st :number :singular
-	     :italian-root "andare"})
-(add-lexeme "vai" "go"
-	    {:cat :verb :infl :present :person :2nd :number :singular
-	     :italian-root "andare"})
-(add-lexeme "va" "go"
-	    {:cat :verb :infl :present :person :3rd :number :singular
-	     :italian-root "andare"})
-(add-lexeme "andamo" "go"
-	    {:cat :verb :infl :present :person :1st :number :plural 
-	     :italian-root "andare"})
-(add-lexeme "andate" "go"
-	    {:cat :verb :infl :present :person :2nd :number :plural 
-	     :italian-root "andare"})
-(add-lexeme "vanno" "go"
-	    {:cat :verb :infl :present :person :3rd :number :plural 
-	     :italian-root "andare"})
+(add-lex2 "vado" (list firstp sing present)
+	  {:root andare})
+(add-lex2 "vai" (list secondp sing present)
+	  {:root andare})
+(add-lex2 "va" (list thirdp sing present)
+	  {:root andare})
+(add-lex2 "andiamo" (list firstp plural present)
+	  {:root andare})
+(add-lex2 "andate" (list secondp plural present)
+	  {:root andare})
+(add-lex2 "vanno" (list thirdp plural present)
+	  {:root andare})
 
-(defn add-lex2 [italian & [types result]]
-  (if (first types)
-    (add-lex2
-     italian
-     (rest types)
-     (merge (first types) result))
-    (add-lexeme italian nil result)))
-
-;; useful abbreviations
-(def firstp
-  {:person :1st})
-(def secondp
-  {:person :2nd})
-(def thirdp
-  {:person :3rd})
-(def sing
-  {:number :singular})
-(def plural
-  {:number :plural})
-(def present
-  {:cat :verb :infl :present :fn "trans-vo"})
-
-(add-lexeme "volare" "to want"
-	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+(def volare (add-lexeme "volare" "to want"
+			{:cat :verb :infl :infinitive :fn "trans-sv"}))
 (add-lex2 "voglio" (list firstp sing present
-			 {:italian-root "volare"}))
+			 {:root volare}))
 (add-lex2 "vogli" (list secondp sing present
-			 {:italian-root "volare"}))
+			{:root volare}))
 (add-lex2 "voglie" (list thirdp sing present
-			 {:italian-root "volare"}))
+			 {:root volare}))
 (add-lex2 "vogliamo" (list firstp plural sing present
-			 {:italian-root "volare"}))
+			 {:root volare}))
 (add-lex2 "vogliete" (list secondp plural plural present
-			 {:italian-root "volare"}))
+			 {:root volare}))
 (add-lex2 "vogliono" (list thirdp plural plural present
-			 {:italian-root "volare"}))
+			 {:root volare}))
 
-(add-lexeme "fare" "to make"
-	    {:cat :verb :infl :infinitive :fn "trans-sv"})
+(def fare (add-lexeme "fare" "to make"
+		      {:cat :verb :infl :infinitive :fn "trans-sv"}))
 (add-lexeme "fare" "to do"
 	    {:cat :verb :infl :infinitive :fn "trans-sv"})
 
 (add-lex2 "facio" (list firstp sing present
-			{:italian-root "fare"}))
+			{:root fare}))
 (add-lex2 "fai" (list secondp sing present
-		      {:italian-root "fare"}))
-
+		      {:root fare}))
 (add-lex2 "fà" (list thirdp sing present
-		      {:italian-root "fare"}))
-
+		      {:root fare}))
 (add-lex2 "facciamo" (list firstp plural sing present
-			 {:italian-root "fare"}))
+			   {:root fare}))
 (add-lex2 "fate" (list secondp plural plural present
-			 {:italian-root "fare"}))
+			 {:root fare}))
 (add-lex2 "fanno" (list thirdp plural plural present
-			 {:italian-root "fare"}))
-
-
-
+			 {:root fare}))
 
 ;; pronouns
 (add-lexeme "io" "i" {:person :1st :number :singular :cat :pronoun})
