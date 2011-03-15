@@ -64,9 +64,9 @@
        regex
        (fn [[_ word space rest]] (str word "s" space rest))))))
 
-(defn conjugate-english [verb subject]
+(defn conjugate-english-verb [verb-head subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (let [english (get verb :english)]
+  (let [english (get verb-head :english)]
     (cond
      (and (not (= (get subject :cat) "noun"))
 	  (not (= (get subject :cat) "pronoun")))
@@ -83,8 +83,8 @@
      true
      (remove-to english))))
 
-(defn conjugate-italian-verb-regular [italian-verb-head subject]
-   (let [root-form (get italian-verb-head :italian)
+(defn conjugate-italian-verb-regular [verb-head subject]
+   (let [root-form (get verb-head :italian)
 	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
      (cond
 
@@ -121,7 +121,7 @@
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
       (str "(conjugate-italian-verb-regular=>(can't conjugate this..)"
-	   (tablize italian-verb-head)
+	   (tablize verb-head)
 	   (tablize subject)))))
  
 (defn plural-masc [italian]
@@ -232,7 +232,8 @@
     (string/join " "
 		 (list 
 		  (get comp :english)
-		  (conjugate-english head comp)))
+		  (conjugate-english-verb (get-head head) comp)
+		  (get (get head :comp) :english)))
     :italian
     (string/join " "
 		 (list

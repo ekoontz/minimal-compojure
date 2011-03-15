@@ -16,8 +16,10 @@
   (str "<div class='test'>" string "</div>"))
 
 ;; return a feature structure just like node, but with :left and :right set.
-(defn pos [node left right]
-  (merge node {:left left :right right}))
+(defn pos [sign left right]
+  (if sign
+    (merge sign {:left left :right right})
+    {:left left :right right :cat :error :note "null sign given to (pos)"}))
 
 (defn lex-thead [lexeme]
   (str "<tr>"
@@ -138,26 +140,29 @@
   ;; do a query based on the given struct,
   ;; and choose a random element that satisfies the query.
   (let [results (fetch :lexicon :where struct)]
-    (nth results (rand-int (count results)))))
+    (if (= (count results) 0)
+      {:cat :error :note (str "choose lexeme: no results found for " struct)}
+      (nth results (rand-int (count results))))))
 
 (defn generate-np [offset]
   (let [noun
 	(pos 
 	 (choose-lexeme
-	  (assoc {} :cat :noun))
-	  (+ offset 1)
-	  (+ offset 2))]
+	  {:cat :noun})
+	 (+ offset 1)
+	 (+ offset 2))]
     ;; choose a determiner that agrees with the noun in number and gender.
     (let [determiner
 	  (pos
 	   (choose-lexeme
-	    (assoc {}
-	      :gender (get noun :gender)
-	      :number (get noun :number)
-	      :cat :det
-	      :def :def))
+	    {:gender (get noun :gender)
+	     :number (get noun :number)
+	     :cat :det
+	     :def :def
+	     })
 	   offset
 	   (+ offset 1))]
+;      noun)))
       (combine noun determiner))))
 
 (defn generate-vp [offset]
@@ -165,16 +170,17 @@
 		 :infl :infinitive
 		 :fn "verb-vo"}
 	verb
-	(pos
-	 (nth (fetch :lexicon :where verb-fs)
-	      (rand-int (count (fetch :lexicon :where verb-fs))))
-	 offset
-	 (+ offset 1))
-	parent (combine
-		 verb
-		 (generate-np 2))]
-    parent))
- 
+	(nth (fetch :lexicon :where verb-fs)
+	     (rand-int (count (fetch :lexicon :where verb-fs))))]
+    (let [verb-with-pos
+	  (pos verb
+	       offset
+	       (+ 1 offset))
+	  parent (combine
+		  verb-with-pos
+		  (generate-np (+ 1 offset)))]
+    parent)))
+      
 (defn generate-sentence []
   (let [subject
 	(pos
@@ -187,14 +193,28 @@
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
 
+(defn linearize [signs & [offset]]
+  (let [offset (if offset offset 0)]
+    (if (> (count signs) 0)
+      (cons
+       (pos (first signs) offset (+ 1 offset))
+       (linearize (rest signs) (+ 1 offset))))))
+
 ;; current thing I'm debugging..
 (defn bugs []
-   "<div> <h2>bugs</h2></div>"
-   (let [subject (pos (get-from-lexicon "io") 0 1)
-	 verb-phrase (pos (get-from-lexicon "andare") 1 2)]
-     (str
-      (tablize (combine verb-phrase subject))
-      (tablize (combine (pos (get-from-lexicon "pranzare") 1 2) subject)))))
+  (let [sentence
+	(list (get-from-lexicon "io")
+	      (get-from-lexicon "dimenticare")
+	      (get-from-lexicon "Italia"))
+	linearized
+	(linearize sentence)]
+    (str
+     "<div> <h2>bugs</h2></div>"
+     (tablize (combine
+	       (nth linearized 0)
+	       (combine
+		(nth linearized 1)
+		(nth linearized 2)))))))
       
 (defn conjugation [verb] ;; verb should be the infinitive form of a verb.
   (str
@@ -246,17 +266,22 @@
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
 ;   (bugs)
-   "<div class='section'> <h2>conjugations</h2></div>"
-   (conjugation (get-from-lexicon "andare"))
-   (conjugation (get-from-lexicon "volare"))
-   (conjugation (get-from-lexicon "fare"))
-   (conjugation (get-from-lexicon "venire"))
-   (conjugation (get-from-lexicon "dire"))
+;   "<div class='section'> <h2>conjugations</h2></div>"
+;   (conjugation (get-from-lexicon "andare"))
+;   (conjugation (get-from-lexicon "volare"))
+;   (conjugation (get-from-lexicon "fare"))
+;   (conjugation (get-from-lexicon "venire"))
+;   (conjugation (get-from-lexicon "dire"))
    "<div class='section'> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
-;   (tablize (generate-sentence))
-;   (tablize (generate-sentence))
-;   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+   (tablize (generate-sentence))
+
    "<div class='section'> <h2>fixed sentences</h2></div>"
    (tablize (lui-vado-in-italia))
    (tablize (io-mangio-il-pane))
