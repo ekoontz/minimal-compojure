@@ -1,6 +1,6 @@
-(ns foo.html
+(ns base.html
     (:use [hiccup core page-helpers])
-    (:require [foo.lib :as foolib]))
+    (:require [base.lib :as baselib]))
 
 (defn message [msg] 
   (html
@@ -52,7 +52,7 @@
        [:div {:class "http major"}
      (sessiondata (get request :session))
      (if false ; probably removing this
-	 (foolib/reqdata (get request :request-method) 
+	 (baselib/reqdata (get request :request-method) 
 			 (get request :uri)
 			 (get request :query-string)))
      ])

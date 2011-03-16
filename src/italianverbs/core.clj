@@ -1,10 +1,10 @@
 (ns italianverbs.core
   (:use [compojure.core]
 	[somnium.congomongo]
-	[foo.html])
+	[base.html])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-	    [foo.lib :as foolib]
+	    [base.lib :as baselib]
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
