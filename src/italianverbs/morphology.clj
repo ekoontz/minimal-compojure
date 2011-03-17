@@ -15,22 +15,31 @@
 (defn remove-to [english-verb-phrase]
   (let [english-verb-phrase (get english-verb-phrase :english)]
     (let [regex #"to (.*)"]
-      (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest))))))
+      (let [string
+	    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))]
+	english-verb-phrase))))
+
+					;	(merge
+;	 {:remove-to string}
+;	 english-verb-phrase)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
-  ;; FIXME: look at (get english-verb-phrase :head)
-  (let [regex #"^([^ ]*)([o])([ ]?)(.*)"
-	with-e
-	(str-utils/replace
-	 english-verb-phrase
-	 regex
-	 (fn [[_ word vowel space rest]] (str word (if vowel (str vowel "e")) space rest)))]
-    (let [regex #"^([^ ]*)([ ]?)(.*)"]
-      (str-utils/replace
-       with-e
-       regex
-       (fn [[_ word space rest]] (str word "s" space rest))))))
-
+  (let [english-verb-phrase-fs english-verb-phrase
+	english-verb-phrase (get english-verb-phrase :english)]
+    (let [regex #"^([^ ]*)([o])([ ]?)(.*)"
+	  with-e
+	  (str-utils/replace
+	   english-verb-phrase
+	   regex
+	   (fn [[_ word vowel space rest]] (str word (if vowel (str vowel "e")) space rest)))]
+      (let [regex #"^([^ ]*)([ ]?)(.*)"]
+	english-verb-phrase-fs))))
+	
+;	(str-utils/replace
+;	 with-e
+;	 regex
+;	 (fn [[_ word space rest]] (str word "s" space rest)))
+  
 (defn conjugate-english-verb [verb-head subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb-head :english)]
@@ -47,7 +56,8 @@
       (= (get subject :person) "3rd")
       (= (get subject :number) "singular")) 
      ;; FIXME: should take fs, not string.
-     (add-s-to-first-word (remove-to verb-head))
+     (remove-to verb-head)
+					;     (add-s-to-first-word (remove-to verb-head))
      true
      ;; FIXME: should take fs, not string.
      (remove-to verb-head))))
