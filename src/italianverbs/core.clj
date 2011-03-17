@@ -17,6 +17,7 @@
 ;; at page load.
 
 ;; main app code
+(load-file "src/italianverbs/morphology.clj")
 (load-file "src/italianverbs/lexicon.clj")
 (load-file "src/italianverbs/grammar.clj")
 (load-file "src/italianverbs/html.clj")
