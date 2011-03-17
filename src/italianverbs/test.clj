@@ -116,7 +116,7 @@
 			     object)]
     (combine verb-phrase subject)))
 
-(defn lui-mangio-la-pasta []
+(defn lui-mangio-la-pasta-in-italia []
   (let [subject (pos (lexfn/get "lui") 0 1)
 	object (combine
 		(pos (lexfn/get "pasta") 3 4)
@@ -285,7 +285,7 @@
    "<div class='section'> <h2>fixed sentences</h2></div>"
    (tablize (lui-vado-in-italia))
    (tablize (io-mangio-il-pane))
-   (tablize (lui-mangio-la-pasta))
+   (tablize (lui-mangio-la-pasta-in-italia))
    (tablize (io-pranzo))
    (tablize (lui-scrivo-il-libro))
 
