@@ -2,8 +2,9 @@
   (:use [hiccup core page-helpers]
 	[somnium.congomongo]
 	[italianverbs.grammar])
-  (:require [clojure.string :as string]
-	    [clojure.contrib.str-utils2 :as str-utils]))
+  (:require
+   [clojure.string :as string]
+   [clojure.contrib.str-utils2 :as str-utils]))
 
 (mongo! :db "mydb")
 
@@ -18,12 +19,6 @@
 
 (defn english [lexeme]
   (get (nth lexeme 1) :english))
-
-(defn verb-row [italian]
-  (html  
-   [:tr 
-   [:th italian] [:td (get (get-from-lexicon italian) :english)] 
-   ]))
 
 (defn clear-lexicon []
   (destroy! :lexicon {}))
@@ -548,8 +543,4 @@
 (add-lexeme "qui" "here"
 	    {:cat :adjective})
 
-(defn verb-table [lexicon]
-  (html [:table 
-	(for [verb (sort (keys lexicon))]
-	     (verb-row verb))]))
 

@@ -8,15 +8,21 @@
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
-	    [italianverbs.grammar :as grammar]
-	    [italianverbs.lexicon :as lexicon]))
+	    [italianverbs.lexicon :as lexicon]
+	    [italianverbs.html :as ihtml]
+	    [italianverbs.grammar :as grammar]))
+
 
 ;; seems like i need to do this explicitly to get certain things to be reloaded
 ;; at page load.
+
+;; main app code
 (load-file "src/italianverbs/lexicon.clj")
 (load-file "src/italianverbs/grammar.clj")
-(load-file "src/italianverbs/test.clj")
+(load-file "src/italianverbs/html.clj")
 
+;; test code
+(load-file "src/italianverbs/test.clj")
 
 (defroutes main-routes
 
@@ -41,7 +47,7 @@
        ;; response map
        { :session (get request :session)
          :body (page "Lexicon"
-		     (lexicon/verb-table (fetch :lexicon))
+		     (ihtml/verb-table (fetch :lexicon))
 		     request)
        }
        )
