@@ -45,8 +45,10 @@
      (and
       (= (get subject :person) "3rd")
       (= (get subject :number) "singular")) 
+     ;; FIXME: should take fs, not string.
      (add-s-to-first-word (remove-to english))
      true
+     ;; FIXME: should take fs, not string.
      (remove-to english))))
 
 (defn conjugate-italian-verb-regular [verb-head subject]
