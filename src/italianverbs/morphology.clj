@@ -13,8 +13,9 @@
     sign))
 
 (defn remove-to [english-verb-phrase]
-  (let [regex #"to (.*)"]
-    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))))
+  (let [english-verb-phrase (get english-verb-phrase :english)]
+    (let [regex #"to (.*)"]
+      (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest))))))
 
 (defn add-s-to-first-word [english-verb-phrase]
   ;; FIXME: look at (get english-verb-phrase :head)
@@ -39,17 +40,17 @@
      {:cat :error
       :note  (str ":cat != :noun for " subject)}
      (= (get subject :person) "1st")
-     (remove-to english)
+     (remove-to verb-head)
      (= (get subject :person) "2nd")
-     (remove-to english)
+     (remove-to verb-head)
      (and
       (= (get subject :person) "3rd")
       (= (get subject :number) "singular")) 
      ;; FIXME: should take fs, not string.
-     (add-s-to-first-word (remove-to english))
+     (add-s-to-first-word (remove-to verb-head))
      true
      ;; FIXME: should take fs, not string.
-     (remove-to english))))
+     (remove-to verb-head))))
 
 (defn conjugate-italian-verb-regular [verb-head subject]
    (let [root-form (get verb-head :italian)
