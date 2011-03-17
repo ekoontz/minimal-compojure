@@ -2,9 +2,9 @@
     (:use 
      [hiccup core page-helpers]
      [italianverbs.grammar]
-     [italianverbs.lexicon]
      [somnium.congomongo])
-    (:require 
+    (:require
+     [italianverbs.lexiconfn :as lexfn]
      [clojure.string :as string]
      [italianverbs.quiz :as quiz]))
 
@@ -76,63 +76,63 @@
     (combine verb-phrase subject)))
 
 (defn io-pranzo []
-  (let [subject (pos (get-from-lexicon "io") 0 1)
-	verb-phrase (pos (get-from-lexicon "pranzare") 1 2)]
+  (let [subject (pos (lexfn/get "io") 0 1)
+	verb-phrase (pos (lexfn/get "pranzare") 1 2)]
     (combine verb-phrase subject)))
 
 (defn lui-scrivo-il-libro []
-  (let [subject (pos (get-from-lexicon "lui") 0 1)
+  (let [subject (pos (lexfn/get "lui") 0 1)
 	object (combine
-		(pos (get-from-lexicon "libro") 3 4)
-		(pos (get-from-lexicon "il") 2 3))
+		(pos (lexfn/get "libro") 3 4)
+		(pos (lexfn/get "il") 2 3))
 	verb-phrase (combine
-		     (pos (get-from-lexicon "scrivere") 1 2)
+		     (pos (lexfn/get "scrivere") 1 2)
 		     object)]
     (combine verb-phrase subject)))
 
 (def in-italia
-  (let [prep (get-from-lexicon "in")
-	noun (get-from-lexicon "Italia")]
+  (let [prep (lexfn/get "in")
+	noun (lexfn/get "Italia")]
     (combine prep noun)))
 
 (def andare-in-italia
-  (let [verb (pos (get-from-lexicon "andare") 0 1)]
+  (let [verb (pos (lexfn/get "andare") 0 1)]
     (combine verb
 	     (pos in-italia 1 3))))
 
 (defn lui-vado-in-italia []
   (combine
    (combine
-    (pos (get-from-lexicon "andare") 1 2)
+    (pos (lexfn/get "andare") 1 2)
     (pos in-italia 2 4))
-   (pos (get-from-lexicon "lui") 0 1)))
+   (pos (lexfn/get "lui") 0 1)))
 
 (defn io-mangio-il-pane []
-  (let [subject (pos (get-from-lexicon "io") 0 1)
+  (let [subject (pos (lexfn/get "io") 0 1)
 	object (combine
-		(pos (get-from-lexicon "pane") 3 4)
-		(pos (get-from-lexicon "il") 2 3))
-	verb-phrase (combine (pos (get-from-lexicon "mangiare") 1 2)
+		(pos (lexfn/get "pane") 3 4)
+		(pos (lexfn/get "il") 2 3))
+	verb-phrase (combine (pos (lexfn/get "mangiare") 1 2)
 			     object)]
     (combine verb-phrase subject)))
 
 (defn lui-mangio-la-pasta []
-  (let [subject (pos (get-from-lexicon "lui") 0 1)
+  (let [subject (pos (lexfn/get "lui") 0 1)
 	object (combine
-		(pos (get-from-lexicon "pasta") 3 4)
-		(pos (get-from-lexicon "la") 2 3))
-	verb-phrase (combine (pos (get-from-lexicon "mangiare") 1 2)
+		(pos (lexfn/get "pasta") 3 4)
+		(pos (lexfn/get "la") 2 3))
+	verb-phrase (combine (pos (lexfn/get "mangiare") 1 2)
 			     object)]
     (combine 
      (combine verb-phrase subject)
      (pos in-italia 4 6))))
 
 (defn io-scrivo-il-libro []
-  (let [subject (get-from-lexicon "io")
+  (let [subject (lexfn/get "io")
 	object (combine
-		(get-from-lexicon "libro")
-		(get-from-lexicon "il"))
-	verb-phrase (combine (get-from-lexicon "scrivere")
+		(lexfn/get "libro")
+		(lexfn/get "il"))
+	verb-phrase (combine (lexfn/get "scrivere")
 			     object)]
     (combine verb-phrase subject)))
 
@@ -203,9 +203,9 @@
 ;; current thing I'm debugging..
 (defn bugs []
   (let [sentence
-	(list (get-from-lexicon "io")
-	      (get-from-lexicon "dimenticare")
-	      (get-from-lexicon "Italia"))
+	(list (lexfn/get "io")
+	      (lexfn/get "dimenticare")
+	      (lexfn/get "Italia"))
 	linearized
 	(linearize sentence)]
     (str
@@ -224,37 +224,37 @@
    "<tr>"
    "<th>io</th>"
    "<td>"
-   (get (conjugate (get-from-lexicon "io") verb) :italian)
+   (get (conjugate (lexfn/get "io") verb) :italian)
    "</td>"
    "</tr>"
    "<tr>"
        "<th>tu</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "tu") verb) :italian)
+       (get (conjugate (lexfn/get "tu") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>lui/lei</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "lui") verb) :italian)
+       (get (conjugate (lexfn/get "lui") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>noi</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "noi") verb) :italian)
+       (get (conjugate (lexfn/get "noi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>voi</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "voi") verb) :italian)
+       (get (conjugate (lexfn/get "voi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>loro</th>"
        "<td>"
-       (get (conjugate (get-from-lexicon "loro") verb) :italian)
+       (get (conjugate (lexfn/get "loro") verb) :italian)
        "</td>"
        "</tr>"
        "</table>"
@@ -267,11 +267,11 @@
 
 ;   (bugs)
 ;   "<div class='section'> <h2>conjugations</h2></div>"
-;   (conjugation (get-from-lexicon "andare"))
-;   (conjugation (get-from-lexicon "volare"))
-;   (conjugation (get-from-lexicon "fare"))
-;   (conjugation (get-from-lexicon "venire"))
-;   (conjugation (get-from-lexicon "dire"))
+;   (conjugation (lexfn/get "andare"))
+;   (conjugation (lexfn/get "volare"))
+;   (conjugation (lexfn/get "fare"))
+;   (conjugation (lexfn/get "venire"))
+;   (conjugation (lexfn/get "dire"))
    "<div class='section'> <h2>random sentences</h2></div>"
    (tablize (generate-sentence))
    (tablize (generate-sentence))

@@ -4,6 +4,7 @@
 	[italianverbs.grammar])
   (:require
    [clojure.string :as string]
+   [italianverbs.html :as html]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 (defn get-head [sign]
@@ -86,8 +87,10 @@
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
       (str "(conjugate-italian-verb-regular=>(can't conjugate this..)"
-	   (tablize verb-head)
-	   (tablize subject)))))
+	   verb-head
+	   subject))))
+					;	   (tablize verb-head)
+;	   (tablize subject)))))
 
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)

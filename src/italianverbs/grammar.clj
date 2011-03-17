@@ -1,6 +1,7 @@
 (ns italianverbs.grammar
   (:require
    [clojure.set :as set]
+   [italianverbs.morphology :as morphology]
    [clojure.string :as string]))
 
 (defn fs-tr [key-val-pair]
@@ -89,4 +90,96 @@
 					    "</td>")) children))
      "</tr>"
      "</table></div>")))
-  
+
+(defn unify-np [head arg]
+  (if (and
+       (= (get head :gender)
+	  (get arg :gender))
+       (= (get head :number)
+	  (get arg :number)))
+    (assoc {}
+      :head head)
+    (assoc {}
+      :cat :fail
+      ;; FIXME: rewrite as (defn diagnosis [head arg])
+      :note (str (get head :gender) " != " (get arg :gender)
+		 " or "
+		 (get head :number) " != " (get arg :number)))))
+
+
+(defn prep-fn [head arg]  ;; e.g. "[in Italia]","[a lavorare]"
+  {:head head
+   :comp arg
+   :english
+   (string/join " "
+		(list 
+		 (get head :english)
+		 (get arg :english)))
+   
+   :italian
+   (string/join " "
+		(list 
+		 (get head :italian)
+		 (get arg :italian)))})
+
+(defn noun-fn [head arg]  ;; e.g. "il libro"
+  (merge
+   (unify-np head arg)
+   (assoc {}
+    :english
+    (morphology/conjugate-en head arg)
+    :italian
+    (string/join " "
+		 (list (get arg :italian)
+		       (morphology/conjugate-it head))))))
+
+(defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
+  (cond
+   (or (= (get (morphology/get-head comp) :cat) "noun")
+       (= (get (morphology/get-head comp) :cat) "pronoun"))
+   {:fn "verb-sv"
+    :english
+    (string/join " "
+		 (list 
+		  (get comp :english)
+		  (morphology/conjugate-english-verb (morphology/get-head head) comp)
+		  (get (get head :comp) :english)))
+    :italian
+    (string/join " "
+		 (list
+		  (get comp :italian)
+		  (morphology/conjugate-italian-verb head comp)))}
+   (= (get (morphology/get-head comp) :cat) "prep")
+   {:fn "verb-sv"
+    :head head
+    :comp comp
+    :italian
+    (str
+     (get head :italian)
+     " "
+     (get comp :italian))
+     :english
+    (str
+     (get head :english)
+     " "
+     (get comp :english))}
+   true
+   {:cat :error
+    :note "verb does not know what to do with this argument."}))
+
+(defn verb-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
+  (assoc {}
+    :infl :infinitive
+    :fn verb-sv
+    :head head
+    :comp arg
+    :english
+    (string/join " "
+		 (list 
+		  (get head :english)
+		  (get arg :english)))
+    :italian
+    (string/join " "
+		 (list 
+		  (get head :italian)
+		  (get arg :italian)))))
