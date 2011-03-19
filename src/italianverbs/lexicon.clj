@@ -8,9 +8,13 @@
    [italianverbs.morphology :as morphology]
    [clojure.contrib.str-utils2 :as str-utils]))
 
-(mongo! :db "mydb")
-
+;(mongo! :db "mydb")
+(make-connection "mydb" :host "localhost")
 ;; useful abbreviations
+(def noun
+  {:cat :noun})
+(def propernoun
+  {:genfn "no-det"})
 (def firstp
   {:person :1st})
 (def secondp
@@ -156,7 +160,8 @@
 (lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :pronoun})
 (lexfn/add "loro" "they" {:person :3rd :number :plural :cat :pronoun})
 
-(lexfn/add "Italia" "Italy" {:cat :noun})
+
+(lexfn/add-as "Italia" "Italy" (list noun propernoun))
 
 ;; determiners
 (lexfn/add "il" "the" {:gender :masc :number :singular :cat :det

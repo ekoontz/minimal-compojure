@@ -23,25 +23,24 @@
     {:left left :right right :cat :error :note "null sign given to (pos)"}))
 
 (defn generate-np [offset]
-  (let [noun
-	(pos 
-	 (choose-lexeme
-	  {:cat :noun})
-	 (+ offset 1)
-	 (+ offset 2))]
-    ;; choose a determiner that agrees with the noun in number and gender.
-    (let [determiner
-	  (pos
-	   (choose-lexeme
-	    {:gender (get noun :gender)
-	     :number (get noun :number)
-	     :cat :det
-	     :def :def
-	     })
-	   offset
-	   (+ offset 1))]
-;      noun)))
-      (grammar/combine noun determiner))))
+  (let [lexeme (choose-lexeme {:cat :noun})
+        genfn (get lexeme :genfn)]
+    (let [noun
+          (pos lexeme
+               (+ offset 1)
+               (+ offset 2))]
+      ;; choose a determiner that agrees with the noun in number and gender.
+      (let [determiner
+            (pos
+             (choose-lexeme
+              {:gender (get noun :gender)
+               :number (get noun :number)
+               :cat :det
+               :def :def
+               })
+             offset
+             (+ offset 1))]
+        (grammar/combine noun determiner)))))
 
 (defn generate-vp [offset]
   (let [verb-fs {:cat :verb

@@ -17,6 +17,7 @@
   (get (nth lexeme 1) :english))
 
 ;; CRUD-like functions:
+;; italian and english are strings, featuremap is a map of key->values.
 (defn add [italian english & [featuremap]]
   (let [featuremap
 	(merge featuremap
@@ -27,6 +28,21 @@
       (insert! :lexicon function-to-symbol)
       featuremap)))
 
+;; _italian and _english are strings; _types is a list of symbols (each of which is a map of key-values);
+;; result is an accumulator which is the merge of all of the maps in _types.
+(defn add-as [italian english & [types result]]
+  (if (first types)
+    (add-as
+     italian
+     english
+     (rest types)
+     (merge (first types) result))
+    (add italian nil (merge {:english english} result))))
+
+;; _italian is a string; _types is a list of symbols (each of which is a map of key-values);
+;; _result is an accumulator which contains the merge of all of the maps
+;; in _types.
+;; no _english param needed; _result should be assumed to contain a :root key-value.
 (defn add-infl [italian & [types result]]
   (if (first types)
     (add-infl
