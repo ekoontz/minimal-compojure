@@ -91,20 +91,27 @@
      "</tr>"
      "</table></div>")))
 
+(defn gramhead [sign]
+  (if (get sign :head)
+    (get sign :head)
+    sign))
+
 (defn unify-np [head arg]
   (if (and
-       (= (get head :gender)
-	  (get arg :gender))
-       (= (get head :number)
-	  (get arg :number)))
-    (assoc {}
-      :head head)
-    (assoc {}
-      :cat :fail
-      ;; FIXME: rewrite as (defn diagnosis [head arg])
-      :note (str (get head :gender) " != " (get arg :gender)
-		 " or "
-		 (get head :number) " != " (get arg :number)))))
+       (= (get (gramhead head) :gender)
+          (get (gramhead arg) :gender))
+       (= (get (gramhead head) :number)
+          (get (gramhead arg) :number)))
+    {
+     :head head
+     }
+    {
+     :cat :fail
+     ;; FIXME: rewrite as (defn diagnosis [head arg])
+     :note (str (get head :gender) " != " (get arg :gender)
+                " or "
+                (get head :number) " != " (get arg :number))
+     }))
 
 
 (defn prep-fn [head arg]  ;; e.g. "[in Italia]","[a lavorare]"
@@ -125,18 +132,21 @@
 (defn noun-fn [head arg]  ;; e.g. "il libro"
   (merge
    (unify-np head arg)
-   (assoc {}
+   {
     :english
     (morphology/conjugate-en head arg)
     :italian
     (string/join " "
-		 (list (get arg :italian)
-		       (morphology/conjugate-it head))))))
+                 (list (get arg :italian)
+                       (morphology/conjugate-it head)))
+    }))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
-   (or (= (get (morphology/get-head comp) :cat) "noun")
-       (= (get (morphology/get-head comp) :cat) "pronoun"))
+   (or (= (get (morphology/get-head comp) :cat) :noun)
+       (= (get (morphology/get-head comp) :cat) "noun") ;; sucks we have to do this..
+       (= (get (morphology/get-head comp) :cat) :pronoun)
+       (= (get (morphology/get-head comp) :cat) "pronoun")) ;; sucks we have to do this..
    {:fn "verb-sv"
     :english
     (string/join " "
@@ -148,7 +158,8 @@
     (string/join " "
 		 (list
 		  (get comp :italian)
-		  (morphology/conjugate-italian-verb head comp)))}
+		  (morphology/conjugate-italian-verb head comp)
+          (get (get head :comp) :italian)))}
    (= (get (morphology/get-head comp) :cat) "prep")
    {:fn "verb-sv"
     :head head
