@@ -3,11 +3,9 @@
 	[somnium.congomongo])
   (:require
    [clojure.string :as string]
-   [italianverbs.morphology :as morphology]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 (mongo! :db "mydb")
-
 
 (defn italian [lexeme]
   (get (nth lexeme 1) :lexicon))
@@ -29,9 +27,9 @@
       (insert! :lexicon function-to-symbol)
       featuremap)))
 
-(defn add2 [italian & [types result]]
+(defn add-infl [italian & [types result]]
   (if (first types)
-    (add2
+    (add-infl
      italian
      (rest types)
      (merge (first types) result))

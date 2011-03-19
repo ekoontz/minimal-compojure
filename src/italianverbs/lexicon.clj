@@ -38,35 +38,37 @@
 
 (lexfn/add "dimenticare" "to forget"
 	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+(lexfn/add "agitare" "to shake"
+	    {:cat :verb :infl :infinitive :fn "verb-vo"})
 
 (def dire (lexfn/add "dire" "to say"
 		      {:cat :verb :infl :infinitive :fn "verb-sv"}))
-(lexfn/add2 "dico" (list firstp sing present
+(lexfn/add-infl "dico" (list firstp sing present
 		       {:root dire}))
-(lexfn/add2 "dici" (list secondp sing present
+(lexfn/add-infl "dici" (list secondp sing present
 		       {:root dire}))
-(lexfn/add2 "dice" (list thirdp sing present
+(lexfn/add-infl "dice" (list thirdp sing present
 		       {:root dire}))
-(lexfn/add2 "diciamo" (list firstp plural present
+(lexfn/add-infl "diciamo" (list firstp plural present
 		       {:root dire}))
-(lexfn/add2 "dite" (list secondp plural present
+(lexfn/add-infl "dite" (list secondp plural present
 		       {:root dire}))
-(lexfn/add2 "dicono" (list thirdp plural present
+(lexfn/add-infl "dicono" (list thirdp plural present
 		       {:root dire}))
 
 (def venire (lexfn/add "venire" "to come"
 			{:cat :verb :infl :infinitive :fn "verb-sv"}))
-(lexfn/add2 "vengo" (list firstp sing present
+(lexfn/add-infl "vengo" (list firstp sing present
 		       {:root venire}))
-(lexfn/add2 "vieni" (list secondp present
+(lexfn/add-infl "vieni" (list secondp present
 		       {:root venire}))
-(lexfn/add2 "viene" (list thirdp sing present
+(lexfn/add-infl "viene" (list thirdp sing present
 		       {:root venire}))
-(lexfn/add2 "veniamo" (list firstp plural present
+(lexfn/add-infl "veniamo" (list firstp plural present
 		       {:root venire}))
-(lexfn/add2 "venite" (list secondp plural present
+(lexfn/add-infl "venite" (list secondp plural present
 		       {:root venire}))
-(lexfn/add2 "vengono" (list thirdp plural present
+(lexfn/add-infl "vengono" (list thirdp plural present
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
@@ -101,48 +103,48 @@
   (lexfn/add "andare" "to go"
 	      {:cat :verb :infl :infinitive :fn "verb-sv"}))
 ;; exceptions
-(lexfn/add2 "vado" (list firstp sing present)
+(lexfn/add-infl "vado" (list firstp sing present)
 	  {:root andare})
-(lexfn/add2 "vai" (list secondp sing present)
+(lexfn/add-infl "vai" (list secondp sing present)
 	  {:root andare})
-(lexfn/add2 "va" (list thirdp sing present)
+(lexfn/add-infl "va" (list thirdp sing present)
 	  {:root andare})
-(lexfn/add2 "andiamo" (list firstp plural present)
+(lexfn/add-infl "andiamo" (list firstp plural present)
 	  {:root andare})
-(lexfn/add2 "andate" (list secondp plural present)
+(lexfn/add-infl "andate" (list secondp plural present)
 	  {:root andare})
-(lexfn/add2 "vanno" (list thirdp plural present)
+(lexfn/add-infl "vanno" (list thirdp plural present)
 	  {:root andare})
 
 (def volare (lexfn/add "volare" "to want"
 			{:cat :verb :infl :infinitive :fn "verb-sv"}))
-(lexfn/add2 "voglio" (list firstp sing present
+(lexfn/add-infl "voglio" (list firstp sing present
 			 {:root volare}))
-(lexfn/add2 "vogli" (list secondp sing present
+(lexfn/add-infl "vogli" (list secondp sing present
 			{:root volare}))
-(lexfn/add2 "voglie" (list thirdp sing present
+(lexfn/add-infl "voglie" (list thirdp sing present
 			 {:root volare}))
-(lexfn/add2 "vogliamo" (list firstp plural sing present
+(lexfn/add-infl "vogliamo" (list firstp plural sing present
 			 {:root volare}))
-(lexfn/add2 "vogliete" (list secondp plural plural present
+(lexfn/add-infl "vogliete" (list secondp plural plural present
 			 {:root volare}))
-(lexfn/add2 "vogliono" (list thirdp plural plural present
+(lexfn/add-infl "vogliono" (list thirdp plural plural present
 			 {:root volare}))
 
 (def fare (lexfn/add "fare" "to make"
 			    {:cat :verb :infl :infinitive :fn "verb-sv"}))
 
-(lexfn/add2 "facio" (list firstp sing present
+(lexfn/add-infl "facio" (list firstp sing present
 			{:root fare}))
-(lexfn/add2 "fai" (list secondp sing present
+(lexfn/add-infl "fai" (list secondp sing present
 		      {:root fare}))
-(lexfn/add2 "fà" (list thirdp sing present
+(lexfn/add-infl "fà" (list thirdp sing present
 		      {:root fare}))
-(lexfn/add2 "facciamo" (list firstp plural sing present
+(lexfn/add-infl "facciamo" (list firstp plural sing present
 			   {:root fare}))
-(lexfn/add2 "fate" (list secondp plural plural present
+(lexfn/add-infl "fate" (list secondp plural plural present
 			 {:root fare}))
-(lexfn/add2 "fanno" (list thirdp plural plural present
+(lexfn/add-infl "fanno" (list thirdp plural plural present
 			 {:root fare}))
 
 ;; pronouns
@@ -199,6 +201,7 @@
 	     :number :singular
 	     :gender :masc
 	     :writable true
+         :person :3rd
 	     :fn "noun-fn"})
 (lexfn/add "abito" "dress"
 	    {:cat :noun
