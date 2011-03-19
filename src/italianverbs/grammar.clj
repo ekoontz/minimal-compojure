@@ -143,10 +143,13 @@
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
+   ;; unfortunately we have to check
+   ;; for either the :-form or the quoted-string below:
    (or (= (get (morphology/get-head comp) :cat) :noun)
-       (= (get (morphology/get-head comp) :cat) "noun") ;; sucks we have to do this..
+       (= (get (morphology/get-head comp) :cat) "noun")
        (= (get (morphology/get-head comp) :cat) :pronoun)
-       (= (get (morphology/get-head comp) :cat) "pronoun")) ;; sucks we have to do this..
+       (= (get (morphology/get-head comp) :cat) "pronoun"))
+
    {:fn "verb-sv"
     :english
     (string/join " "
