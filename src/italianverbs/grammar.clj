@@ -176,7 +176,12 @@
      (get comp :english))}
    true
    {:cat :error
-    :note "verb does not know what to do with this argument."}))
+    :note (str
+           "<tt><i>error: verb does not know what to do with this argument.</i>(<b>verb-sv</b> "
+           "'" (get head :english) "','" (get comp :english) "'"
+           ")</i>."
+           "<p>get-head comp :cat=" (get (morphology/get-head comp) :cat) "</p>"
+           "</tt>")}))
 
 (defn verb-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
   (assoc {}
