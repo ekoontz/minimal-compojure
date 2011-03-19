@@ -1,7 +1,6 @@
 (ns italianverbs.morphology
   (:use [hiccup core page-helpers]
-	[somnium.congomongo]
-	[italianverbs.grammar])
+	[somnium.congomongo])
   (:require
    [clojure.string :as string]
    [italianverbs.html :as html]
@@ -13,103 +12,100 @@
     sign))
 
 (defn remove-to [english-verb-phrase]
-  (let [english-verb-phrase (get english-verb-phrase :english)]
-    (let [regex #"to (.*)"]
+  (let [english (get (get-head english-verb-phrase) :english)]
+    (let [regex #"^to[ ]+(.*)"]
       (let [string
-	    (str-utils/replace english-verb-phrase regex (fn [[_ rest]] (str rest)))]
-	english-verb-phrase))))
-
-					;	(merge
-;	 {:remove-to string}
-;	 english-verb-phrase)))))
+	    (str-utils/replace english regex (fn [[_ rest]] (str rest)))]
+	(merge
+	 {:remove-to string}
+	 english-verb-phrase)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
-  (let [english-verb-phrase-fs english-verb-phrase
-	english-verb-phrase (get english-verb-phrase :english)]
-    (let [regex #"^([^ ]*)([o])([ ]?)(.*)"
+  (let [english-verb-string (get (get-head english-verb-phrase) :english)]
+    (let [regex #"^([^o]*)([o])$"
 	  with-e
 	  (str-utils/replace
-	   english-verb-phrase
+	   english-verb-string
 	   regex
-	   (fn [[_ word vowel space rest]] (str word (if vowel (str vowel "e")) space rest)))]
+	   (fn [[_ pre-o o]] (str pre-o (if o (str o "e")))))]
       (let [regex #"^([^ ]*)([ ]?)(.*)"]
-	english-verb-phrase-fs))))
-	
-;	(str-utils/replace
-;	 with-e
-;	 regex
-;	 (fn [[_ word space rest]] (str word "s" space rest)))
-  
+	(merge
+	 {:add-s
+	  (str with-e "s")}
+	 english-verb-phrase)))))
+    
 (defn conjugate-english-verb [verb-head subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
-  (let [english (get verb-head :english)]
+  (let [english (get verb-head :english)
+	remove-to (remove-to verb-head)]
     (cond
-     (and (not (= (get subject :cat) "noun"))
-	  (not (= (get subject :cat) "pronoun")))
+     (and (not (= (get (get-head subject) :cat) "noun"))
+          (not (= (get (get-head subject) :cat) "pronoun")))
      {:cat :error
-      :note  (str ":cat != :noun for " subject)}
-     (= (get subject :person) "1st")
-     (remove-to verb-head)
-     (= (get subject :person) "2nd")
-     (remove-to verb-head)
+      :note  (str "<tt><i>error: :cat of '" (get subject :english) "' != :noun</i>."
+                  "(<b>conjugate-english-verb</b> " (get verb-head :english)
+                  "," (get subject :english) ")</tt>")}
+     (= (get (get-head subject) :person) "1st")
+     (get remove-to :remove-to)
+     (= (get (get-head subject) :person) "2nd")
+     (get remove-to :remove-to)
      (and
-      (= (get subject :person) "3rd")
-      (= (get subject :number) "singular")) 
+      (= (get (get-head subject) :person) "3rd")
+      (= (get (get-head subject) :number) "singular")) 
      ;; FIXME: should take fs, not string.
-     (remove-to verb-head)
-					;     (add-s-to-first-word (remove-to verb-head))
-     true
-     ;; FIXME: should take fs, not string.
-     (remove-to verb-head))))
+     (get
+      (add-s-to-first-word
+       (merge
+	remove-to
+	{:english (get remove-to :remove-to)}))
+      :add-s)
+     true ;; 3rd plural
+     (get remove-to :remove-to))))
 
-(defn conjugate-italian-verb-regular [verb-head subject]
+(defn conjugate-italian-verb-regular [verb-head subject-head]
    (let [root-form (get verb-head :italian)
 	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
      (cond
 
-      (and (= (get subject :person) "1st")
-	   (= (get subject :number) "singular"))
+      (and (= (get subject-head :person) "1st")
+	   (= (get subject-head :number) "singular"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "o" space rest)))
 
-      (and (= (get subject :person) "1st")
-	   (= (get subject :number) "plural"))
+      (and (= (get subject-head :person) "1st")
+	   (= (get subject-head :number) "plural"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "i" "amo" space rest)))
-
-
-      (and (= (get subject :person) "2nd")
-	   (= (get subject :number) "singular"))
+      (and (= (get subject-head :person) "2nd")
+	   (= (get subject-head :number) "singular"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "i" space rest)))
 
-      (and (= (get subject :person) "2nd")
-	   (= (get subject :number) "plural"))
+      (and (= (get subject-head :person) "2nd")
+	   (= (get subject-head :number) "plural"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "te" space rest)))
 
       
-      (and (= (get subject :person) "3rd")
-	   (= (get subject :number) "singular"))
+      (and (= (get subject-head :person) "3rd")
+	   (= (get subject-head :number) "singular"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem "e" space rest)))
 
-      (and (= (get subject :person) "3rd")
-	   (= (get subject :number) "plural"))
+      (and (= (get subject-head :person) "3rd")
+	   (= (get subject-head :number) "plural"))
       (str-utils/replace root-form regex
 			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
       true
-      (str "(conjugate-italian-verb-regular=>(can't conjugate this..)"
-	   verb-head
-	   subject))))
-					;	   (tablize verb-head)
-;	   (tablize subject)))))
+      (str "<tt><i>error: :person value was not matched</i>. (<b>conjugate-italian-verb-regular</b> " (get verb-head :italian) ",(phrase with head:'" (get subject-head :italian) "'))</i></tt>"))))
 
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   ;; takes two feature structures and returns a string.
   (let [italian (get verb-phrase :italian)
-	italian-head (get (get verb-phrase :head) :italian)]
+        italian-head (get (get-head verb-phrase) :italian)
+        ;; all we need is the head, which has the relevant grammatical information, not the whole subject
+        subject (get-head subject)] 
     (let [italian (if italian-head italian-head italian)]
       (let [irregular
 	    (fetch-one :lexicon
@@ -121,13 +117,10 @@
 			       }
 		       )]
 	(if irregular
-	  (str (get irregular :italian)
-	       " "
-	       (get (get verb-phrase :comp) :italian))
+	  (str (get irregular :italian))
 	  (str
 	   (conjugate-italian-verb-regular
-	    (get-head verb-phrase) subject) " "
-	   (get (get verb-phrase :comp) :italian)))))))
+	    (get-head verb-phrase) subject)))))))
  
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
