@@ -69,29 +69,30 @@
     (combine verb-phrase subject)))
 
 (defn io-pranzo []
-  (let [subject (gen/pos (lexfn/get "io") 0 1)
+  (let [subject (gen/pos (lexfn/get "io" {:case {:$ne :acc}}) 0 1)
 	verb-phrase (gen/pos (lexfn/get "pranzare") 1 2)]
     (combine verb-phrase subject)))
 
 (defn lui-scrivo-il-libro []
-  (let [subject (gen/pos (lexfn/get "lui") 0 1)
-	object (combine
-		(gen/pos (lexfn/get "libro") 3 4)
-		(gen/pos (lexfn/get "il") 2 3))
-	verb-phrase (combine
-		     (gen/pos (lexfn/get "scrivere") 1 2)
-		     object)]
+  (let [subject (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)
+        object (combine
+                (gen/pos (lexfn/get "libro") 3 4)
+                (gen/pos (lexfn/get "il") 2 3))
+        verb-phrase (combine
+                     (gen/pos (lexfn/get "scrivere") 1 2)
+                     object)]
     (combine verb-phrase subject)))
 
 (def in-italia
   (let [prep (lexfn/get "in")
 	noun (lexfn/get "Italia")]
-    (combine prep noun)))
+    (combine
+     prep noun)))
 
 (def andare-in-italia
   (let [verb (gen/pos (lexfn/get "andare") 0 1)]
     (combine verb
-	     (gen/pos in-italia 1 3))))
+             (gen/pos in-italia 1 3))))
 
 (defn lui-vado-in-italia []
   (combine
@@ -101,7 +102,7 @@
    (gen/pos (lexfn/get "lui") 0 1)))
 
 (defn io-mangio-il-pane []
-  (let [subject (gen/pos (lexfn/get "io") 0 1)
+  (let [subject (gen/pos (lexfn/get "io" {:case {:$ne :acc}}) 0 1)
 	object (combine
 		(gen/pos (lexfn/get "pane") 3 4)
 		(gen/pos (lexfn/get "il") 2 3))
@@ -110,12 +111,12 @@
     (combine verb-phrase subject)))
 
 (defn lui-mangio-la-pasta-in-italia []
-  (let [subject (gen/pos (lexfn/get "lui") 0 1)
-	object (combine
-		(gen/pos (lexfn/get "pasta") 3 4)
-		(gen/pos (lexfn/get "la") 2 3))
-	verb-phrase (combine (gen/pos (lexfn/get "mangiare") 1 2)
-			     object)]
+  (let [subject (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)
+        object (combine
+                (gen/pos (lexfn/get "pasta") 3 4)
+                (gen/pos (lexfn/get "la") 2 3))
+        verb-phrase (combine (gen/pos (lexfn/get "mangiare") 1 2)
+                             object)]
     (combine 
      (combine verb-phrase subject)
      (gen/pos in-italia 4 6))))
