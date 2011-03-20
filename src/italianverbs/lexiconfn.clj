@@ -5,7 +5,9 @@
    [clojure.string :as string]
    [clojure.contrib.str-utils2 :as str-utils]))
 
+; global initializations go here, i guess..
 (mongo! :db "mydb")
+(make-connection "mydb" :host "localhost")
 
 (defn italian [lexeme]
   (get (nth lexeme 1) :lexicon))

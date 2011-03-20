@@ -17,14 +17,15 @@
 ;; at page load.
 
 ;; main app code
-(load-file "src/italianverbs/morphology.clj")
-(load-file "src/italianverbs/lexiconfn.clj")
+;(load-file "src/italianverbs/morphology.clj")
+;(load-file "src/italianverbs/lexiconfn.clj")
 (load-file "src/italianverbs/lexicon.clj")
-(load-file "src/italianverbs/grammar.clj")
-(load-file "src/italianverbs/html.clj")
+;(load-file "src/italianverbs/grammar.clj")
+;(load-file "src/italianverbs/generate.clj")
+;(load-file "src/italianverbs/html.clj")
 
 ;; test code
-(load-file "src/italianverbs/test.clj")
+;(load-file "src/italianverbs/test.clj")
 
 (defroutes main-routes
 
@@ -129,5 +130,3 @@
 (def app
   (handler/site main-routes))
 
-; global initializations go here, i guess..
-(mongo! :db "mydb")

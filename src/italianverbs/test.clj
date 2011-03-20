@@ -9,8 +9,6 @@
      [clojure.string :as string]
      [italianverbs.quiz :as quiz]))
 
-(mongo! :db "mydb")
-
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]

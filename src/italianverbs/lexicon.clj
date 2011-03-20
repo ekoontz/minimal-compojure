@@ -8,8 +8,6 @@
    [italianverbs.morphology :as morphology]
    [clojure.contrib.str-utils2 :as str-utils]))
 
-;(mongo! :db "mydb")
-(make-connection "mydb" :host "localhost")
 ;; useful abbreviations
 (def noun
   {:cat :noun
