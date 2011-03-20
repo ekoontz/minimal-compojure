@@ -23,24 +23,27 @@
 ;					  (= key :fn) nil
 					  (= key :head)
 					  (list key
-						(fs (get lexeme key)))
+                            (fs (get lexeme key)))
+                      (or (= key :head-debug) (= key :comp-debug))
+                      (list key
+                            (fs (get lexeme key)))
 					  (= key :root)
 					  (list key
-						(fs (get lexeme key)))
+                            (fs (get lexeme key)))
 					  (= key :comp) nil
 					  true
 					  (list key
-						(get lexeme key))))
+                            (get lexeme key))))
 				       (cons
-					:italian
-					(if (get lexeme :english)
-					  (cons :english
-						(set/difference
-						 (set (keys lexeme))
-						 #{:english :italian}))
-					  (set/difference
-					   (set (keys lexeme))
-					   #{:english :italian})))))))
+                        :italian
+                        (if (get lexeme :english)
+                          (cons :english
+                                (set/difference
+                                 (set (keys lexeme))
+                                 #{:english :italian}))
+                          (set/difference
+                           (set (keys lexeme))
+                           #{:english :italian})))))))
        "</table>"))
 
 (defn combine [head comp]
@@ -54,6 +57,8 @@
                       true
                       (list
                        {:cat :error
+                        :head-debug head
+                        :comp-debug comp
                         :note (str "<tt><b>(combine '"
                                    (get head :italian) "',"  "'" (get comp :italian) "'</b>) <i>head and comp not adjacent:</i>"
                                    "head:[" (get head :left) "," (get head :right) "];"
