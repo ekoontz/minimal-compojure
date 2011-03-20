@@ -21,7 +21,7 @@
 ;(load-file "src/italianverbs/lexiconfn.clj")
 ;(load-file "src/italianverbs/lexicon.clj")
 ;(load-file "src/italianverbs/grammar.clj")
-(load-file "src/italianverbs/generate.clj")
+;(load-file "src/italianverbs/generate.clj")
 ;(load-file "src/italianverbs/html.clj")
 
 ;; test code
