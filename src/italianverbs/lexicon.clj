@@ -35,6 +35,12 @@
   {:number :plural})
 (def present
   {:cat :verb :infl :present})
+(def choose-pp
+  {:genfn "choose-pp"})
+(def choose-np
+  {:genfn "choose-np"})
+(def choose-vp-inf
+  {:genfn "choose-vp-inf"})
 
 ;; WARNING: clear blows away entire lexicon in backing store (mongodb).
 (lexfn/clear)
@@ -53,9 +59,11 @@
 
 ;; verbs
 (lexfn/add "dimenticare" "to forget"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 (lexfn/add "agitare" "to shake"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 
 (def dire (lexfn/add "dire" "to say"
 		      {:cat :verb :infl :infinitive :fn "verb-sv"}))
@@ -73,7 +81,8 @@
 		       {:root dire}))
 
 (def venire (lexfn/add "venire" "to come"
-			{:cat :verb :infl :infinitive :fn "verb-sv"}))
+                       {:cat :verb :infl :infinitive :fn "verb-sv"}
+                       (list choose-pp)))
 (lexfn/add-infl "vengo" (list firstp sing present
 		       {:root venire}))
 (lexfn/add-infl "vieni" (list secondp present
@@ -88,14 +97,18 @@
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-pp))
 (lexfn/add "correggere" "to correct"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 (lexfn/add "leggere" "to read"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 
 (lexfn/add "mangiare" "to eat"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 
 ;; FIXME: hacks until italian morphology works better: mangiare
 ;; is a regular -are verb.
@@ -109,17 +122,19 @@
 	     :person :3rd :number :singular})
 
 (lexfn/add "parlere" "to speak"
-	    {:cat :verb :infl :infinitive :fn "verb-pp"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-pp))
 
 (lexfn/add "smettere" "to quit"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-np))
 (lexfn/add "pranzare" "to eat lunch"
 	    {:cat :verb :infl :infinitive :fn "verb-sv"})
 
-
 (def andare
   (lexfn/add "andare" "to go"
-	      {:cat :verb :infl :infinitive :fn "verb-sv"}))
+             {:cat :verb :infl :infinitive :fn "verb-arg"}
+             (list choose-pp)))
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
 	  {:root andare})
@@ -136,7 +151,9 @@
 
 
 (def volare (lexfn/add "volare" "to want"
-			{:cat :verb :infl :infinitive :fn "verb-sv"}))
+                       {:cat :verb :infl :infinitive :fn "verb-sv"}
+                       (list choose-vp-inf)))
+                       
 (lexfn/add-infl "voglio" (list firstp sing present
 			 {:root volare}))
 (lexfn/add-infl "vogli" (list secondp sing present
