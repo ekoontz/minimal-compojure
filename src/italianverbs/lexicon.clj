@@ -13,9 +13,14 @@
 ;; useful abbreviations
 (def noun
   {:cat :noun
+   :person :3rd
    :genfn "np-det"})
+(def pronoun
+  {:cat :noun
+   :genfn "np-no-det"})
 (def propernoun
-  {:genfn "np-no-det"})
+  {:person :3rd
+   :genfn "np-no-det"})
 (def firstp
   {:person :1st})
 (def secondp
@@ -154,13 +159,14 @@
 
 ;; pronouns
 
-(lexfn/add "io" "i" {:person :1st :number :singular :cat :pronoun})
-(lexfn/add "tu" "you" {:person :2nd :number :singular :cat :pronoun})
-(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :pronoun})
-(lexfn/add "noi" "we" {:person :1st :number :plural :cat :pronoun})
-(lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :pronoun})
-(lexfn/add "loro" "they" {:person :3rd :number :plural :cat :pronoun})
+(lexfn/add "io" "i" {:person :1st :number :singular :cat :noun} (list pronoun))
+(lexfn/add "tu" "you" {:person :2nd :number :singular :cat :noun} (list pronoun))
+(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun} (list pronoun))
+(lexfn/add "noi" "we" {:person :1st :number :plural :cat :noun} (list pronoun))
+(lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :noun} (list pronoun))
+(lexfn/add "loro" "they" {:person :3rd :number :plural :cat :noun} (list pronoun))
 
+;; Proper nouns
 (lexfn/add-as "Italia" "Italy" (list propernoun noun))
 
 ;; determiners

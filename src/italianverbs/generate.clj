@@ -60,8 +60,9 @@
   ;; varies depending on length of subject.
   (let [subject
 	(pos
-	 (nth (fetch :lexicon :where {:cat :pronoun})
-	      (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
+     (generate-np 0)
+;	 (nth (fetch :lexicon :where {:cat :pronoun})
+;	      (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
 	 0 1)]
     (grammar/combine (generate-vp 1) subject)))
 
