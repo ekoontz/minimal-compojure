@@ -216,24 +216,26 @@
        "</div>"
        ))
 
+(defn conjugations []
+  (list 
+   "<div class='section'> <h2>conjugations</h2></div>"
+   (conjugation (lexfn/get "andare"))
+   (conjugation (lexfn/get "volare"))
+   (conjugation (lexfn/get "fare"))
+   (conjugation (lexfn/get "venire"))
+   (conjugation (lexfn/get "dire"))))
+
 (def tests
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
 
-   (bugs)
-   "<div class='section'> <h2>conjugations</h2></div>"
+   ;(bugs)
+
+   ;(conjugations)
 
    (if true
-     (list 
-      (conjugation (lexfn/get "andare"))
-      (conjugation (lexfn/get "volare"))
-      (conjugation (lexfn/get "fare"))
-      (conjugation (lexfn/get "venire"))
-      (conjugation (lexfn/get "dire"))))
-   
-   "<div class='section'> <h2>random sentences</h2></div>"
-   (if true
      (list
+      "<div class='section'> <h2>random sentences</h2></div>"
       (tablize (gen/sentence))
       (tablize (gen/sentence))
       (tablize (gen/sentence))
