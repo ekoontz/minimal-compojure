@@ -99,7 +99,7 @@
    (combine
     (gen/pos (lexfn/get "andare") 1 2)
     (gen/pos in-italia 2 4))
-   (gen/pos (lexfn/get "lui") 0 1)))
+   (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)))
 
 (defn io-mangio-il-pane []
   (let [subject (gen/pos (lexfn/get "io" {:case {:$ne :acc}}) 0 1)
