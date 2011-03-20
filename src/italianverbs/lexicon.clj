@@ -46,8 +46,12 @@
 	   {:cat :prep
 	    :fn "prep-fn"})
 
-;; verbs
+(lexfn/add "a" "to"
+	   {:cat :prep
+	    :fn "prep-fn"})
 
+
+;; verbs
 (lexfn/add "dimenticare" "to forget"
 	    {:cat :verb :infl :infinitive :fn "verb-vo"})
 (lexfn/add "agitare" "to shake"
@@ -105,11 +109,13 @@
 	     :person :3rd :number :singular})
 
 (lexfn/add "parlere" "to speak"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-pp"})
+
 (lexfn/add "smettere" "to quit"
 	    {:cat :verb :infl :infinitive :fn "verb-vo"})
 (lexfn/add "pranzare" "to eat lunch"
 	    {:cat :verb :infl :infinitive :fn "verb-sv"})
+
 
 (def andare
   (lexfn/add "andare" "to go"
@@ -127,6 +133,7 @@
 	  {:root andare})
 (lexfn/add-infl "vanno" (list thirdp plural present)
 	  {:root andare})
+
 
 (def volare (lexfn/add "volare" "to want"
 			{:cat :verb :infl :infinitive :fn "verb-sv"}))

@@ -50,12 +50,24 @@
          (pos determiner offset (+ offset det-span)))
         (pos noun offset (+ 1 offset))))))
 
+(defn pp [offset & [fs]]
+  (let [prep (grammar/choose-lexeme (merge fs {:cat :prep}))
+        ;; (eventually) use _genfn to generate an argument (np) given _prep.
+        genfn (get prep :genfn)]
+    (let [prep-span (span prep)
+          np (np (+ 1 offset prep-span) {:case {:$ne :nom}})
+          np-span (span np)]
+      (grammar/combine
+       (pos prep offset (+ offset prep-span))
+       (pos np (+ offset prep-span) (+ offset prep-span np-span))))))
+
 (defn vp [offset & [fs]]
   (let [verb-fs (merge
                  fs
                  {:cat :verb
+                  :italian "parlere"
                   :infl :infinitive
-                  :fn "verb-vo"})
+                  :fn "verb-pp"})
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
@@ -63,14 +75,10 @@
     (let [verb
           (pos verb
                offset)
-          np
-          (np (+ 1 offset)
-              {:case {:$ne :nom}})]
+          pp
+          (pp (+ 1 offset))]
       (grammar/combine
-        verb
-        (merge
-         {:case :acc}
-         np)))))
+        verb pp))))
 
 (defn sentence []
   ;; fixme: :left (beginning of sentence) is always 0,
@@ -85,8 +93,9 @@
              {:case :nom}
              (morphology/get-head subject))}
            subject)]
-    (grammar/combine (vp (get subject :right)) subject))))
-    
+      (grammar/combine (vp (get subject :right)) subject))))
+;      (pp 0))))
+      
 (defn linearize [signs & [offset]]
   (let [offset (if offset offset 0)]
     (if (> (count signs) 0)

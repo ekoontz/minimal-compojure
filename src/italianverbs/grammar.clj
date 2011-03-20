@@ -228,3 +228,20 @@
                  (get head :italian)
                  (get arg :italian)))
    })
+
+(defn verb-pp [head arg]  ;; e.g. "[speaks to the man]"
+  {
+   :fn verb-sv
+   :head head
+   :comp arg
+   :english
+   (string/join " "
+                (list 
+                 (get head :english)
+                 (get arg :english)))
+   :italian
+   (string/join " "
+                (list 
+                 (get head :italian)
+                 (get arg :italian)))
+   })
