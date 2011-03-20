@@ -45,25 +45,28 @@
 
 (defn combine [head comp]
   (let [linear-order (cond
-		      (= (get head :right)
-			 (get comp :left))
-		      (list head comp)
-		      (= (get head :left)
-			 (get comp :right))
-		      (list comp head)
-		      true
-		      (list
-		       {:cat :error
-                :note (str "<tt><b>(combine '" (get head :italian) "',"  "'" (get comp :italian) "'</b>) <i>head and comp not adjacent:</i>"
-                           (get head :right) "!=" (get comp :left) ")</tt>")
-                }))
-	fn (cond
-	    (nil? (get head :fn))
-	    {:cat :error :note
-	     (str "no function for this head :" head )}
-	    (string? (get head :fn))
-	    (eval (symbol (get head :fn)))
-	    true (get head :fn))]
+                      (= (get head :right)
+                         (get comp :left))
+                      (list head comp)
+                      (= (get head :left)
+                         (get comp :right))
+                      (list comp head)
+                      true
+                      (list
+                       {:cat :error
+                        :note (str "<tt><b>(combine '"
+                                   (get head :italian) "',"  "'" (get comp :italian) "'</b>) <i>head and comp not adjacent:</i>"
+                                   "head:[" (get head :left) "," (get head :right) "];"
+                                   "comp:[" (get comp :left) "," (get comp :right) "];")
+                                   
+                        }))
+        fn (cond
+            (nil? (get head :fn))
+            {:cat :error :note
+             (str "no function for this head :" head )}
+            (string? (get head :fn))
+            (eval (symbol (get head :fn)))
+            true (get head :fn))]
     (merge
      (apply fn (list head comp))
      {:head (if (get head :head) (get head :head) head)
