@@ -223,23 +223,29 @@
    (bugs)
    "<div class='section'> <h2>conjugations</h2></div>"
 
-   ;(conjugation (lexfn/get "andare"))
-   ;(conjugation (lexfn/get "volare"))
-   ;(conjugation (lexfn/get "fare"))
-   ;(conjugation (lexfn/get "venire"))
-   ;(conjugation (lexfn/get "dire"))
+   (if true
+     (list 
+      (conjugation (lexfn/get "andare"))
+      (conjugation (lexfn/get "volare"))
+      (conjugation (lexfn/get "fare"))
+      (conjugation (lexfn/get "venire"))
+      (conjugation (lexfn/get "dire"))))
+   
    "<div class='section'> <h2>random sentences</h2></div>"
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
-   (tablize (gen/sentence))
+   (if true
+     (list
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))
+      (tablize (gen/sentence))))
 
    "<div class='section'> <h2>fixed sentences</h2></div>"
    (tablize (lui-vado-in-italia))

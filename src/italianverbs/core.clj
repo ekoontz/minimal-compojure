@@ -78,7 +78,7 @@
        { :session (get request :session)
          :body (page "test" 
 		     (map test/wrap-div 
-			  test/tests)
+			  (flatten test/tests))
 		     request)
 	 })
   (POST "/test/" 
