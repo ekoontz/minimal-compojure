@@ -21,7 +21,9 @@
     (let [right
           (if right right
               (+ left (span sign)))]
-      (merge {:left left :right right} sign)) ;; overwrites existing :left and :right, if any.
+      ;; overwrites existing :left and :right, if any.
+      (merge {:left left :right right}
+             (dissoc (dissoc sign :right) :left))) 
     {:left left :right right :cat :error :note "null sign given to (pos)"}))
 
 "find a function which might really be a function, or might be a string that
