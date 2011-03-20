@@ -142,6 +142,7 @@
 
 ;; following 3 fns should probably be in generate.clj.
 (defn np-no-det [noun]
+  ;; for nouns that do not take determiners.
   nil)
 
 (defn choose-lexeme [struct]
@@ -156,8 +157,7 @@
   (choose-lexeme
    {:gender (get noun :gender)
     :number (get noun :number)
-    :cat :det
-    :def :def}))
+    :cat :det}))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -205,18 +205,18 @@
            "</tt>")}))
 
 (defn verb-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
-  (assoc {}
-    :infl :infinitive
-    :fn verb-sv
-    :head head
-    :comp arg
-    :english
-    (string/join " "
-		 (list 
-		  (get head :english)
-		  (get arg :english)))
-    :italian
-    (string/join " "
-		 (list 
-		  (get head :italian)
-		  (get arg :italian)))))
+  {
+   :fn verb-sv
+   :head head
+   :comp arg
+   :english
+   (string/join " "
+                (list 
+                 (get head :english)
+                 (get arg :english)))
+   :italian
+   (string/join " "
+                (list 
+                 (get head :italian)
+                 (get arg :italian)))
+   })

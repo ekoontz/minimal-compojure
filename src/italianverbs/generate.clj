@@ -26,12 +26,13 @@
    (symbol fn)
    true fn))
 
-(defn generate-np [offset]
-  (let [noun (grammar/choose-lexeme {:cat :noun})
+(defn generate-np [offset & [fs]]
+  (let [noun (grammar/choose-lexeme (merge fs {:cat :noun}))
         ;; use _genfn to generate an argument (determiner) given _noun.
         genfn (get noun :genfn)]
     (let [determiner
           (apply (eval (find-fn genfn)) (list noun))]
+      ;; FIXME: should count size of determiner and noun. (not just "+ 1"')
       (if determiner
         (grammar/combine
          (pos noun (+ offset 1) (+ offset 2))
@@ -45,14 +46,15 @@
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
+    ;; FIXME: should count size of verb (not just "+ 1"')
     (let [verb-with-pos
           (pos verb
                offset
-               (+ 1 offset))
-          parent (grammar/combine
-                  verb-with-pos
-                  (generate-np (+ 1 offset)))]
-      parent)))
+               (+ 1 offset))]
+      (grammar/combine
+       verb-with-pos
+       (generate-np (+ 1 offset)
+                    {:case {:$ne :nom}})))))
 
 (defn sentence []
   ;; fixme: :left (beginning of sentence) is always 0,
@@ -60,10 +62,9 @@
   ;; varies depending on length of subject.
   (let [subject
 	(pos
-     (generate-np 0)
-;	 (nth (fetch :lexicon :where {:cat :pronoun})
-;	      (rand-int (count (fetch :lexicon :where {:cat :pronoun}))))
+     (generate-np 0 {:case {:$ne :acc}})
 	 0 1)]
+;    subject))
     (grammar/combine (generate-vp 1) subject)))
 
 (defn linearize [signs & [offset]]

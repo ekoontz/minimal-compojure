@@ -16,6 +16,10 @@
 (def pronoun
   {:cat :noun
    :genfn "np-no-det"})
+(def nominative
+  {:case :nom})
+(def accusative
+  {:case :acc})
 (def propernoun
   {:person :3rd
    :genfn "np-no-det"})
@@ -157,15 +161,20 @@
 
 ;; pronouns
 
-(lexfn/add "io" "i" {:person :1st :number :singular :cat :noun} (list pronoun))
+(lexfn/add "io" "i" {:person :1st :number :singular :cat :noun} (list pronoun nominative))
 (lexfn/add "tu" "you" {:person :2nd :number :singular :cat :noun} (list pronoun))
-(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun} (list pronoun))
-(lexfn/add "noi" "we" {:person :1st :number :plural :cat :noun} (list pronoun))
+(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun} (list pronoun nominative))
+(lexfn/add "noi" "we" {:person :1st :number :plural :cat :noun} (list pronoun nominative))
 (lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :noun} (list pronoun))
-(lexfn/add "loro" "they" {:person :3rd :number :plural :cat :noun} (list pronoun))
+(lexfn/add "loro" "they" {:person :3rd :number :plural :cat :noun} (list pronoun nominative))
+
+(lexfn/add "io" "me" {:person :1st :number :singular :cat :noun} (list pronoun accusative))
+(lexfn/add "lui" "him" {:person :3rd :number :singular :cat :noun} (list pronoun accusative))
+(lexfn/add "noi" "us" {:person :1st :number :plural :cat :noun} (list pronoun accusative))
+(lexfn/add "loro" "them" {:person :3rd :number :plural :cat :noun} (list pronoun accusative))
 
 ;; Proper nouns
-(lexfn/add-as "Italia" "Italy" (list propernoun noun))
+(lexfn/add-as "Italia" "Italy" (list sing propernoun noun))
 
 ;; determiners
 (lexfn/add "il" "the" {:gender :masc :number :singular :cat :det
