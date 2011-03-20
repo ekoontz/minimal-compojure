@@ -163,13 +163,15 @@
 
 (lexfn/add "io" "i" {:person :1st :number :singular :cat :noun} (list pronoun nominative))
 (lexfn/add "tu" "you" {:person :2nd :number :singular :cat :noun} (list pronoun))
-(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun} (list pronoun nominative))
+(lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun :gender :masc} (list pronoun nominative))
+(lexfn/add "lei" "she" {:person :3rd :number :singular :cat :noun :gender :fem} (list pronoun nominative))
 (lexfn/add "noi" "we" {:person :1st :number :plural :cat :noun} (list pronoun nominative))
 (lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :noun} (list pronoun))
 (lexfn/add "loro" "they" {:person :3rd :number :plural :cat :noun} (list pronoun nominative))
 
 (lexfn/add "io" "me" {:person :1st :number :singular :cat :noun} (list pronoun accusative))
-(lexfn/add "lui" "him" {:person :3rd :number :singular :cat :noun} (list pronoun accusative))
+(lexfn/add "lui" "him" {:person :3rd :number :singular :cat :noun :gender :masc} (list pronoun accusative))
+(lexfn/add "lei" "her" {:person :3rd :number :singular :cat :noun :gender :fem} (list pronoun accusative))
 (lexfn/add "noi" "us" {:person :1st :number :plural :cat :noun} (list pronoun accusative))
 (lexfn/add "loro" "them" {:person :3rd :number :plural :cat :noun} (list pronoun accusative))
 
