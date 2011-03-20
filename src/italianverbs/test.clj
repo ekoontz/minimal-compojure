@@ -223,6 +223,17 @@
    (conjugation (lexfn/get "venire"))
    (conjugation (lexfn/get "dire"))))
 
+(defn random-sentences-1 [num]
+  (if (> num 0)
+    (cons
+     (tablize (gen/sentence))
+     (random-sentences-1 (- num 1)))))
+
+(defn random-sentences [num]
+  (list
+   "<div class='section'> <h2>random sentences</h2></div>"
+   (random-sentences-1 num)))
+
 (def tests
   (list
 ;   (reload-button) ; reload button does not work yet (results are still cached)
@@ -231,22 +242,8 @@
 
    ;(conjugations)
 
-   (if true
-     (list
-      "<div class='section'> <h2>random sentences</h2></div>"
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))
-      (tablize (gen/sentence))))
-
+   (random-sentences 10)
+   
    "<div class='section'> <h2>fixed sentences</h2></div>"
    (tablize (lui-vado-in-italia))
    (tablize (io-mangio-il-pane))
