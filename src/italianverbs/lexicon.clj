@@ -12,9 +12,10 @@
 (make-connection "mydb" :host "localhost")
 ;; useful abbreviations
 (def noun
-  {:cat :noun})
+  {:cat :noun
+   :genfn "np-det"})
 (def propernoun
-  {:genfn "no-det"})
+  {:genfn "np-no-det"})
 (def firstp
   {:person :1st})
 (def secondp
@@ -160,8 +161,7 @@
 (lexfn/add "voi" "you all" {:person :2nd :number :plural :cat :pronoun})
 (lexfn/add "loro" "they" {:person :3rd :number :plural :cat :pronoun})
 
-
-(lexfn/add-as "Italia" "Italy" (list noun propernoun))
+(lexfn/add-as "Italia" "Italy" (list propernoun noun))
 
 ;; determiners
 (lexfn/add "il" "the" {:gender :masc :number :singular :cat :det
@@ -177,29 +177,35 @@
 			:def :def})
 
 ;; nouns
+(if true
+  (do
 (lexfn/add "uomo" "man"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
 	     
 (lexfn/add "donna" "woman"
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
 
 (lexfn/add "pane" "bread"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
 
 (lexfn/add "pasta" "pasta"
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
 
 (lexfn/add "libro" "book"
 	    {:cat :noun
@@ -207,13 +213,21 @@
 	     :gender :masc
 	     :writable true
          :person :3rd
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
+
+
 (lexfn/add "abito" "dress"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
 	     :writable true
-	     :fn "noun-fn"})
+	     :fn "noun-fn"}
+        (list noun))
+
+))
+
+
 
 ;; adjectives
 (lexfn/add "bianco" "white"

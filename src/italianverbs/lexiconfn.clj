@@ -18,18 +18,28 @@
 
 ;; CRUD-like functions:
 ;; italian and english are strings, featuremap is a map of key->values.
-(defn add [italian english & [featuremap]]
-  (let [featuremap
-	(merge featuremap
-	       (if english
-		 (assoc {} :italian italian :english english)
-		 (assoc {} :italian italian)))]
-    (let [function-to-symbol featuremap]
-      (insert! :lexicon function-to-symbol)
-      featuremap)))
+(defn add [italian english & [featuremap types result]]
+  (if (first types)
+    (add
+     italian
+     english
+     featuremap
+     (rest types)
+     (merge (first types) result))
+    (let [featuremap
+          (merge featuremap
+                 (merge result
+                        (if english
+                          (assoc {} :italian italian :english english)
+                          (assoc {} :italian italian))))]
+      (let [function-to-symbol featuremap]
+        (insert! :lexicon function-to-symbol)
+        featuremap))))
 
 ;; _italian and _english are strings; _types is a list of symbols (each of which is a map of key-values);
-;; result is an accumulator which is the merge of all of the maps in _types.
+;; _result is an accumulator which is the merge of all of the maps in _types.
+;; Key-values in earlier types have precedence over those in later types
+;; (i.e. the later key-value pair do NOT override original value for that key).
 (defn add-as [italian english & [types result]]
   (if (first types)
     (add-as
