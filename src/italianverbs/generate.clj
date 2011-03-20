@@ -9,10 +9,19 @@
    [italianverbs.morphology :as morphology]
    [clojure.contrib.str-utils2 :as str-utils]))
 
+(defn span [fs]
+  (cond
+   (nil? (get fs :head)) 1
+   true
+   2))
+
 ;; return a feature structure just like sign, but with :left and :right set.
-(defn pos [sign left right]
+(defn pos [sign left & [right]]
   (if sign
-    (merge sign {:left left :right right})
+    (let [right
+          (if right right
+              (+ left (span sign)))]
+      (merge {:left left :right right} sign)) ;; overwrites existing :left and :right, if any.
     {:left left :right right :cat :error :note "null sign given to (pos)"}))
 
 "find a function which might really be a function, or might be a string that
@@ -26,47 +35,56 @@
    (symbol fn)
    true fn))
 
-(defn generate-np [offset & [fs]]
+(defn np [offset & [fs]]
   (let [noun (grammar/choose-lexeme (merge fs {:cat :noun}))
         ;; use _genfn to generate an argument (determiner) given _noun.
         genfn (get noun :genfn)]
-    (let [determiner
-          (apply (eval (find-fn genfn)) (list noun))]
-      ;; FIXME: should count size of determiner and noun. (not just "+ 1"')
+    (let [determiner (apply (eval (find-fn genfn)) (list noun))
+          det-span (span determiner)
+          noun-span (span noun)]
       (if determiner
         (grammar/combine
-         (pos noun (+ offset 1) (+ offset 2))
-         (pos determiner offset (+ offset 1)))
-        (pos noun offset (+ offset 1))))))
+         (pos noun (+ offset det-span) (+ offset det-span noun-span))
+         (pos determiner offset (+ offset det-span)))
+        (pos noun offset (+ 1 offset))))))
 
-(defn generate-vp [offset]
-  (let [verb-fs {:cat :verb
-                 :infl :infinitive
-                 :fn "verb-vo"}
+(defn vp [offset & [fs]]
+  (let [verb-fs (merge
+                 fs
+                 {:cat :verb
+                  :infl :infinitive
+                  :fn "verb-vo"})
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
     ;; FIXME: should count size of verb (not just "+ 1"')
-    (let [verb-with-pos
+    (let [verb
           (pos verb
-               offset
-               (+ 1 offset))]
+               offset)
+          np
+          (np (+ 1 offset)
+              {:case {:$ne :nom}})]
       (grammar/combine
-       verb-with-pos
-       (generate-np (+ 1 offset)
-                    {:case {:$ne :nom}})))))
+        verb
+        (merge
+         {:case :acc}
+         np)))))
 
 (defn sentence []
   ;; fixme: :left (beginning of sentence) is always 0,
   ;; but :right (end of subject/beginning of vp)
   ;; varies depending on length of subject.
   (let [subject
-	(pos
-     (generate-np 0 {:case {:$ne :acc}})
-	 0 1)]
-;    subject))
-    (grammar/combine (generate-vp 1) subject)))
-
+        (np 0 {:case {:$ne :acc}})]
+    (let [subject
+          (merge
+           {:head
+            (merge 
+             {:case :nom}
+             (morphology/get-head subject))}
+           subject)]
+    (grammar/combine (vp (get subject :right)) subject))))
+    
 (defn linearize [signs & [offset]]
   (let [offset (if offset offset 0)]
     (if (> (count signs) 0)
