@@ -212,7 +212,7 @@
            "<p>get-head comp :cat=" (get (morphology/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn verb-vo [head arg]  ;; e.g. "[sees a house]","[writes a book]"
+(defn verb-arg [head arg]  ;; e.g. "[sees a house]","[writes a book]","[speaks to the man]"
   {
    :fn verb-sv
    :head head
@@ -229,19 +229,3 @@
                  (get arg :italian)))
    })
 
-(defn verb-pp [head arg]  ;; e.g. "[speaks to the man]"
-  {
-   :fn verb-sv
-   :head head
-   :comp arg
-   :english
-   (string/join " "
-                (list 
-                 (get head :english)
-                 (get arg :english)))
-   :italian
-   (string/join " "
-                (list 
-                 (get head :italian)
-                 (get arg :italian)))
-   })

@@ -65,9 +65,7 @@
   (let [verb-fs (merge
                  fs
                  {:cat :verb
-                  :italian "parlere"
-                  :infl :infinitive
-                  :fn "verb-pp"})
+                  :infl :infinitive})
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
@@ -75,10 +73,10 @@
     (let [verb
           (pos verb
                offset)
-          pp
+          arg
           (pp (+ 1 offset))]
       (grammar/combine
-        verb pp))))
+        verb arg))))
 
 (defn sentence []
   ;; fixme: :left (beginning of sentence) is always 0,
@@ -94,7 +92,6 @@
              (morphology/get-head subject))}
            subject)]
       (grammar/combine (vp (get subject :right)) subject))))
-;      (pp 0))))
       
 (defn linearize [signs & [offset]]
   (let [offset (if offset offset 0)]

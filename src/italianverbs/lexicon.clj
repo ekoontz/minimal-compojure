@@ -53,9 +53,9 @@
 
 ;; verbs
 (lexfn/add "dimenticare" "to forget"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 (lexfn/add "agitare" "to shake"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 
 (def dire (lexfn/add "dire" "to say"
 		      {:cat :verb :infl :infinitive :fn "verb-sv"}))
@@ -88,14 +88,14 @@
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 (lexfn/add "correggere" "to correct"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 (lexfn/add "leggere" "to read"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 
 (lexfn/add "mangiare" "to eat"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 
 ;; FIXME: hacks until italian morphology works better: mangiare
 ;; is a regular -are verb.
@@ -112,7 +112,7 @@
 	    {:cat :verb :infl :infinitive :fn "verb-pp"})
 
 (lexfn/add "smettere" "to quit"
-	    {:cat :verb :infl :infinitive :fn "verb-vo"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 (lexfn/add "pranzare" "to eat lunch"
 	    {:cat :verb :infl :infinitive :fn "verb-sv"})
 
