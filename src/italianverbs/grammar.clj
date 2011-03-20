@@ -1,4 +1,5 @@
 (ns italianverbs.grammar
+  (:use [somnium.congomongo])
   (:require
    [clojure.set :as set]
    [italianverbs.morphology :as morphology]
@@ -53,9 +54,9 @@
 		      true
 		      (list
 		       {:cat :error
-			:note (str "head and comp not adjacent:"
-				   (get head :right) "!=" (get comp :left))
-				   }))
+                :note (str "<tt><b>(combine '" (get head :italian) "',"  "'" (get comp :italian) "'</b>) <i>head and comp not adjacent:</i>"
+                           (get head :right) "!=" (get comp :left) ")</tt>")
+                }))
 	fn (cond
 	    (nil? (get head :fn))
 	    {:cat :error :note
@@ -132,14 +133,31 @@
 (defn noun-fn [head arg]  ;; e.g. "il libro"
   (merge
    (unify-np head arg)
-   {
-    :english
+   {:english
     (morphology/conjugate-en head arg)
     :italian
     (string/join " "
                  (list (get arg :italian)
-                       (morphology/conjugate-it head)))
-    }))
+                       (morphology/conjugate-it head)))}))
+
+;; following 3 fns should probably be in generate.clj.
+(defn np-no-det [noun]
+  nil)
+
+(defn choose-lexeme [struct]
+  ;; do a query based on the given struct,
+  ;; and choose a random element that satisfies the query.
+  (let [results (fetch :lexicon :where struct)]
+    (if (= (count results) 0)
+      {:cat :error :note (str "choose lexeme: no results found for " struct)}
+      (nth results (rand-int (count results))))))
+
+(defn np-det [noun]
+  (choose-lexeme
+   {:gender (get noun :gender)
+    :number (get noun :number)
+    :cat :det
+    :def :def}))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
