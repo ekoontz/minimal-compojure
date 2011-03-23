@@ -64,62 +64,56 @@
 
 ;; fixme: change name to "compose-sv-sentence" or something.
 (defn conjugate [pronoun infinitive]
-  (let [subject (gen/pos pronoun 0 1)
-	verb-phrase (gen/pos infinitive 1 2)]
-    (combine verb-phrase subject)))
+    (combine infinitive pronoun 'right))
 
 (defn io-pranzo []
-  (let [subject (gen/pos (lexfn/get "io" {:case {:$ne :acc}}) 0 1)
-	verb-phrase (gen/pos (lexfn/get "pranzare") 1 2)]
-    (combine verb-phrase subject)))
+  (combine (lexfn/get "pranzare")
+           (lexfn/get "io" {:case {:$ne :acc}}) 'right))
 
 (defn lui-scrivo-il-libro []
-  (let [subject (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)
+  (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
         object (combine
-                (gen/pos (lexfn/get "libro") 3 4)
-                (gen/pos (lexfn/get "il") 2 3))
-        verb-phrase (combine
-                     (gen/pos (lexfn/get "scrivere") 1 2)
-                     object)]
-    (combine verb-phrase subject)))
+                (lexfn/get "libro")
+                (lexfn/get "il") 'right)
+        verb-phrase (combine (lexfn/get "scrivere") object 'left)]
+    (combine verb-phrase subject 'right)))
 
 (def in-italia
   (let [prep (lexfn/get "in")
 	noun (lexfn/get "Italia")]
     (combine
-     prep noun)))
+     prep noun 'left)))
 
 (def andare-in-italia
-  (let [verb (gen/pos (lexfn/get "andare") 0 1)]
-    (combine verb
-             (gen/pos in-italia 1 3))))
+  (combine (lexfn/get "andare")
+           in-italia 'left))
 
 (defn lui-vado-in-italia []
   (combine
    (combine
-    (gen/pos (lexfn/get "andare") 1 2)
-    (gen/pos in-italia 2 4))
-   (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)))
+    (lexfn/get "andare") in-italia 'left)
+   (lexfn/get "lui" {:case {:$ne :acc}}) 'right))
 
 (defn io-mangio-il-pane []
-  (let [subject (gen/pos (lexfn/get "io" {:case {:$ne :acc}}) 0 1)
-	object (combine
-		(gen/pos (lexfn/get "pane") 3 4)
-		(gen/pos (lexfn/get "il") 2 3))
-	verb-phrase (combine (gen/pos (lexfn/get "mangiare") 1 2)
-			     object)]
-    (combine verb-phrase subject)))
+  (let [subject (lexfn/get "io" {:case {:$ne :acc}})
+        object (combine
+                (lexfn/get "pane")
+                (lexfn/get "il") 'right)
+        verb-phrase (combine (lexfn/get "mangiare")
+                             object 'left)]
+    (combine verb-phrase subject 'right)))
 
 (defn lui-mangio-la-pasta-in-italia []
-  (let [subject (gen/pos (lexfn/get "lui" {:case {:$ne :acc}}) 0 1)
+  (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
         object (combine
-                (gen/pos (lexfn/get "pasta") 3 4)
-                (gen/pos (lexfn/get "la") 2 3))
-        verb-phrase (combine (gen/pos (lexfn/get "mangiare") 1 2)
-                             object)]
+                (lexfn/get "pasta")
+                (lexfn/get "la") 'right)
+        verb-phrase (combine (lexfn/get "mangiare")
+                             object
+                             'left)]
     (combine 
-     (combine verb-phrase subject)
-     (gen/pos in-italia 4 6))))
+     (combine verb-phrase subject 'right)
+     in-italia 'left)))
 
 (defn io-scrivo-il-libro []
   (let [subject (lexfn/get "io")
@@ -133,42 +127,8 @@
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
 
-;; current thing I'm debugging..
 (defn bugs []
-  (let [sentence
-	(list (lexfn/get "lui")
-	      (lexfn/get "dimenticare")
-	      (lexfn/get "il")
-	      (lexfn/get "libro"))
-	linearized
-	(gen/linearize sentence)]
-    (str
-     "<div> <h2>bugs</h2></div>"
-     (tablize (combine
-	       (combine
-		(nth linearized 1)
-		(combine
-		 (nth linearized 3)
-		 (nth linearized 2)))
-	       (nth linearized 0))))))
-
-(defn bugs []
-  (let [sentence
-        (list (lexfn/get "il")
-              (lexfn/get "libro")
-              (lexfn/get "dimenticare")
-              (lexfn/get "Italia"))
-	linearized
-	(gen/linearize sentence)]
-    (str
-     "<div> <h2>bugs</h2></div>" ;; 
-     (tablize (combine ;; [ [C [C il] [H libro] ] [H [H dimenticare] [C Italia] ] ]
-               (combine
-                (nth linearized 2)    ;; dimenticare
-                (nth linearized 3))   ;; Italia
-               (combine
-                (nth linearized 1)
-                (nth linearized 0)))))))
+  nil)
 
 (defn conjugation [verb] ;; verb should be the infinitive form of a verb.
   (str

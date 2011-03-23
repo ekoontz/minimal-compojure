@@ -17,8 +17,6 @@
 					 (cond
 					  (= key :_id) nil
 					  (= key :children) nil
-;					  (= key :left) nil
-;					  (= key :right) nil
 ; uncomment for debugging.
 ;					  (= key :fn) nil
 					  (= key :head)
@@ -46,26 +44,8 @@
                            #{:english :italian})))))))
        "</table>"))
 
-(defn combine [head comp]
-  (let [linear-order (cond
-                      (= (get head :right)
-                         (get comp :left))
-                      (list head comp)
-                      (= (get head :left)
-                         (get comp :right))
-                      (list comp head)
-                      true
-                      (list
-                       {:cat :error
-                        :head-debug head
-                        :comp-debug comp
-                        :note (str "<tt><b>(combine '"
-                                   (get head :italian) "',"  "'" (get comp :italian) "'</b>) <i>head and comp not adjacent:</i>"
-                                   "head:[" (get head :left) "," (get head :right) "];"
-                                   "comp:[" (get comp :left) "," (get comp :right) "];")
-                                   
-                        }))
-        fn (cond
+(defn combine [head comp head-position]
+  (let [fn (cond
             (nil? (get head :fn))
             {:cat :error :note
              (str "no function for this head :" head )}
@@ -74,10 +54,11 @@
             true (get head :fn))]
     (merge
      (apply fn (list head comp))
-     {:head (if (get head :head) (get head :head) head)
-      :left (get (first linear-order) :left)
-      :right (get (second linear-order) :right)
-      :children linear-order})))
+     {:head (morphology/get-head head)
+      :children
+      (if (= head-position 'left)
+        (list head comp)
+        (list comp head))})))
   
 (defn tablize [parent]
   (let

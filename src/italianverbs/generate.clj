@@ -9,23 +9,6 @@
    [italianverbs.morphology :as morphology]
    [clojure.contrib.str-utils2 :as str-utils]))
 
-(defn span [fs]
-  (cond
-   (nil? (get fs :head)) 1
-   true
-   2))
-
-;; return a feature structure just like sign, but with :left and :right set.
-(defn pos [sign left & [right]]
-  (if sign
-    (let [right
-          (if right right
-              (+ left (span sign)))]
-      ;; overwrites existing :left and :right, if any.
-      (merge {:left left :right right}
-             (dissoc (dissoc sign :right) :left))) 
-    {:left left :right right :cat :error :note "null sign given to (pos)"}))
-
 "find a function which might really be a function, or might be a string that
  needs to be converted to a function whose name is that string."
 (defn find-fn [fn]
@@ -37,31 +20,23 @@
    (symbol fn)
    true fn))
 
-(defn np [offset & [fs]]
+(defn np [ & [fs]]
   (let [noun (grammar/choose-lexeme (merge fs {:cat :noun}))
         ;; use _genfn to generate an argument (determiner) given _noun.
         genfn (get noun :genfn)]
-    (let [determiner (apply (eval (find-fn genfn)) (list noun))
-          det-span (span determiner)
-          noun-span (span noun)]
+    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
       (if determiner
-        (grammar/combine
-         (pos noun (+ offset det-span) (+ offset det-span noun-span))
-         (pos determiner offset (+ offset det-span)))
-        (pos noun offset (+ 1 offset))))))
+        (grammar/combine noun determiner 'right)
+        noun))))
 
-(defn pp [offset & [fs]]
+(defn pp [ & [fs]]
   (let [prep (grammar/choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
-    (let [prep-span (span prep)
-          np (np (+ 1 offset prep-span) {:case {:$ne :nom}})
-          np-span (span np)]
-      (grammar/combine
-       (pos prep offset (+ offset prep-span))
-       (pos np (+ offset prep-span) (+ offset prep-span np-span))))))
+    (let [np (np {:case {:$ne :nom}})]
+      (grammar/combine prep np 'left))))
 
-(defn vp [offset & [fs]]
+(defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
                  {:cat :verb
@@ -69,34 +44,19 @@
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
-    ;; FIXME: should count size of verb (not just "+ 1"')
-    (let [verb
-          (pos verb
-               offset)
-          arg
-          (pp (+ 1 offset))]
-      (grammar/combine
-        verb arg))))
+    (grammar/combine verb (pp) 'left)))
 
 (defn sentence []
-  ;; fixme: :left (beginning of sentence) is always 0,
-  ;; but :right (end of subject/beginning of vp)
-  ;; varies depending on length of subject.
   (let [subject
-        (np 0 {:case {:$ne :acc}})]
+        (np {:case {:$ne :acc}})]
     (let [subject
           (merge
            {:head
             (merge 
              {:case :nom}
              (morphology/get-head subject))}
-           subject)]
-      (grammar/combine (vp (get subject :right)) subject))))
+           subject)
+          vp (vp)]
+      (grammar/combine vp subject 'right))))
       
-(defn linearize [signs & [offset]]
-  (let [offset (if offset offset 0)]
-    (if (> (count signs) 0)
-      (cons
-       (pos (first signs) offset (+ 1 offset))
-       (linearize (rest signs) (+ 1 offset))))))
 
