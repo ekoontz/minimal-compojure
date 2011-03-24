@@ -9,7 +9,7 @@
 ; not found in clojars..
 ;		 [mungbean "1.0-SNAPSHOT"]
                  [net.defn.ring/ring-jetty-adapter "0.2.0"]
-                 [ring/ring-core "0.2.0"]                   
+                 [ring/ring-core "0.3.0"]                   
                  [ring/ring-jetty-adapter "0.2.0"]    
 		 [hiccup "0.3.4"]]
   :dev-dependencies [[lein-ring "0.3.2"]]
