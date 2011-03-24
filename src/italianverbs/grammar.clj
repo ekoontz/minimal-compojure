@@ -148,6 +148,13 @@
     :number (get noun :number)
     :cat :det}))
 
+(defn choose-np-fn [verb]
+;  (generate/np))
+  (choose-lexeme
+   {:cat :noun}))
+; TODO : should be (generate/np).
+ 
+
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
    ;; unfortunately we have to check

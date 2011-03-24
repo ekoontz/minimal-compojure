@@ -1,6 +1,7 @@
 (ns italianverbs.generate
   (:use [hiccup core page-helpers]
-        [somnium.congomongo])
+        [somnium.congomongo]
+        [italianverbs.morphology])
   (:require
    [clojure.string :as string]
    [italianverbs.lexiconfn :as lexfn]
@@ -39,15 +40,39 @@
 (defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
-                 {:cat :verb
+                 {:italian "leggere"
+                  :cat :verb
                   :infl :infinitive})
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
-    (grammar/combine verb (pp) 'left)))
+    (let [genfn (get verb :genfn)]
+      (let [arg (apply (eval (find-fn genfn)) (list verb))]
+;        (grammar/combine verb arg 'left)))))
+    ;; TODO: generate pp if this verb allows it lexically.
 
+    ;; generate a VP given this verb.
+;    (grammar/combine verb (pp) 'left)))
+;    (grammar/combine 
+;     (grammar/combine verb (np) 'left)
+;     (pp) 'left)))
+;    (grammar/combine verb (np) 'left)))
+    (cond
+;     (= (get (morphology/get-head verb) :subcat) 'np-pp)
+;     (grammar/combine 
+;      (grammar/combine verb (np) 'left)
+;      (pp) 'left)
+     true
+     (merge
+      {:arg arg
+       :foofers "barz3"}
+                                        ;      (grammar/combine verb (pp) 'left)))))))
+      (grammar/combine verb arg 'left)))))))
+
+    
 (defn sentence []
   (let [subject
+        ;; (np) generates a random noun phrase: in this case, one whose case is NOT accusative.
         (np {:case {:$ne :acc}})]
     (let [subject
           (merge
@@ -56,6 +81,7 @@
              {:case :nom}
              (morphology/get-head subject))}
            subject)
+          ;; (vp) generates a random verb phase
           vp (vp)]
       (grammar/combine vp subject 'right))))
       
