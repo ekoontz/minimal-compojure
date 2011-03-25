@@ -104,15 +104,19 @@
 (lexfn/add "correggere" "to correct"
            {:cat :verb :infl :infinitive :fn "verb-arg"}
            (list choose-np))
+
+;; verb-arg is defined in grammar.clj.
 (lexfn/add "leggere" "to read"
            {:cat :verb
             :infl :infinitive
-            :fn "verb-arg"}
-           (list choose-np))
+            :fn "verb-arg"
+            :genfn "choose-written-artifact"})
 
 (lexfn/add "mangiare" "to eat"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-np))
+           {:cat :verb
+            :infl :infinitive
+            :fn "verb-arg"
+            :genfn "choose-edible"})
 
 ;; FIXME: hacks until italian morphology works better: mangiare
 ;; is a regular -are verb.
@@ -240,6 +244,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
+         :semantics :edible
 	     :fn "noun-fn"}
         (list noun))
 
@@ -247,6 +252,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
+         :semantics :edible
 	     :fn "noun-fn"}
         (list noun))
 
@@ -254,7 +260,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-	     :writable true
+         :semantics :written-artifact
          :person :3rd
 	     :fn "noun-fn"}
         (list noun))

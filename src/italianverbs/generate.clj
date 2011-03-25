@@ -32,7 +32,7 @@
 (defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
-                 {:italian "leggere"
+                 {:italian "mangiare"
                   :cat :verb
                   :infl :infinitive})
         verb

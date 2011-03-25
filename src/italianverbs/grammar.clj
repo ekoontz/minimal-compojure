@@ -179,7 +179,16 @@
 
 (defn choose-np-fn [verb]
   (np-in-grammar-ns {:case {:$ne :nom}}))
-                                        ;  (generate/np))
+
+(defn choose-written-artifact [verb]
+  (np-in-grammar-ns {:case {:$ne :nom}
+                     :semantics :written-artifact}))
+
+(defn choose-edible [verb]
+  (np-in-grammar-ns {:case {:$ne :nom}
+                     :semantics :edible}))
+
+;  (generate/np))
 ;  (choose-lexeme
 ;   {:cat :noun}))
 ; TODO : should be (generate/np).
