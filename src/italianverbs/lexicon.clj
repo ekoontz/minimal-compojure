@@ -38,7 +38,9 @@
 (def choose-pp
   {:genfn "choose-pp"})
 (def choose-np
-  {:genfn "choose-np-fn"})
+  {
+   :genfn "choose-np-fn"
+   })
 (def choose-vp-inf
   {:genfn "choose-vp-inf"})
 
@@ -103,7 +105,9 @@
            {:cat :verb :infl :infinitive :fn "verb-arg"}
            (list choose-np))
 (lexfn/add "leggere" "to read"
-           {:cat :verb :infl :infinitive :fn "verb-arg" :subcat :np-pp}
+           {:cat :verb
+            :infl :infinitive
+            :fn "verb-arg"}
            (list choose-np))
 
 (lexfn/add "mangiare" "to eat"

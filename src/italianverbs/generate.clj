@@ -21,20 +21,12 @@
    (symbol fn)
    true fn))
 
-(defn np [ & [fs]]
-  (let [noun (grammar/choose-lexeme (merge fs {:cat :noun}))
-        ;; use _genfn to generate an argument (determiner) given _noun.
-        genfn (get noun :genfn)]
-    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
-      (if determiner
-        (grammar/combine noun determiner 'right)
-        noun))))
 
 (defn pp [ & [fs]]
   (let [prep (grammar/choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
-    (let [np (np {:case {:$ne :nom}})]
+    (let [np (grammar/np {:case {:$ne :nom}})]
       (grammar/combine prep np 'left))))
 
 (defn vp [ & [fs]]
@@ -63,17 +55,13 @@
 ;      (grammar/combine verb (np) 'left)
 ;      (pp) 'left)
      true
-     (merge
-      {:arg arg
-       :foofers "barz3"}
-                                        ;      (grammar/combine verb (pp) 'left)))))))
-      (grammar/combine verb arg 'left)))))))
+     (grammar/combine verb arg 'left))))))
 
     
 (defn sentence []
   (let [subject
         ;; (np) generates a random noun phrase: in this case, one whose case is NOT accusative.
-        (np {:case {:$ne :acc}})]
+        (grammar/np {:case {:$ne :acc}})]
     (let [subject
           (merge
            {:head

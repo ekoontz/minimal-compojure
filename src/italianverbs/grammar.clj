@@ -148,10 +148,40 @@
     :number (get noun :number)
     :cat :det}))
 
+"find a function which might really be a function, or might be a string that
+ needs to be converted to a function whose name is that string."
+(defn find-fn [fn]
+  (cond
+   (nil? fn)
+   {:cat :error :note
+    (str "function is null")}
+   (string? fn)
+   (symbol fn)
+   true fn))
+
+(defn np-in-grammar-ns [ & [fs]]
+  (let [noun (choose-lexeme (merge fs {:cat :noun}))
+        ;; use _genfn to generate an argument (determiner) given _noun.
+        genfn (get noun :genfn)]
+    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
+      (if determiner
+        (combine noun determiner 'right)
+        noun))))
+
+(defn np [ & [fs]]
+  (let [noun (choose-lexeme (merge fs {:cat :noun}))
+        ;; use _genfn to generate an argument (determiner) given _noun.
+        genfn (get noun :genfn)]
+    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
+      (if determiner
+        (combine noun determiner 'right)
+        noun))))
+
 (defn choose-np-fn [verb]
-;  (generate/np))
-  (choose-lexeme
-   {:cat :noun}))
+  (np-in-grammar-ns {:case {:$ne :nom}}))
+                                        ;  (generate/np))
+;  (choose-lexeme
+;   {:cat :noun}))
 ; TODO : should be (generate/np).
  
 
@@ -201,6 +231,7 @@
            "</tt>")}))
 
 (defn verb-arg [head arg]  ;; e.g. "[sees a house]","[writes a book]","[speaks to the man]"
+  ;; arg might be a np, pp, or vp[inf].
   {
    :fn verb-sv
    :head head
