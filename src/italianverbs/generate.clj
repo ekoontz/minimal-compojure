@@ -57,6 +57,25 @@
      true
      (grammar/combine verb arg 'left))))))
 
+(defn vp-with-adjunct-pp [ & [fs]]
+  (let [verb-fs (merge
+                 fs
+                 {:italian "leggere"
+                  :cat :verb
+                  :infl :infinitive})
+        verb
+        (nth (fetch :lexicon :where verb-fs)
+             (rand-int (count (fetch :lexicon :where verb-fs))))
+        pp (pp)]
+    (let [genfn (get verb :genfn)]
+      (let [arg (apply (eval (find-fn genfn)) (list verb))]
+        (cond
+         true
+         (grammar/combine
+          (vp fs)
+          pp
+          'left))))))
+
     
 (defn sentence []
   (let [subject
@@ -70,7 +89,8 @@
              (morphology/get-head subject))}
            subject)
           ;; (vp) generates a random verb phase
-          vp (vp)]
+          ;;          vp (vp)]
+          vp (vp-with-adjunct-pp)]
       (grammar/combine vp subject 'right))))
       
 
