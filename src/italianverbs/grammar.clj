@@ -19,9 +19,7 @@
 					  (= key :children) nil
 ; uncomment for debugging.
 ;					  (= key :fn) nil
-					  (= key :head)
-					  (list key
-                            (fs (get lexeme key)))
+					  (= key :head) nil
                       (or (= key :head-debug) (= key :comp-debug))
                       (list key
                             (fs (get lexeme key)))
@@ -54,7 +52,8 @@
             true (get head :fn))]
     (merge
      (apply fn (list head comp))
-     {:head (morphology/get-head head)
+     {
+      :head head
       :children
       (if (= head-position 'left)
         (list head comp)
