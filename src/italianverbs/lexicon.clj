@@ -265,6 +265,14 @@
 	     :fn "noun-fn"}
         (list noun))
 
+(lexfn/add "giornale" "newspaper"
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc
+         :semantics :written-artifact
+         :person :3rd
+	     :fn "noun-fn"}
+        (list noun))
 
 (lexfn/add "abito" "dress"
 	    {:cat :noun
