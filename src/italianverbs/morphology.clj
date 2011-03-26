@@ -23,16 +23,16 @@
 (defn add-s-to-first-word [english-verb-phrase]
   (let [english-verb-string (get (get-head english-verb-phrase) :english)]
     (let [regex #"^([^o]*)([o])$"
-	  with-e
-	  (str-utils/replace
-	   english-verb-string
-	   regex
-	   (fn [[_ pre-o o]] (str pre-o (if o (str o "e")))))]
+          with-e
+          (str-utils/replace
+           english-verb-string
+           regex
+           (fn [[_ pre-o o]] (str pre-o (if o (str o "e")))))]
       (let [regex #"^([^ ]*)([ ]?)(.*)"]
-	(merge
-	 {:add-s
-	  (str with-e "s")}
-	 english-verb-phrase)))))
+        (merge
+         {:add-s
+          (str with-e "s")}
+         english-verb-phrase)))))
     
 (defn conjugate-english-verb [verb-head subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
