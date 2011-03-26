@@ -12,32 +12,31 @@
     sign))
 
 (defn remove-to [english-verb-phrase]
-  (let [english (get (get-head english-verb-phrase) :english)]
+  (let [english (get english-verb-phrase :english)]
     (let [regex #"^to[ ]+(.*)"]
       (let [string
-	    (str-utils/replace english regex (fn [[_ rest]] (str rest)))]
-	(merge
-	 {:remove-to string}
-	 english-verb-phrase)))))
+            (str-utils/replace english regex (fn [[_ rest]] (str rest)))]
+        (merge
+         {:remove-to string}
+         english-verb-phrase)))))
 
 (defn add-s-to-first-word [english-verb-phrase]
-  (let [english-verb-string (get (get-head english-verb-phrase) :english)]
-    (let [regex #"^([^o]*)([o])$"
-          with-e
+  (let [english-verb-string (get english-verb-phrase :english)]
+    (let [regex #"^[ ]*([^ ]+)[ ]*(.*)"
+          with-s
           (str-utils/replace
            english-verb-string
            regex
-           (fn [[_ pre-o o]] (str pre-o (if o (str o "e")))))]
-      (let [regex #"^([^ ]*)([ ]?)(.*)"]
-        (merge
-         {:add-s
-          (str with-e "s")}
-         english-verb-phrase)))))
+           (fn [[_ first-word rest]]
+             (str first-word (if (re-find #"o$" first-word) "e") "s" " " rest)))]
+      (merge
+       {:add-s with-s}
+       english-verb-phrase))))
     
 (defn conjugate-english-verb [verb-head subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   (let [english (get verb-head :english)
-	remove-to (remove-to verb-head)]
+        remove-to (remove-to verb-head)]
     (cond
      (and (not (= (get (get-head subject) :cat) "noun"))
           (not (= (get (get-head subject) :cat) "pronoun")))
@@ -51,13 +50,12 @@
      (get remove-to :remove-to)
      (and
       (= (get (get-head subject) :person) "3rd")
-      (= (get (get-head subject) :number) "singular")) 
-     ;; FIXME: should take fs, not string.
+      (= (get (get-head subject) :number) "singular"))
      (get
       (add-s-to-first-word
        (merge
-	remove-to
-	{:english (get remove-to :remove-to)}))
+        remove-to
+        {:english (get remove-to :remove-to)}))
       :add-s)
      true ;; 3rd plural
      (get remove-to :remove-to))))
