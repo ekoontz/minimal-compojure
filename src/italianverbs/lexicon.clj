@@ -68,7 +68,7 @@
            (list choose-np))
 
 (def dire (lexfn/add "dire" "to say"
-		      {:cat :verb :infl :infinitive :fn "verb-sv"}))
+		      {:cat :verb :infl :infinitive :fn "verb-arg"}))
 (lexfn/add-infl "dico" (list firstp sing present
 		       {:root dire}))
 (lexfn/add-infl "dici" (list secondp sing present
@@ -83,7 +83,7 @@
 		       {:root dire}))
 
 (def venire (lexfn/add "venire" "to come"
-                       {:cat :verb :infl :infinitive :fn "verb-sv"}
+                       {:cat :verb :infl-omit :infinitive :fn "verb-sv"}
                        (list choose-pp)))
 (lexfn/add-infl "vengo" (list firstp sing present
 		       {:root venire}))
@@ -99,7 +99,7 @@
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
            (list choose-pp))
 (lexfn/add "correggere" "to correct"
            {:cat :verb :infl :infinitive :fn "verb-arg"}
@@ -130,18 +130,18 @@
 	     :person :3rd :number :singular})
 
 (lexfn/add "parlere" "to speak"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
            (list choose-pp))
 
 (lexfn/add "smettere" "to quit"
            {:cat :verb :infl :infinitive :fn "verb-arg"}
            (list choose-np))
 (lexfn/add "pranzare" "to eat lunch"
-	    {:cat :verb :infl :infinitive :fn "verb-sv"})
+	    {:cat :verb :infl :infinitive :fn "verb-arg"})
 
 (def andare
   (lexfn/add "andare" "to go"
-             {:cat :verb :infl :infinitive :fn "verb-arg"}
+             {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
              (list choose-pp)))
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
@@ -159,7 +159,7 @@
 
 
 (def volare (lexfn/add "volare" "to want"
-                       {:cat :verb :infl :infinitive :fn "verb-sv"}
+                       {:cat :verb :infl :infinitive-omit-me :fn "verb-arg"}
                        (list choose-vp-inf)))
                        
 (lexfn/add-infl "voglio" (list firstp sing present
@@ -176,7 +176,8 @@
 			 {:root volare}))
 
 (def fare (lexfn/add "fare" "to make"
-			    {:cat :verb :infl :infinitive :fn "verb-sv"}))
+                     {:cat :verb :infl :infinitive :fn "verb-arg"
+                      :genfn "choose-makeable"}))
 
 (lexfn/add-infl "facio" (list firstp sing present
 			{:root fare}))
@@ -252,6 +253,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
+         :makeable true
          :semantics :edible
 	     :fn "noun-fn"}
         (list noun))

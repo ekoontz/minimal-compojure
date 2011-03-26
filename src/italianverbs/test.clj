@@ -203,14 +203,14 @@
 
    ;(conjugations)
 
-   (random-sentences 10)
+   (random-sentences 20)
    
    "<div class='section'> <h2>fixed sentences</h2></div>"
-   (tablize (lui-vado-in-italia))
-   (tablize (io-mangio-il-pane))
-   (tablize (lui-mangio-la-pasta-in-italia))
-   (tablize (io-pranzo))
-   (tablize (lui-scrivo-il-libro))
+ ;  (tablize (lui-vado-in-italia))
+ ;  (tablize (io-mangio-il-pane))
+ ;  (tablize (lui-mangio-la-pasta-in-italia))
+ ;  (tablize (io-pranzo))
+ ;  (tablize (lui-scrivo-il-libro))
 
    (show-lexicon-as-feature-structures)
 

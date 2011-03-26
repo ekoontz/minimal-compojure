@@ -187,6 +187,10 @@
   (np-in-grammar-ns {:case {:$ne :nom}
                      :semantics :edible}))
 
+(defn choose-makeable [verb]
+  (np-in-grammar-ns {:case {:$ne :nom}
+                     :makeable true}))
+
 ;  (generate/np))
 ;  (choose-lexeme
 ;   {:cat :noun}))

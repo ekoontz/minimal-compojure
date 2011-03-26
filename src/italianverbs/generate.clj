@@ -32,8 +32,7 @@
 (defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
-                 {:italian "mangiare"
-                  :cat :verb
+                 {:cat :verb
                   :infl :infinitive})
         verb
         (nth (fetch :lexicon :where verb-fs)
@@ -57,12 +56,13 @@
      true
      (grammar/combine verb arg 'left))))))
 
+
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [verb-fs (merge
-                 fs
-                 {:italian "leggere"
+                 {:italian "leggere" ; this has stopped working for some reason.
                   :cat :verb
-                  :infl :infinitive})
+                  :infl :infinitive}
+                 fs)
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))
