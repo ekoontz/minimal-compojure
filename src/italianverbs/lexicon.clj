@@ -68,7 +68,8 @@
            (list choose-np))
 
 (def dire (lexfn/add "dire" "to say"
-		      {:cat :verb :infl :infinitive :fn "verb-arg"}))
+                     {:cat :verb :infl :infinitive :fn "verb-arg"
+                      :genfn "choose-sayable"}))
 (lexfn/add-infl "dico" (list firstp sing present
 		       {:root dire}))
 (lexfn/add-infl "dici" (list secondp sing present
@@ -284,9 +285,16 @@
 	     :fn "noun-fn"}
         (list noun))
 
+(lexfn/add "parole" "word"
+	    {:cat :noun
+	     :number :plural
+         :sayable true
+         :writable true
+	     :gender :fem
+	     :fn "noun-fn"}
+        (list noun))
+
 ))
-
-
 
 ;; adjectives
 (lexfn/add "bianco" "white"

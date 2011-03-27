@@ -42,7 +42,7 @@
                            #{:english :italian})))))))
        "</table>"))
 
-(defn combine [head comp head-position]
+(defn combine [head comp head-position] ;; head-position is 'left or 'right.
   (let [fn (cond
             (nil? (get head :fn))
             {:cat :error :note
@@ -190,6 +190,10 @@
 (defn choose-makeable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
                      :makeable true}))
+
+(defn choose-sayable [verb]
+  (np-in-grammar-ns {:case {:$ne :nom}
+                     :sayable true}))
 
 ;  (generate/np))
 ;  (choose-lexeme
