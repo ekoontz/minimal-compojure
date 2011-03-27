@@ -97,6 +97,13 @@
       true
       (str "<tt><i>error: :person or :number value was not matched</i>. (<b>conjugate-italian-verb-regular</b> " (get verb-head :italian) ",(phrase with head:'" (get subject-head :italian) "'))</i></tt>"))))
 
+(defn get-root-head [sign]
+  (cond
+   (get sign :head)
+   (get-root-head (get sign :head))
+   true
+   sign))
+
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   ;; takes two feature structures and returns a string.
@@ -108,10 +115,10 @@
       (let [irregular
 	    (fetch-one :lexicon
 		       :where {:cat :verb
-			       :infl :present
-			       :person (get subject :person)
-			       :number (get subject :number)
-			       :root.italian (get (get-head verb-phrase) :italian)
+                       :infl :present
+                       :person (get subject :person)
+                       :number (get subject :number)
+                       :root.italian (get (get-root-head verb-phrase) :italian)
 			       }
 		       )]
 	(if irregular
