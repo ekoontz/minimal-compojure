@@ -122,7 +122,7 @@
 			       }
 		       )]
 	(if irregular
-	  (str (get irregular :italian))
+	  (str (get irregular :italian) " " (get (get (get-head verb-phrase) :comp) :italian))
 	  (str
 	   (conjugate-italian-verb-regular
 	    (get-head verb-phrase) subject)))))))
