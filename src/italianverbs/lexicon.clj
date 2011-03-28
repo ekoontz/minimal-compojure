@@ -6,6 +6,7 @@
    [clojure.string :as string]
    [italianverbs.lexiconfn :as lexfn]
    [italianverbs.morphology :as morphology]
+   [italianverbs.grammar :as grammar]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 ;; useful abbreviations
@@ -35,12 +36,12 @@
   {:number :plural})
 (def present
   {:cat :verb :infl :present})
+(def choose-none
+  {:genfn "choose-none-fn"})
 (def choose-pp
   {:genfn "choose-pp"})
 (def choose-np
-  {
-   :genfn "choose-np-fn"
-   })
+  {:genfn "choose-np-fn"})
 (def choose-vp-inf
   {:genfn "choose-vp-inf"})
 
@@ -137,8 +138,10 @@
 (lexfn/add "smettere" "to quit"
            {:cat :verb :infl :infinitive :fn "verb-arg"}
            (list choose-np))
+
 (lexfn/add "pranzare" "to eat lunch"
-	    {:cat :verb :infl :infinitive :fn "verb-arg"})
+           {:cat :verb :infl :infinitive :fn "verb-arg"}
+           (list choose-none))
 
 (def andare
   (lexfn/add "andare" "to go"
@@ -246,6 +249,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
+         :makeable true
          :edible true
 	     :fn "noun-fn"}
         (list noun))

@@ -179,6 +179,9 @@
 (defn choose-np-fn [verb]
   (np-in-grammar-ns {:case {:$ne :nom}}))
 
+(defn choose-none-fn [verb]
+  nil)
+
 (defn choose-written-artifact [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
                      :written-artifact true}))
