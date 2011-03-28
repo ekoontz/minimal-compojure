@@ -37,45 +37,21 @@
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
-    (let [genfn (get verb :genfn)]
-      (let [arg (apply (eval (find-fn genfn)) (list verb))]
-;        (grammar/combine verb arg 'left)))))
-    ;; TODO: generate pp if this verb allows it lexically.
-
-    ;; generate a VP given this verb.
-;    (grammar/combine verb (pp) 'left)))
-;    (grammar/combine 
-;     (grammar/combine verb (np) 'left)
-;     (pp) 'left)))
-;    (grammar/combine verb (np) 'left)))
-    (cond
-;     (= (get (morphology/get-head verb) :subcat) 'np-pp)
-;     (grammar/combine 
-;      (grammar/combine verb (np) 'left)
-;      (pp) 'left)
-     true
-     (grammar/combine verb arg 'left))))))
-
+    (let [genfn (get verb :genfn)
+          arg (apply (eval (find-fn genfn)) (list verb))]
+      (if arg
+        (grammar/combine verb arg 'left)
+        verb))))
 
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [verb-fs (merge
-                 {:italian "leggere" ; this has stopped working for some reason.
-                  :cat :verb
-                  :infl :infinitive}
+                 {:cat :verb :infl :infinitive}
                  fs)
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))
         pp (pp)]
-    (let [genfn (get verb :genfn)]
-      (let [arg (apply (eval (find-fn genfn)) (list verb))]
-        (cond
-         true
-         (grammar/combine
-          (vp fs)
-          pp
-          'left))))))
-
+    (grammar/combine (vp fs) pp 'left)))
     
 (defn sentence []
   (let [subject
@@ -88,8 +64,6 @@
              {:case :nom}
              (morphology/get-head subject))}
            subject)
-          ;; (vp) generates a random verb phase
-          ;;          vp (vp)]
           vp (vp-with-adjunct-pp)]
       (grammar/combine vp subject 'right))))
       

@@ -185,7 +185,7 @@
 
 (defn choose-edible [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
-                     :edible :true}))
+                     :edible true}))
 
 (defn choose-makeable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
@@ -194,12 +194,6 @@
 (defn choose-sayable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
                      :sayable true}))
-
-;  (generate/np))
-;  (choose-lexeme
-;   {:cat :noun}))
-; TODO : should be (generate/np).
- 
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -246,7 +240,7 @@
            "<p>get-head comp :cat=" (get (morphology/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn verb-arg [head arg]  ;; e.g. "[sees a house]","[writes a book]","[speaks to the man]"
+(defn verb-arg [head arg]  ;; e.g. head = "they"; comp = "[sees a house]","[writes a book]","[speaks to the man]"
   ;; arg might be a np, pp, or vp[inf].
   {
    :fn verb-sv
