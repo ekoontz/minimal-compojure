@@ -45,6 +45,10 @@
 (def choose-vp-inf
   {:genfn "choose-vp-inf"})
 
+(def human
+  {:human true
+   :animate true})
+
 ;; WARNING: clear blows away entire lexicon in backing store (mongodb).
 (lexfn/clear)
 
@@ -236,13 +240,23 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
+         :human true
 	     :fn "noun-fn"}
-        (list noun))
+        (list noun human))
 	     
 (lexfn/add "donna" "woman"
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
+         :human true
+	     :fn "noun-fn"}
+        (list noun human))
+
+(lexfn/add "cane" "dog"
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc
+         :animate true
 	     :fn "noun-fn"}
         (list noun))
 
@@ -250,7 +264,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :makeable true
+         :artifact true
          :edible true
 	     :fn "noun-fn"}
         (list noun))
@@ -277,16 +291,17 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :written-artifact true
          :person :3rd
-	     :fn "noun-fn"}
+	     :fn "noun-fn"
+         :artifact true
+         :written true}
         (list noun))
 
 (lexfn/add "abito" "dress"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-	     :writable true
+         :artifact true
 	     :fn "noun-fn"}
         (list noun))
 

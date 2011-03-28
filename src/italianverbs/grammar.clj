@@ -192,7 +192,7 @@
 
 (defn choose-makeable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
-                     :makeable true}))
+                     :artifact true}))
 
 (defn choose-sayable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
