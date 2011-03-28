@@ -1,3 +1,4 @@
+;; CHANGES TO THIS FILE REQUIRES RESTARTING RING (for some reason).
 (ns italianverbs.generate
   (:use [hiccup core page-helpers]
         [somnium.congomongo]
@@ -37,21 +38,13 @@
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
-    (let [genfn (get verb :genfn)
-          arg (apply (eval (find-fn genfn)) (list verb))]
-      (if arg
-        (grammar/combine verb arg 'left)
-        verb))))
+    (if (get verb :obj)
+      (grammar/combine verb (grammar/choose-object verb) 'left)
+      verb)))
 
 (defn vp-with-adjunct-pp [ & [fs]]
-  (let [verb-fs (merge
-                 {:cat :verb :infl :infinitive}
-                 fs)
-        verb
-        (nth (fetch :lexicon :where verb-fs)
-             (rand-int (count (fetch :lexicon :where verb-fs))))
-        pp (pp)]
-    (grammar/combine (vp fs) pp 'left)))
+  (let [vp (vp fs)]
+    (grammar/combine vp (pp) 'left)))
     
 (defn sentence []
   (let [subject
@@ -65,6 +58,10 @@
              (morphology/get-head subject))}
            subject)
           vp (vp-with-adjunct-pp)]
-      (grammar/combine vp subject 'right))))
+      (if vp
+        (grammar/combine vp subject 'right)
+        {:cat :error
+         :error "no matches for this specification"}))))
+
       
 

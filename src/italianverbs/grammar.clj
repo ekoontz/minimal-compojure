@@ -1,3 +1,4 @@
+;; NO RESTARTING OF RING REQUIRED FOR CHANGES TO THIS FILE. (must reload browser 2x though).
 (ns italianverbs.grammar
   (:use [somnium.congomongo])
   (:require
@@ -18,9 +19,10 @@
 					  (= key :_id) nil
 					  (= key :children) nil
 ; uncomment for debugging.
-;					  (= key :fn) nil
+					  (= key :fn) nil
 					  (= key :head) nil
-                      (or (= key :head-debug) (= key :comp-debug))
+                      ;; featues whose values are nested feature structures.
+                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct))
                       (list key
                             (fs (get lexeme key)))
 					  (= key :root)
@@ -30,16 +32,15 @@
 					  true
 					  (list key
                             (get lexeme key))))
-				       (cons
-                        :italian
-                        (if (get lexeme :english)
-                          (cons :english
-                                (set/difference
-                                 (set (keys lexeme))
-                                 #{:english :italian}))
-                          (set/difference
-                           (set (keys lexeme))
-                           #{:english :italian})))))))
+                       (if (get lexeme :english)
+                         (cons :italian
+                               (cons :english
+                                     (set/difference
+                                      (set (keys lexeme))
+                                      #{:english :italian})))
+                         (set/difference
+                          (set (keys lexeme))
+                          #{:english :italian}))))))
        "</table>"))
 
 (defn combine [head comp head-position] ;; head-position is 'left or 'right.
@@ -177,7 +178,7 @@
         noun))))
 
 (defn choose-np-fn [verb]
-  (np-in-grammar-ns {:case {:$ne :nom}}))
+  (np {:case {:$ne :nom}}))
 
 (defn choose-none-fn [verb]
   nil)
@@ -186,9 +187,9 @@
   (np-in-grammar-ns {:case {:$ne :nom}
                      :written-artifact true}))
 
-(defn choose-edible [verb]
-  (np-in-grammar-ns {:case {:$ne :nom}
-                     :edible true}))
+(defn choose-object [verb]
+  (np (merge {:case {:$ne :nom}}
+             (get verb :obj))))
 
 (defn choose-makeable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}

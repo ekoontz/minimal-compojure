@@ -74,7 +74,7 @@
 
 (def dire (lexfn/add "dire" "to say"
                      {:cat :verb :infl :infinitive :fn "verb-arg"
-                      :genfn "choose-sayable"}))
+                      :obj {:sayable true}}))
 (lexfn/add-infl "dico" (list firstp sing present
 		       {:root dire}))
 (lexfn/add-infl "dici" (list secondp sing present
@@ -116,14 +116,19 @@
            {:cat :verb
             :infl :infinitive
             :fn "verb-arg"
-            :genfn "choose-written-artifact"})
+            :subj human
+            :obj {:written true}
+            :adjunct {:place true}})
 
 (def mangiare
   (lexfn/add "mangiare" "to eat"
              {:cat :verb
-              :infl :infinitive
               :fn "verb-arg"
-              :genfn "choose-edible"}))
+              :subj {:animate true}
+              :obj {:edible true}
+              :adjunct {:place true}
+              :infl :infinitive}))
+
 
 ;; FIXME: hacks until italian morphology works better: mangiare
 ;; is a regular -are verb.
@@ -186,8 +191,8 @@
 
 (def fare (lexfn/add "fare" "to make"
                      {:cat :verb :infl :infinitive :fn "verb-arg"
-                      :genfn "choose-makeable"}))
-
+                      :obj {:artifact true}
+                      :subj {:human true}}))
 (lexfn/add-infl "facio" (list firstp sing present
 			{:root fare}))
 (lexfn/add-infl "fai" (list secondp sing present
@@ -240,7 +245,6 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :human true
 	     :fn "noun-fn"}
         (list noun human))
 	     
@@ -248,7 +252,6 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem
-         :human true
 	     :fn "noun-fn"}
         (list noun human))
 
@@ -282,7 +285,8 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :written-artifact true
+         :artifact true
+         :written true
          :person :3rd
 	     :fn "noun-fn"}
         (list noun))
