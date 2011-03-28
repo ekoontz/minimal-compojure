@@ -246,7 +246,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :semantics :edible
+         :edible true
 	     :fn "noun-fn"}
         (list noun))
 
@@ -255,7 +255,7 @@
 	     :number :singular
 	     :gender :fem
          :makeable true
-         :semantics :edible
+         :edible true
 	     :fn "noun-fn"}
         (list noun))
 
@@ -263,7 +263,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :semantics :written-artifact
+         :written-artifact true
          :person :3rd
 	     :fn "noun-fn"}
         (list noun))
@@ -272,7 +272,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :semantics :written-artifact
+         :written-artifact true
          :person :3rd
 	     :fn "noun-fn"}
         (list noun))

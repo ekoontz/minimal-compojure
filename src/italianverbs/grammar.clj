@@ -181,11 +181,11 @@
 
 (defn choose-written-artifact [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
-                     :semantics :written-artifact}))
+                     :written-artifact true}))
 
 (defn choose-edible [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
-                     :semantics :edible}))
+                     :edible :true}))
 
 (defn choose-makeable [verb]
   (np-in-grammar-ns {:case {:$ne :nom}
