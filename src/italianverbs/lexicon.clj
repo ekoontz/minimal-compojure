@@ -114,20 +114,21 @@
             :fn "verb-arg"
             :genfn "choose-written-artifact"})
 
-(lexfn/add "mangiare" "to eat"
-           {:cat :verb
-            :infl :infinitive
-            :fn "verb-arg"
-            :genfn "choose-edible"})
+(def mangiare
+  (lexfn/add "mangiare" "to eat"
+             {:cat :verb
+              :infl :infinitive
+              :fn "verb-arg"
+              :genfn "choose-edible"}))
 
 ;; FIXME: hacks until italian morphology works better: mangiare
 ;; is a regular -are verb.
 (lexfn/add "mangi" "to eat"
-	    {:italian-root "mangiare"
+	    {:root mangiare
 	     :cat :verb :infl :present
 	     :person :2nd :number :singular})
 (lexfn/add "mangia" "to eat"
-	    {:italian-root "mangiare"
+	    {:root mangiare
 	     :cat :verb :infl :present
 	     :person :3rd :number :singular})
 
