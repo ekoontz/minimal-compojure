@@ -27,7 +27,8 @@
   (let [prep (grammar/choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
-    (let [np (grammar/np {:case {:$ne :nom}})]
+    (let [np (grammar/np {:case {:$ne :nom}
+                          :place true})]
       (grammar/combine prep np 'left))))
 
 (defn vp [ & [fs]]
@@ -47,17 +48,12 @@
     (grammar/combine vp (pp) 'left)))
     
 (defn sentence []
-  (let [subject
-        ;; (np) generates a random noun phrase: in this case, one whose case is NOT accusative.
-        (grammar/np {:case {:$ne :acc}})]
+  (let [vp (vp-with-adjunct-pp)]
     (let [subject
-          (merge
-           {:head
-            (merge 
-             {:case :nom}
-             (morphology/get-head subject))}
-           subject)
-          vp (vp-with-adjunct-pp)]
+          (grammar/np
+           (merge
+            {:case {:$ne :acc}}
+            (get (get-root-head vp) :subj)))]
       (if vp
         (grammar/combine vp subject 'right)
         {:cat :error

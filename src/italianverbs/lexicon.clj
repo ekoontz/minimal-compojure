@@ -16,6 +16,7 @@
    :genfn "np-det"})
 (def pronoun
   {:cat :noun
+   :human true
    :genfn "np-no-det"})
 (def nominative
   {:case :nom})
@@ -36,12 +37,8 @@
   {:number :plural})
 (def present
   {:cat :verb :infl :present})
-(def choose-none
-  {:genfn "choose-none-fn"})
 (def choose-pp
   {:genfn "choose-pp"})
-(def choose-np
-  {:genfn "choose-np-fn"})
 (def choose-vp-inf
   {:genfn "choose-vp-inf"})
 
@@ -66,15 +63,20 @@
 
 ;; verbs
 (lexfn/add "dimenticare" "to forget"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-np))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:animate true}
+            :obj {:cat :noun}})
+
 (lexfn/add "agitare" "to shake"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-np))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:cat :noun}
+            :obj {:holdable true}})
 
 (def dire (lexfn/add "dire" "to say"
                      {:cat :verb :infl :infinitive :fn "verb-arg"
-                      :obj {:sayable true}}))
+                      :obj {:sayable true}
+                      :iobj {:animate true}
+                      :subj {:human true}}))
 (lexfn/add-infl "dico" (list firstp sing present
 		       {:root dire}))
 (lexfn/add-infl "dici" (list secondp sing present
@@ -105,19 +107,24 @@
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
-           {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
-           (list choose-pp))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:human true}
+            :obj {:writable true}})
+;           (list choose-pp))
+
 (lexfn/add "correggere" "to correct"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-np))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:human true}
+            :obj {:human true}})
 
 ;; verb-arg is defined in grammar.clj.
 (lexfn/add "leggere" "to read"
            {:cat :verb
             :infl :infinitive
             :fn "verb-arg"
-            :subj human
+            :subj {:human true}
             :obj {:written true}
+            :iobj {:human true}
             :adjunct {:place true}})
 
 (def mangiare
@@ -146,12 +153,13 @@
            (list choose-pp))
 
 (lexfn/add "smettere" "to quit"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-np))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:human true}
+            :obj {:cat :noun}})
 
 (lexfn/add "pranzare" "to eat lunch"
-           {:cat :verb :infl :infinitive :fn "verb-arg"}
-           (list choose-none))
+           {:cat :verb :infl :infinitive :fn "verb-arg"
+            :subj {:human true}})
 
 (def andare
   (lexfn/add "andare" "to go"
@@ -192,7 +200,10 @@
 (def fare (lexfn/add "fare" "to make"
                      {:cat :verb :infl :infinitive :fn "verb-arg"
                       :obj {:artifact true}
-                      :subj {:human true}}))
+                      :subj {:human true}
+                      :iobj {:animate true
+                             :benifactive true}}))
+                     
 (lexfn/add-infl "facio" (list firstp sing present
 			{:root fare}))
 (lexfn/add-infl "fai" (list secondp sing present
@@ -223,7 +234,18 @@
 (lexfn/add "loro" "them" {:person :3rd :number :plural :cat :noun} (list pronoun accusative))
 
 ;; Proper nouns
-(lexfn/add-as "Italia" "Italy" (list sing propernoun noun))
+(lexfn/add "Italia" "Italy" 
+           {:place true}
+           (list sing propernoun noun))
+
+(lexfn/add "Firenze" "Florence" 
+           {:place true}
+           (list sing propernoun noun))
+
+(lexfn/add "Napoli" "Naples" 
+           {:place true}
+           (list sing propernoun noun))
+
 
 ;; determiners
 (lexfn/add "il" "the" {:gender :masc :number :singular :cat :det
@@ -269,6 +291,7 @@
 	     :gender :masc
          :artifact true
          :edible true
+         :holdable true
 	     :fn "noun-fn"}
         (list noun))
 
@@ -278,6 +301,7 @@
 	     :gender :fem
          :makeable true
          :edible true
+         :holdable true
 	     :fn "noun-fn"}
         (list noun))
 
@@ -287,8 +311,19 @@
 	     :gender :masc
          :artifact true
          :written true
+         :holdable true
          :person :3rd
 	     :fn "noun-fn"}
+        (list noun))
+
+(lexfn/add "gamba" "leg"
+	    {:cat :noun
+	     :number :singular
+	     :gender :fem
+         :person :3rd
+	     :fn "noun-fn"
+         :body-part true
+         }
         (list noun))
 
 (lexfn/add "giornale" "newspaper"

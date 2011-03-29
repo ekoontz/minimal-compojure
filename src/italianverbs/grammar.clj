@@ -22,7 +22,7 @@
 					  (= key :fn) nil
 					  (= key :head) nil
                       ;; featues whose values are nested feature structures.
-                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct))
+                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct)(= key :iobj))
                       (list key
                             (fs (get lexeme key)))
 					  (= key :root)
@@ -177,27 +177,9 @@
         (combine noun determiner 'right)
         noun))))
 
-(defn choose-np-fn [verb]
-  (np {:case {:$ne :nom}}))
-
-(defn choose-none-fn [verb]
-  nil)
-
-(defn choose-written-artifact [verb]
-  (np-in-grammar-ns {:case {:$ne :nom}
-                     :written-artifact true}))
-
 (defn choose-object [verb]
   (np (merge {:case {:$ne :nom}}
              (get verb :obj))))
-
-(defn choose-makeable [verb]
-  (np-in-grammar-ns {:case {:$ne :nom}
-                     :artifact true}))
-
-(defn choose-sayable [verb]
-  (np-in-grammar-ns {:case {:$ne :nom}
-                     :sayable true}))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
