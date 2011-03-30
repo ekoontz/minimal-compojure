@@ -43,18 +43,70 @@
                           #{:english :italian}))))))
        "</table>"))
 
-(defn combine [head comp head-position] ;; head-position is 'left or 'right.
+(defn right [head comp]
+  {:english (string/join " "
+                         (list 
+                          (get comp :english)
+                          (get head :english)))
+   :italian (string/join " "
+                         (list 
+                          (get comp :italian)
+                          (get head :italian)))
+   :children (list comp head)})
+
+(defn left [head comp]
+  {:english (string/join " "
+                         (list 
+                          (get head :english)
+                          (get comp :english)))
+
+   :italian (string/join " "
+                         (list 
+                          (get comp :italian)
+                          (get head :italian)))
+   :children (list comp head)})
+
+(defn combine-with-fn [head comp head-position fn]
   (let [fn (cond
+            fn fn
             (nil? (get head :fn))
             {:cat :error :note
              (str "no function for this head :" head )}
             (string? (get head :fn))
             (eval (symbol (get head :fn)))
-            true (get head :fn))]
+            (get head :fn) (get head :fn)
+            (= head-position 'left)
+            left
+            (= head-position 'right)
+            right)]
     (merge
      (apply fn (list head comp))
-     {
-      :head head
+     {:head head
+      :comp comp
+      :children
+      (if (= head-position 'left)
+        (list head comp)
+        (list comp head))})))
+  
+
+;; head-position is 'left or 'right.
+(defn combine [head comp head-position & [fn]]
+  (let [fn (cond
+            fn fn
+            (nil? (get head :fn))
+            {:cat :error :note
+             (str "no function for this head :" head )}
+            (string? (get head :fn))
+            (eval (symbol (get head :fn)))
+            (get head :fn) (get head :fn)
+            (= head-position 'left)
+            left
+            (= head-position 'right)
+            right)]
+    (merge
+     (apply fn (list head comp))
+     {:head head
+      :comp comp
       :children
       (if (= head-position 'left)
         (list head comp)

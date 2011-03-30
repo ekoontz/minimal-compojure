@@ -74,8 +74,8 @@
   (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
         object (combine
                 (lexfn/get "libro")
-                (lexfn/get "il") 'right)
-        verb-phrase (combine (lexfn/get "scrivere") object 'left)]
+                (lexfn/get "il") 'right gen/det-n)
+        verb-phrase (combine (lexfn/get "scrivere") object 'left gen/vo)]
     (combine verb-phrase subject 'right)))
 
 (def in-italia

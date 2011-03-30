@@ -22,7 +22,6 @@
    (symbol fn)
    true fn))
 
-
 (defn pp [ & [fs]]
   (let [prep (grammar/choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
@@ -31,21 +30,34 @@
                           :place true})]
       (grammar/combine prep np 'left))))
 
+(defn sv [head comp]
+  (grammar/right head comp))
+
+(defn vo [head comp]
+  (grammar/left head comp))
+
+(defn vp-pp [head comp]
+  (grammar/left head comp))
+
+(defn det-n [head comp]
+  (grammar/right head comp))
+  
 (defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
                  {:cat :verb
+                  :italian "pranzare"
                   :infl :infinitive})
         verb
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
     (if (get verb :obj)
-      (grammar/combine verb (grammar/choose-object verb) 'left)
+      (grammar/combine verb (grammar/choose-object verb) 'left vo)
       verb)))
 
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [vp (vp fs)]
-    (grammar/combine vp (pp) 'left)))
+    (grammar/combine vp (pp) 'left vp-pp)))
     
 (defn sentence []
   (let [vp (vp-with-adjunct-pp)]
@@ -55,9 +67,9 @@
             {:case {:$ne :acc}}
             (get (get-root-head vp) :subj)))]
       (if vp
-        (grammar/combine vp subject 'right)
+        (grammar/combine vp subject 'left sv)
         {:cat :error
-         :error "no matches for this specification"}))))
+         :error "vp-with-adjunct-pp returned null."}))))
 
       
 

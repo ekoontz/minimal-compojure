@@ -63,17 +63,17 @@
 
 ;; verbs
 (lexfn/add "dimenticare" "to forget"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:animate true}
             :obj {:cat :noun}})
 
 (lexfn/add "agitare" "to shake"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:cat :noun}
             :obj {:holdable true}})
 
 (def dire (lexfn/add "dire" "to say"
-                     {:cat :verb :infl :infinitive :fn "verb-arg"
+                     {:cat :verb :infl :infinitive
                       :obj {:sayable true}
                       :iobj {:animate true}
                       :subj {:human true}}))
@@ -107,21 +107,19 @@
 		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:human true}
             :obj {:writable true}})
 ;           (list choose-pp))
 
 (lexfn/add "correggere" "to correct"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:human true}
             :obj {:human true}})
 
-;; verb-arg is defined in grammar.clj.
 (lexfn/add "leggere" "to read"
            {:cat :verb
             :infl :infinitive
-            :fn "verb-arg"
             :subj {:human true}
             :obj {:written true}
             :iobj {:human true}
@@ -130,7 +128,6 @@
 (def mangiare
   (lexfn/add "mangiare" "to eat"
              {:cat :verb
-              :fn "verb-arg"
               :subj {:animate true}
               :obj {:edible true}
               :adjunct {:place true}
@@ -149,21 +146,21 @@
 	     :person :3rd :number :singular})
 
 (lexfn/add "parlere" "to speak"
-           {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
+           {:cat :verb :infl-omit :infinitive}
            (list choose-pp))
 
 (lexfn/add "smettere" "to quit"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:human true}
             :obj {:cat :noun}})
 
 (lexfn/add "pranzare" "to eat lunch"
-           {:cat :verb :infl :infinitive :fn "verb-arg"
+           {:cat :verb :infl :infinitive
             :subj {:human true}})
 
 (def andare
   (lexfn/add "andare" "to go"
-             {:cat :verb :infl-omit :infinitive :fn "verb-arg"}
+             {:cat :verb :infl-omit :infinitive}
              (list choose-pp)))
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
@@ -181,7 +178,7 @@
 
 
 (def volare (lexfn/add "volare" "to want"
-                       {:cat :verb :infl :infinitive-omit-me :fn "verb-arg"}
+                       {:cat :verb :infl :infinitive-omit-me}
                        (list choose-vp-inf)))
                        
 (lexfn/add-infl "voglio" (list firstp sing present
@@ -198,7 +195,7 @@
 			 {:root volare}))
 
 (def fare (lexfn/add "fare" "to make"
-                     {:cat :verb :infl :infinitive :fn "verb-arg"
+                     {:cat :verb :infl :infinitive
                       :obj {:artifact true}
                       :subj {:human true}
                       :iobj {:animate true
