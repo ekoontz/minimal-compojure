@@ -41,10 +41,27 @@
   {:genfn "choose-pp"})
 (def choose-vp-inf
   {:genfn "choose-vp-inf"})
-
 (def human
   {:human true
    :animate true})
+
+;; not used yet; just considering...
+(def transitive-human-verb-with-edible-obj-and-benefactive-pp
+  ;; e.g. "cook" as in "the man cooked dinner for the woman."
+  {:fn (fn [verb obj]
+         (combine verb obj 'left
+                  {:fn (fn [vp subj]
+                         (combine subj vp 'right
+                                  {:fn (fn [sentence pp]
+                                         (combine sentence pp 'left))
+                                   :arg {:cat :prep
+                                         :comp {:cat :noun
+                                                :animate true}
+                                         :benefactive true}})) 
+                   :arg {:cat :noun
+                         :human true}}))
+   :arg {:cat :noun
+         :edible true}})
 
 ;; WARNING: clear blows away entire lexicon in backing store (mongodb).
 (lexfn/clear)
