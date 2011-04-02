@@ -216,7 +216,6 @@
   (let [verb-fs (merge
                  fs
                  {:cat :verb
-                  :italian "pranzare"
                   :infl :infinitive})
         verb
         (nth (fetch :lexicon :where verb-fs)
