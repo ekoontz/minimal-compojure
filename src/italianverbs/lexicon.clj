@@ -261,23 +261,20 @@
 (lexfn/add "uomo" "man"
 	    {:cat :noun
 	     :number :singular
-	     :gender :masc
-	     :fn "noun-fn"}
+	     :gender :masc}
         (list noun human))
 	     
 (lexfn/add "donna" "woman"
 	    {:cat :noun
 	     :number :singular
-	     :gender :fem
-	     :fn "noun-fn"}
+	     :gender :fem}
         (list noun human))
 
 (lexfn/add "cane" "dog"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :animate true
-	     :fn "noun-fn"}
+         :animate true}
         (list noun))
 
 (lexfn/add "pane" "bread"
@@ -286,8 +283,7 @@
 	     :gender :masc
          :artifact true
          :edible true
-         :holdable true
-	     :fn "noun-fn"}
+         :holdable true}
         (list noun))
 
 (lexfn/add "pasta" "pasta"
@@ -296,8 +292,7 @@
 	     :gender :fem
          :makeable true
          :edible true
-         :holdable true
-	     :fn "noun-fn"}
+         :holdable true}
         (list noun))
 
 (lexfn/add "libro" "book"
@@ -307,8 +302,7 @@
          :artifact true
          :written true
          :holdable true
-         :person :3rd
-	     :fn "noun-fn"}
+         :person :3rd}
         (list noun))
 
 (lexfn/add "gamba" "leg"
@@ -316,9 +310,7 @@
 	     :number :singular
 	     :gender :fem
          :person :3rd
-	     :fn "noun-fn"
-         :body-part true
-         }
+         :body-part true}
         (list noun))
 
 (lexfn/add "giornale" "newspaper"
@@ -326,7 +318,6 @@
 	     :number :singular
 	     :gender :masc
          :person :3rd
-	     :fn "noun-fn"
          :artifact true
          :written true}
         (list noun))
@@ -335,8 +326,7 @@
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc
-         :artifact true
-	     :fn "noun-fn"}
+         :artifact true}
         (list noun))
 
 (lexfn/add "parole" "word"
@@ -344,8 +334,7 @@
 	     :number :plural
          :sayable true
          :writable true
-	     :gender :fem
-	     :fn "noun-fn"}
+	     :gender :fem}
         (list noun))
 
 ))
