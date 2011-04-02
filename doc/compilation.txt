@@ -1,0 +1,59 @@
++---------------+       +---------------+
+|               |       |               |
+|  source       compiler|  mongodb-     |
+|   defs        +------>|    storable   |
+|               |       |               |
+|               |       |               |
++---------------+       +---------------+
+
+  for example:
+                                                                                (defn fn1 [sentence pp]
+(lexfn/add "cook" "cucinare"                                                      (combine sentence pp 'left))
+  ;; e.g. "cook" as in "the man cooked dinner for the woman."
+  {:fn (fn [verb obj]                                                           (defn fn2 [vp subj]
+         (combine verb obj 'left                                                  (combine subj vp 'right
+                  {:fn (fn [vp subj]                                                       {:fn fn1
+                         (combine subj vp 'right                                            :arg {:cat :prep
+                                  {:fn (fn [sentence pp]                                          :comp {:cat :noun
+                                         (combine sentence pp 'left))   =>                               :animate true}
+                                   :arg {:cat :prep                                               :benefactive true}}))
+                                         :comp {:cat :noun
+                                                :animate true}                  (defn fn3 [verb-obj]
+                                         :benefactive true}}))                    (combine verb obj 'left
+                   :arg {:cat :noun                                                        {:fn fn2
+                         :human true}}))                                                    :arg {:cat :noun
+   :arg {:cat :noun                                                                               :human true}}))
+         :edible true}})
+                                                                                (defn cook-cucinare
+                                                                                  {:fn fn3
+                                                                                   :arg {:cat :noun
+                                                                                         :edible true}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
