@@ -1,10 +1,11 @@
  (ns italianverbs.test
     (:use 
      [hiccup core page-helpers]
-     [italianverbs.grammar]
      [somnium.congomongo])
     (:require
+     [italianverbs.html :as html]
      [italianverbs.lexiconfn :as lexfn]
+     [italianverbs.grammar :as gram]
      [italianverbs.generate :as gen]
      [clojure.string :as string]
      [italianverbs.quiz :as quiz]))
@@ -59,70 +60,70 @@
 (defn show-lexicon-as-feature-structures []
   (string/join " "
 	       (map (fn [lexeme]
-		      (fs lexeme))
+		      (html/fs lexeme))
 		    (fetch :lexicon :sort {"italian" 1}))))
 
 ;; fixme: change name to "compose-sv-sentence" or something.
 (defn conjugate [pronoun infinitive]
-    (combine infinitive pronoun 'right))
+    (gram/combine infinitive pronoun 'right))
 
 (defn io-pranzo []
-  (combine (lexfn/get "pranzare")
+  (gram/combine (lexfn/get "pranzare")
            (lexfn/get "io" {:case {:$ne :acc}}) 'right))
 
 (defn lui-scrivo-il-libro []
   (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
-        object (combine
+        object (gram/combine
                 (lexfn/get "libro")
-                (lexfn/get "il") 'right gen/det-n)
-        verb-phrase (combine (lexfn/get "scrivere") object 'left gen/vo)]
-    (combine verb-phrase subject 'right)))
+                (lexfn/get "il") 'right gram/det-n)
+        verb-phrase (gram/combine (lexfn/get "scrivere") object 'left gram/vo)]
+    (gram/combine verb-phrase subject 'right)))
 
 (def in-italia
   (let [prep (lexfn/get "in")
 	noun (lexfn/get "Italia")]
-    (combine
+    (gram/combine
      prep noun 'left)))
 
 (def andare-in-italia
-  (combine (lexfn/get "andare")
+  (gram/combine (lexfn/get "andare")
            in-italia 'left))
 
 (defn lui-vado-in-italia []
-  (combine
-   (combine
+  (gram/combine
+   (gram/combine
     (lexfn/get "andare") in-italia 'left)
    (lexfn/get "lui" {:case {:$ne :acc}}) 'right))
 
 (defn io-mangio-il-pane []
   (let [subject (lexfn/get "io" {:case {:$ne :acc}})
-        object (combine
+        object (gram/combine
                 (lexfn/get "pane")
                 (lexfn/get "il") 'right)
-        verb-phrase (combine (lexfn/get "mangiare")
+        verb-phrase (gram/combine (lexfn/get "mangiare")
                              object 'left)]
-    (combine verb-phrase subject 'right)))
+    (gram/combine verb-phrase subject 'right)))
 
 (defn lui-mangio-la-pasta-in-italia []
   (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
-        object (combine
+        object (gram/combine
                 (lexfn/get "pasta")
                 (lexfn/get "la") 'right)
-        verb-phrase (combine (lexfn/get "mangiare")
+        verb-phrase (gram/combine (lexfn/get "mangiare")
                              object
                              'left)]
-    (combine 
-     (combine verb-phrase subject 'right)
+    (gram/combine 
+     (gram/combine verb-phrase subject 'right)
      in-italia 'left)))
 
 (defn io-scrivo-il-libro []
   (let [subject (lexfn/get "io")
-	object (combine
+	object (gram/combine
 		(lexfn/get "libro")
 		(lexfn/get "il"))
-	verb-phrase (combine (lexfn/get "scrivere")
+	verb-phrase (gram/combine (lexfn/get "scrivere")
 			     object)]
-    (combine verb-phrase subject)))
+    (gram/combine verb-phrase subject)))
 
 (defn reload-button []
   (str "<form action='/test/' method='post'><input type='submit' value='Reload'/>  </form> "))
@@ -133,7 +134,7 @@
 (defn conjugation [verb] ;; verb should be the infinitive form of a verb.
   (str
    "<div class='conjugation'>"
-   (tablize verb)
+   (html/tablize verb)
    "<table class='fs conjugation'>"
    "<tr>"
    "<th>io</th>"
@@ -187,7 +188,7 @@
 (defn random-sentences-1 [num]
   (if (> num 0)
     (cons
-     (tablize (gen/sentence))
+     (html/tablize (gram/sentence))
      (random-sentences-1 (- num 1)))))
 
 (defn random-sentences [num]
@@ -206,11 +207,11 @@
    (random-sentences 20)
    
    "<div class='section'> <h2>fixed sentences</h2></div>"
- ;  (tablize (lui-vado-in-italia))
- ;  (tablize (io-mangio-il-pane))
- ;  (tablize (lui-mangio-la-pasta-in-italia))
- ;  (tablize (io-pranzo))
- ;  (tablize (lui-scrivo-il-libro))
+ ;  (html/tablize (lui-vado-in-italia))
+ ;  (html/tablize (io-mangio-il-pane))
+ ;  (html/tablize (lui-mangio-la-pasta-in-italia))
+ ;  (html/tablize (io-pranzo))
+ ;  (html/tablize (lui-scrivo-il-libro))
 
    (show-lexicon-as-feature-structures)
 

@@ -1,30 +1,29 @@
 (ns italianverbs.lexicon
   (:use [hiccup core page-helpers]
-	[somnium.congomongo]
-	[italianverbs.grammar])
+	[somnium.congomongo])
   (:require
    [clojure.string :as string]
    [italianverbs.lexiconfn :as lexfn]
    [italianverbs.morphology :as morphology]
-   [italianverbs.grammar :as grammar]
+   [italianverbs.grammar :as gram]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 ;; useful abbreviations
 (def noun
   {:cat :noun
    :person :3rd
-   :genfn "np-det"})
+   :genfn "gram/np-det"})
 (def pronoun
   {:cat :noun
    :human true
-   :genfn "np-no-det"})
+   :genfn "gram/np-no-det"})
 (def nominative
   {:case :nom})
 (def accusative
   {:case :acc})
 (def propernoun
   {:person :3rd
-   :genfn "np-no-det"})
+   :genfn "gram/np-no-det"})
 (def firstp
   {:person :1st})
 (def secondp
@@ -53,11 +52,11 @@
 ;; prepositions
 (lexfn/add "in" "in"
 	   {:cat :prep
-	    :fn "prep-fn"})
+	    :fn "gram/prep-fn"})
 
 (lexfn/add "a" "to"
 	   {:cat :prep
-	    :fn "prep-fn"})
+	    :fn "gram/prep-fn"})
 
 
 ;; verbs

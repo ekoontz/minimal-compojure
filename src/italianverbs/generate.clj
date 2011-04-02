@@ -40,43 +40,8 @@
                           (list (get comp :italian)
                                 (conjugate-italian-verb head comp)))}))
 
-(defn vo [head comp]
-  (grammar/left head comp))
-
-(defn vp-pp [head comp]
-  (grammar/left head comp))
-
-(defn det-n [head comp]
-  (grammar/right head comp))
   
-(defn vp [ & [fs]]
-  (let [verb-fs (merge
-                 fs
-                 {:cat :verb
-                  :italian "pranzare"
-                  :infl :infinitive})
-        verb
-        (nth (fetch :lexicon :where verb-fs)
-             (rand-int (count (fetch :lexicon :where verb-fs))))]
-    (if (get verb :obj)
-      (grammar/combine verb (grammar/choose-object verb) vo)
-      verb)))
-
-(defn vp-with-adjunct-pp [ & [fs]]
-  (let [vp (vp fs)]
-    (grammar/combine vp (pp) vp-pp)))
     
-(defn sentence []
-  (let [vp (vp-with-adjunct-pp)]
-    (let [subject
-          (grammar/np
-           (merge
-            {:case {:$ne :acc}}
-            (get (get-root-head vp) :subj)))]
-      (if vp
-        (grammar/combine vp subject sv)
-        {:cat :error
-         :error "vp-with-adjunct-pp returned null."}))))
 
       
 

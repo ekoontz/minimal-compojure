@@ -2,46 +2,8 @@
 (ns italianverbs.grammar
   (:use [somnium.congomongo])
   (:require
-   [clojure.set :as set]
-   [italianverbs.morphology :as morphology]
+   [italianverbs.morphology :as morph]
    [clojure.string :as string]))
-
-(defn fs-tr [key-val-pair]
-  (let [key (first key-val-pair)
-	val (second key-val-pair)]
-    (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
-
-(defn fs [lexeme]
-  (str "<table class='fs'>"
-       (string/join " " (seq (map fs-tr
-				  (map (fn [key]
-					 (cond
-					  (= key :_id) nil
-					  (= key :children) nil
-; uncomment for debugging.
-					  (= key :fn) nil
-					  (= key :head) nil
-                      ;; featues whose values are nested feature structures.
-                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct)(= key :iobj))
-                      (list key
-                            (fs (get lexeme key)))
-					  (= key :root)
-					  (list key
-                            (fs (get lexeme key)))
-					  (= key :comp) nil
-					  true
-					  (list key
-                            (get lexeme key))))
-                       (if (get lexeme :english)
-                         (cons :italian
-                               (cons :english
-                                     (set/difference
-                                      (set (keys lexeme))
-                                      #{:english :italian})))
-                         (set/difference
-                          (set (keys lexeme))
-                          #{:english :italian}))))))
-       "</table>"))
 
 (defn right [head comp]
   {:english (string/join " "
@@ -87,27 +49,6 @@
      {:head head
       :comp comp})))
 
-(defn tablize [parent]
-  (let
-      [children (get parent :children)]
-      (str
-     "<div class='syntax'><table class='syntax'>"
-     "<tr><td style='padding-left:5%;width:90%' colspan='" (count children) "'>"
-       (fs parent)
-     "</td></tr>"
-     "<tr>"
-     ;; now show syntactic children for this parent.
-     (string/join " " (map (fn [child] (str "<td>"
-					    (cond (string? child)
-						  child
-						  (get child :children)
-						  (tablize child)
-						  true
-						  (fs child))
-					    "</td>")) children))
-     "</tr>"
-     "</table></div>")))
-
 (defn gramhead [sign]
   (if (get sign :head)
     (get sign :head)
@@ -150,11 +91,11 @@
   (merge
    (unify-np head arg)
    {:english
-    (morphology/conjugate-en head arg)
+    (morph/conjugate-en head arg)
     :italian
     (string/join " "
                  (list (get arg :italian)
-                       (morphology/conjugate-it head)))}))
+                       (morph/conjugate-it head)))}))
 
 ;; following 3 fns should probably be in generate.clj.
 (defn np-no-det [noun]
@@ -212,25 +153,25 @@
   (cond
    ;; unfortunately we have to check
    ;; for either the :-form or the quoted-string below:
-   (or (= (get (morphology/get-head comp) :cat) :noun)
-       (= (get (morphology/get-head comp) :cat) "noun")
-       (= (get (morphology/get-head comp) :cat) :pronoun)
-       (= (get (morphology/get-head comp) :cat) "pronoun"))
+   (or (= (get (morph/get-head comp) :cat) :noun)
+       (= (get (morph/get-head comp) :cat) "noun")
+       (= (get (morph/get-head comp) :cat) :pronoun)
+       (= (get (morph/get-head comp) :cat) "pronoun"))
 
    {:fn "verb-sv"
     :english
     (string/join " "
 		 (list 
 		  (get comp :english)
-		  (morphology/conjugate-english-verb (morphology/get-head head) comp)
+		  (morph/conjugate-english-verb (morph/get-head head) comp)
 		  (get (get head :comp) :english)))
     :italian
     (string/join " "
 		 (list
 		  (get comp :italian)
-		  (morphology/conjugate-italian-verb head comp)
+		  (morph/conjugate-italian-verb head comp)
           (get (get head :comp) :italian)))}
-   (= (get (morphology/get-head comp) :cat) "prep")
+   (= (get (morph/get-head comp) :cat) "prep")
    {:fn "verb-sv"
     :head head
     :comp comp
@@ -250,7 +191,7 @@
            "<tt><i>error: verb does not know what to do with this argument.</i>(<b>verb-sv</b> "
            "'" (get head :english) "','" (get comp :english) "'"
            ")</i>."
-           "<p>get-head comp :cat=" (get (morphology/get-head comp) :cat) "</p>"
+           "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
 (defn verb-arg [head arg]  ;; e.g. head = "they"; comp = "[sees a house]","[writes a book]","[speaks to the man]"
@@ -270,4 +211,60 @@
                  (get head :italian)
                  (get arg :italian)))
    })
+
+(defn pp [ & [fs]]
+  (let [prep (choose-lexeme (merge fs {:cat :prep}))
+        ;; (eventually) use _genfn to generate an argument (np) given _prep.
+        genfn (get prep :genfn)]
+    (let [np (np {:case {:$ne :nom}
+                          :place true})]
+      (combine prep np))))
+
+(defn sv [head comp]
+  (merge
+   (right head comp)
+   {:english (string/join " "
+                          (list (get comp :english)
+                                (morph/conjugate-english-verb head comp)))
+    :italian (string/join " "
+                          (list (get comp :italian)
+                                (morph/conjugate-italian-verb head comp)))}))
+
+(defn vo [head comp]
+  (left head comp))
+
+(defn vp-pp [head comp]
+  (left head comp))
+
+(defn det-n [head comp]
+  (right head comp))
+
+(defn vp [ & [fs]]
+  (let [verb-fs (merge
+                 fs
+                 {:cat :verb
+                  :italian "pranzare"
+                  :infl :infinitive})
+        verb
+        (nth (fetch :lexicon :where verb-fs)
+             (rand-int (count (fetch :lexicon :where verb-fs))))]
+    (if (get verb :obj)
+      (combine verb (choose-object verb) vo)
+      verb)))
+
+(defn vp-with-adjunct-pp [ & [fs]]
+  (let [vp (vp fs)]
+    (combine vp (pp) vp-pp)))
+
+(defn sentence []
+  (let [vp (vp-with-adjunct-pp)]
+    (let [subject
+          (np
+           (merge
+            {:case {:$ne :acc}}
+            (get (morph/get-root-head vp) :subj)))]
+      (if vp
+        (combine vp subject sv)
+        {:cat :error
+         :error "vp-with-adjunct-pp returned null."}))))
 
