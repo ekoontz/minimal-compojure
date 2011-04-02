@@ -66,31 +66,13 @@
                           (get head :italian)))
    :children (list comp head)})
 
-(defn combine-with-fn [head comp head-position fn]
-  (let [fn (cond
-            fn fn
-            (nil? (get head :fn))
-            {:cat :error :note
-             (str "no function for this head :" head )}
-            (string? (get head :fn))
-            (eval (symbol (get head :fn)))
-            (get head :fn) (get head :fn)
-            (= head-position 'left)
-            left
-            (= head-position 'right)
-            right)]
-    (merge
-     (apply fn (list head comp))
-     {:head head
-      :comp comp
-      :children
-      (if (= head-position 'left)
-        (list head comp)
-        (list comp head))})))
-  
+(defn combine-error [head comp]
+  {:cat :error
+   :notes "no function found to combine head and comp."
+   :children (list head comp)})
 
 ;; head-position is 'left or 'right.
-(defn combine [head comp head-position & [fn]]
+(defn combine [head comp & [fn]]
   (let [fn (cond
             fn fn
             (nil? (get head :fn))
@@ -99,19 +81,12 @@
             (string? (get head :fn))
             (eval (symbol (get head :fn)))
             (get head :fn) (get head :fn)
-            (= head-position 'left)
-            left
-            (= head-position 'right)
-            right)]
+            true combine-error)]
     (merge
      (apply fn (list head comp))
      {:head head
-      :comp comp
-      :children
-      (if (= head-position 'left)
-        (list head comp)
-        (list comp head))})))
-  
+      :comp comp})))
+
 (defn tablize [parent]
   (let
       [children (get parent :children)]

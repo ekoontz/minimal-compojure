@@ -28,7 +28,7 @@
         genfn (get prep :genfn)]
     (let [np (grammar/np {:case {:$ne :nom}
                           :place true})]
-      (grammar/combine prep np 'left))))
+      (grammar/combine prep np))))
 
 (defn sv [head comp]
   (grammar/right head comp))
@@ -52,12 +52,12 @@
         (nth (fetch :lexicon :where verb-fs)
              (rand-int (count (fetch :lexicon :where verb-fs))))]
     (if (get verb :obj)
-      (grammar/combine verb (grammar/choose-object verb) 'left vo)
+      (grammar/combine verb (grammar/choose-object verb) vo)
       verb)))
 
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [vp (vp fs)]
-    (grammar/combine vp (pp) 'left vp-pp)))
+    (grammar/combine vp (pp) vp-pp)))
     
 (defn sentence []
   (let [vp (vp-with-adjunct-pp)]
@@ -67,7 +67,7 @@
             {:case {:$ne :acc}}
             (get (get-root-head vp) :subj)))]
       (if vp
-        (grammar/combine vp subject 'right sv)
+        (grammar/combine vp subject sv)
         {:cat :error
          :error "vp-with-adjunct-pp returned null."}))))
 
