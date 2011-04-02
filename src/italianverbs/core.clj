@@ -5,7 +5,6 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [base.lib :as baselib]
-	    [italianverbs.generate :as gen]
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]

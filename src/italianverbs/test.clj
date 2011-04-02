@@ -6,7 +6,6 @@
      [italianverbs.html :as html]
      [italianverbs.lexiconfn :as lexfn]
      [italianverbs.grammar :as gram]
-     [italianverbs.generate :as gen]
      [clojure.string :as string]
      [italianverbs.quiz :as quiz]))
 
