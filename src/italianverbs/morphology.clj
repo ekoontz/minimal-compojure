@@ -104,6 +104,11 @@
    true
    sign))
 
+;; TODO: figure out how to interpolate variables into regexps.
+(defn except-first-words [first-words words]
+  (let [regex #"^[^ ]+[ ]?(.*)"]
+    (str-utils/replace words regex (fn [[_ rest]] rest))))
+
 (defn conjugate-italian-verb [verb-phrase subject]
   ;; conjugate verb based on subject and eventually verb's features (such as tense)
   ;; takes two feature structures and returns a string.
@@ -111,7 +116,7 @@
         italian-head (get (get-head verb-phrase) :italian)
         ;; all we need is the head, which has the relevant grammatical information, not the whole subject
         subject (get-head subject)] 
-    (let [italian (if italian-head italian-head italian)]
+    (let [italian (if italian-head italian italian)]
       (let [irregular
 	    (fetch-one :lexicon
 		       :where {:cat :verb
@@ -121,12 +126,19 @@
                        :root.italian (get (get-root-head verb-phrase) :italian)
 			       }
 		       )]
-	(if irregular
-	  (str (get irregular :italian) " " (get (get (get-head verb-phrase) :comp) :italian))
-	  (str
-	   (conjugate-italian-verb-regular
-	    (get-head verb-phrase) subject)))))))
- 
+        (if irregular
+          (str
+           (get irregular :italian)
+           " "
+           (get (get (get-head verb-phrase) :comp) :italian))
+          (str (conjugate-italian-verb-regular
+                (get-head verb-phrase) subject)
+               " "
+               (except-first-words
+                (get-head verb-phrase)
+                (get verb-phrase :italian))))))))
+;               (get (get verb-phrase :comp) :italian)))))))
+
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
    (str-utils/replace
