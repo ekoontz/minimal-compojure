@@ -118,26 +118,27 @@
         subject (get-head subject)] 
     (let [italian (if italian-head italian italian)]
       (let [irregular
-	    (fetch-one :lexicon
-		       :where {:cat :verb
-                       :infl :present
-                       :person (get subject :person)
-                       :number (get subject :number)
-                       :root.italian (get (get-root-head verb-phrase) :italian)
-			       }
-		       )]
+            (fetch-one :lexicon
+                       :where {:cat :verb
+                               :infl :present
+                               :person (get subject :person)
+                               :number (get subject :number)
+                               :root.italian (get (get-root-head verb-phrase) :italian)
+                               }
+                       )
+            except-first
+            (except-first-words
+             (get-head verb-phrase)
+             (get verb-phrase :italian))]
         (if irregular
           (str
            (get irregular :italian)
-           " "
-           (get (get (get-head verb-phrase) :comp) :italian))
+           " (irr) "
+           except-first)
           (str (conjugate-italian-verb-regular
                 (get-head verb-phrase) subject)
                " "
-               (except-first-words
-                (get-head verb-phrase)
-                (get verb-phrase :italian))))))))
-;               (get (get verb-phrase :comp) :italian)))))))
+               except-first))))))
 
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
