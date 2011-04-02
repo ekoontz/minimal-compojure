@@ -194,24 +194,6 @@
            "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn verb-arg [head arg]  ;; e.g. head = "they"; comp = "[sees a house]","[writes a book]","[speaks to the man]"
-  ;; arg might be a np, pp, or vp[inf].
-  {
-   :fn verb-sv
-   :head head
-   :comp arg
-   :english
-   (string/join " "
-                (list 
-                 (get head :english)
-                 (get arg :english)))
-   :italian
-   (string/join " "
-                (list 
-                 (get head :italian)
-                 (get arg :italian)))
-   })
-
 (defn pp [ & [fs]]
   (let [prep (choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
