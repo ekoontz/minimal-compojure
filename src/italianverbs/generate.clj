@@ -67,7 +67,7 @@
             {:case {:$ne :acc}}
             (get (get-root-head vp) :subj)))]
       (if vp
-        (grammar/combine vp subject 'left sv)
+        (grammar/combine vp subject 'right sv)
         {:cat :error
          :error "vp-with-adjunct-pp returned null."}))))
 
