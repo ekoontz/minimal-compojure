@@ -35,19 +35,10 @@
 
 ;; head-position is 'left or 'right.
 (defn combine [head comp fn]
-  (let [fn (cond
-            fn fn
-            (nil? (get head :fn))
-            {:cat :error :note
-             (str "no function for this head :" head )}
-            (string? (get head :fn))
-            (eval (symbol (get head :fn)))
-            (get head :fn) (get head :fn)
-            true combine-error)]
-    (merge
-     (apply fn (list head comp))
-     {:head head
-      :comp comp})))
+  (merge
+   (apply fn (list head comp))
+   {:head head
+    :comp comp}))
 
 (defn gramhead [sign]
   (if (get sign :head)
