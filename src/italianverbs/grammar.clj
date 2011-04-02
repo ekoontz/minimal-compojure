@@ -24,9 +24,9 @@
 
    :italian (string/join " "
                          (list 
-                          (get comp :italian)
-                          (get head :italian)))
-   :children (list comp head)})
+                          (get head :italian)
+                          (get comp :italian)))
+   :children (list head comp)})
 
 (defn combine-error [head comp]
   {:cat :error
@@ -34,7 +34,7 @@
    :children (list head comp)})
 
 ;; head-position is 'left or 'right.
-(defn combine [head comp & [fn]]
+(defn combine [head comp fn]
   (let [fn (cond
             fn fn
             (nil? (get head :fn))
@@ -133,7 +133,7 @@
         genfn (get noun :genfn)]
     (let [determiner (apply (eval (find-fn genfn)) (list noun))]
       (if determiner
-        (combine noun determiner 'right)
+        (combine noun determiner right)
         noun))))
 
 (defn np [ & [fs]]
@@ -142,7 +142,7 @@
         genfn (get noun :genfn)]
     (let [determiner (apply (eval (find-fn genfn)) (list noun))]
       (if determiner
-        (combine noun determiner 'right)
+        (combine noun determiner right)
         noun))))
 
 (defn choose-object [verb]
@@ -218,7 +218,7 @@
         genfn (get prep :genfn)]
     (let [np (np {:case {:$ne :nom}
                           :place true})]
-      (combine prep np))))
+      (combine prep np left))))
 
 (defn sv [head comp]
   (merge
