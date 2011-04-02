@@ -31,7 +31,14 @@
       (grammar/combine prep np))))
 
 (defn sv [head comp]
-  (grammar/right head comp))
+  (merge
+   (grammar/right head comp)
+   {:english (string/join " "
+                          (list (get comp :english)
+                                (conjugate-english-verb head comp)))
+    :italian (string/join " "
+                          (list (get comp :italian)
+                                (conjugate-italian-verb head comp)))}))
 
 (defn vo [head comp]
   (grammar/left head comp))
