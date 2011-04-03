@@ -79,6 +79,12 @@
         :obj {:case {:$ne :nom}
               :andare-al true}})
 
+(lexfn/add "da" "to"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :human true}})
+
 (lexfn/add "a" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
@@ -230,6 +236,13 @@
                    :adjunct {:cat :prep
                              :italian "al"
                              :obj.andare-al true}}))
+
+(lexfn/add "andare" "to go"
+           (merge andare
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "da"
+                             :obj.human true}}))
 
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
