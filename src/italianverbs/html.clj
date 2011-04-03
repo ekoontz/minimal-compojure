@@ -34,7 +34,7 @@
 					  (= key :fn) nil
 					  (= key :head) nil
                       ;; featues whose values are nested feature structures.
-                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct)(= key :iobj))
+                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct)(= key :iobj)(= key :choose))
                       (list key
                             (fs (get lexeme key)))
 					  (= key :root)

@@ -100,7 +100,9 @@
   (let [results (fetch :lexicon :where struct)]
     (if (= (count results) 0)
       {:english "??" :italian "??"
-       :cat :error :note (str "choose lexeme: no results found for " struct)}
+       :cat :error :note (str "(choose-lexeme): no results found for (see :choose feature).")
+       :choose struct
+       }
       (nth results (rand-int (count results))))))
 
 (defn np-det [noun]
@@ -187,7 +189,7 @@
            "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn pp [ & [fs]] ; additional restrictions on prep.
+(defn pp [ & [fs]] ; fs adds restrictions on prep.
   (let [prep (choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
