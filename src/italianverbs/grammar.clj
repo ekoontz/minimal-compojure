@@ -227,7 +227,9 @@
 
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [vp (vp fs)]
-    (combine vp (pp) vp-pp)))
+    (combine vp
+             (pp (get (morph/get-head vp) :adjunct))
+             vp-pp)))
 
 (defn sentence []
   (let [vp (vp-with-adjunct-pp)]
