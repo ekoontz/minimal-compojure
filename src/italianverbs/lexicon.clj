@@ -73,6 +73,12 @@
         :obj {:case {:$ne :nom}
               :andare-a true}})
 
+(lexfn/add "al" "to"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :andare-al true}})
+
 (lexfn/add "a" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
@@ -217,6 +223,13 @@
                    :adjunct {:cat :prep
                              :italian "in"
                              :obj.andare-in true}}))
+
+(lexfn/add "andare" "to go"
+           (merge andare
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "al"
+                             :obj.andare-al true}}))
 
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
@@ -416,7 +429,7 @@
             :cat :noun
             :genfn "gram/np-no-det"})
 
-(lexfn/add "ufficio" "office" ;; TODO: better english translation would be "my office","your office", etc, or maybe just "work".
+(lexfn/add "ufficio" "the office" ;; TODO: better english translation might be "my office","your office", etc, or in some cases "work".
            {:andare-in true
             :cat :noun
             :genfn "gram/np-no-det"})
@@ -428,6 +441,21 @@
 
 (lexfn/add "letto" "bed"
            {:andare-a true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "cinema" "the theatre"
+           {:andare-al true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "mare" "the beach"
+           {:andare-al true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "ristorante" "the restaurant"
+           {:andare-al true
             :cat :noun
             :genfn "gram/np-no-det"})
 
