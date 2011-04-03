@@ -82,8 +82,19 @@
 
 (lexfn/add "agitare" "to shake"
            {:cat :verb :infl :infinitive
-            :subj {:cat :noun}
+            :subj {
+                   :animate true
+                   }
             :obj {:holdable true}})
+
+(lexfn/add "mostrare" "to show"
+           {:cat :verb :infl :infinitive
+            :subj {
+                   :human true
+                   }
+            :obj {:cat :noun}
+            :iobj {:animate true}})
+           
 
 (def dire (lexfn/add "dire" "to say"
                      {:cat :verb :infl :infinitive
