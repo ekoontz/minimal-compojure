@@ -122,8 +122,9 @@
 (lexfn/add "scrivere" "to write"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj {:writable true}})
-;           (list choose-pp))
+            :obj {:writable true}
+            :iobj {:human true
+                   :prep {:benefactive true}}})
 
 (lexfn/add "correggere" "to correct"
            {:cat :verb :infl :infinitive
@@ -143,7 +144,8 @@
              {:cat :verb
               :subj {:animate true}
               :obj {:edible true}
-              :adjunct {:place true}
+              :adjunct {:cat :prep
+                        :obj {:place true}}
               :infl :infinitive}))
 
 
@@ -168,8 +170,12 @@
             :obj {:cat :noun}})
 
 (lexfn/add "pranzare" "to eat lunch"
-           {:cat :verb :infl :infinitive
-            :subj {:human true}})
+           {:cat :verb
+            :infl :infinitive
+            :subj {:human true}
+            :adjunct {:cat :prep
+                      :obj {:place true}}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
+           
 
 (def andare
   (lexfn/add "andare" "to go"

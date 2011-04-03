@@ -98,7 +98,8 @@
   ;; and choose a random element that satisfies the query.
   (let [results (fetch :lexicon :where struct)]
     (if (= (count results) 0)
-      {:cat :error :note (str "choose lexeme: no results found for " struct)}
+      {:english "??" :italian "??"
+       :cat :error :note (str "choose lexeme: no results found for " struct)}
       (nth results (rand-int (count results))))))
 
 (defn np-det [noun]
@@ -185,12 +186,11 @@
            "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn pp [ & [fs]]
+(defn pp [ & [fs]] ; additional restrictions on prep.
   (let [prep (choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
-    (let [np (np {:case {:$ne :nom}
-                          :place true})]
+    (let [np (np (get prep :obj))]
       (combine prep np left))))
 
 (defn sv [head comp]
