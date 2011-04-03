@@ -15,6 +15,7 @@
    :genfn "gram/np-det"})
 (def pronoun
   {:cat :noun
+   :animate true
    :human true
    :genfn "gram/np-no-det"})
 (def nominative
@@ -22,8 +23,8 @@
 (def accusative
   {:case :acc})
 (def propernoun
-  {:person :3rd
-   :genfn "gram/np-no-det"})
+  (merge noun
+         {:genfn "gram/np-no-det"}))
 (def firstp
   {:person :1st})
 (def secondp
@@ -43,6 +44,16 @@
 (def human
   {:human true
    :animate true})
+(def place
+  {:place true})
+(def city
+  (merge place
+         {:andare-a true
+          :city true}))
+(def region
+  (merge place
+         {:region true
+          :andare-in true}))
 
 ;; WARNING: clear blows away entire lexicon in backing store (mongodb).
 (lexfn/clear)
@@ -50,17 +61,17 @@
 ;; BEGIN LEXICON
 
 ;; prepositions
-(lexfn/add "in" "in"
+(lexfn/add "in" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}
-              :place true}})
+              :andare-in true}})
 
 (lexfn/add "a" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}
-              :place true}})
+              :andare-a true}})
 
 (lexfn/add "a" "to"
 	   {:cat :prep
@@ -156,7 +167,7 @@
               :subj {:animate true}
               :obj {:edible true}
               :adjunct {:cat :prep
-                        :obj {:place true}}
+                        :obj.place true}
               :infl :infinitive}))
 
 
@@ -178,20 +189,35 @@
 (lexfn/add "smettere" "to quit"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj {:cat :noun}})
+            :obj.cat :noun})
 
 (lexfn/add "pranzare" "to eat lunch"
            {:cat :verb
             :infl :infinitive
             :subj {:human true}
             :adjunct {:cat :prep
-                      :obj {:place true}}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
+                      :obj.place true}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
            
 
 (def andare
   (lexfn/add "andare" "to go"
-             {:cat :verb :infl-omit :infinitive}
-             (list choose-pp)))
+             {:cat :verb :infl :supertype
+              :subj {:animate true}}))
+
+(lexfn/add "andare" "to go"
+           (merge andare
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "a"
+                             :obj.andare-a true}}))
+
+(lexfn/add "andare" "to go"
+           (merge andare
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "in"
+                             :obj.andare-in true}}))
+
 ;; exceptions
 (lexfn/add-infl "vado" (list firstp sing present)
 	  {:root andare})
@@ -262,16 +288,24 @@
 
 ;; Proper nouns
 (lexfn/add "Italia" "Italy" 
-           {:place true}
-           (list sing propernoun noun))
+           {}
+           (list sing propernoun region))
+
+(lexfn/add "Spagna" "Spain" 
+           {}
+           (list sing propernoun region))
+
+(lexfn/add "Sicily" "Sicily" 
+           {}
+           (list sing propernoun region))
 
 (lexfn/add "Firenze" "Florence" 
-           {:place true}
-           (list sing propernoun noun))
+           {}
+           (list sing propernoun city))
 
 (lexfn/add "Napoli" "Naples" 
-           {:place true}
-           (list sing propernoun noun))
+           {}
+           (list sing propernoun city))
 
 
 ;; determiners
@@ -288,8 +322,6 @@
 			:def :def})
 
 ;; nouns
-(if true
-  (do
 (lexfn/add "uomo" "man"
 	    {:cat :noun
 	     :number :singular
@@ -367,21 +399,37 @@
         (list noun))
 
 (lexfn/add "abito" "dress"
-	    {:cat :noun
-	     :number :singular
+	    {:number :singular
 	     :gender :masc
          :artifact true}
         (list noun))
 
 (lexfn/add "parole" "word"
-	    {:cat :noun
-	     :number :plural
+	    {:number :plural
          :sayable true
          :writable true
 	     :gender :fem}
         (list noun))
 
-))
+(lexfn/add "centro" "downtown"
+           {:andare-in true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "ufficio" "office" ;; TODO: better english translation would be "my office","your office", etc, or maybe just "work".
+           {:andare-in true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "casa" "home"
+           {:andare-a true
+            :cat :noun
+            :genfn "gram/np-no-det"})
+
+(lexfn/add "letto" "bed"
+           {:andare-a true
+            :cat :noun
+            :genfn "gram/np-no-det"})
 
 ;; adjectives
 (lexfn/add "bianco" "white"
