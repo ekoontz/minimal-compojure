@@ -205,13 +205,13 @@
 
    (random-sentences 20)
    
-   "<div class='section'> <h2>fixed sentences</h2></div>"
+;   "<div class='section'> <h2>fixed sentences</h2></div>"
  ;  (html/tablize (lui-vado-in-italia))
  ;  (html/tablize (io-mangio-il-pane))
  ;  (html/tablize (lui-mangio-la-pasta-in-italia))
  ;  (html/tablize (io-pranzo))
  ;  (html/tablize (lui-scrivo-il-libro))
-
+   "<div class='section'> <h2>lexicon</h2></div>"
    (show-lexicon-as-feature-structures)
 
    (correct)
