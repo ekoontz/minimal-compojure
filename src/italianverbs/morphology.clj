@@ -8,7 +8,7 @@
 
 (defn get-head [sign]
   (if (get sign :head)
-    (get sign :head)
+    (get-head (get sign :head))
     sign))
 
 (defn remove-to [english-verb-phrase]
@@ -61,41 +61,35 @@
      (get remove-to :remove-to))))
 
 (defn conjugate-italian-verb-regular [verb-head subject-head]
-   (let [root-form (get verb-head :italian)
-	 regex #"^([^ ]*)([aei])re([ ]?)(.*)"]
-     (cond
-
-      (and (= (get subject-head :person) "1st")
-	   (= (get subject-head :number) "singular"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem "o" space rest)))
-
-      (and (= (get subject-head :person) "1st")
-	   (= (get subject-head :number) "plural"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem "i" "amo" space rest)))
-      (and (= (get subject-head :person) "2nd")
-	   (= (get subject-head :number) "singular"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem "i" space rest)))
-
-      (and (= (get subject-head :person) "2nd")
-	   (= (get subject-head :number) "plural"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem vowel "te" space rest)))
-
-      
-      (and (= (get subject-head :person) "3rd")
-	   (= (get subject-head :number) "singular"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem "e" space rest)))
-
-      (and (= (get subject-head :person) "3rd")
-	   (= (get subject-head :number) "plural"))
-      (str-utils/replace root-form regex
-			 (fn [[_ stem vowel space rest]] (str stem vowel "no" space rest)))
-      true
-      (str "<tt><i>error: :person or :number value was not matched</i>. (<b>conjugate-italian-verb-regular</b> " (get verb-head :italian) ",(phrase with head:'" (get subject-head :italian) "'))</i></tt>"))))
+  (let [root-form (get verb-head :italian)
+        regex #"^([^ ]*)([aei])re[ ]*$"]
+    (cond
+     (and (= (get subject-head :person) "1st")
+          (= (get subject-head :number) "singular"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem "o" space)))
+     (and (= (get subject-head :person) "1st")
+          (= (get subject-head :number) "plural"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem "i" "amo" space)))
+     (and (= (get subject-head :person) "2nd")
+          (= (get subject-head :number) "singular"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem "i" space)))
+     (and (= (get subject-head :person) "2nd")
+          (= (get subject-head :number) "plural"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem vowel "te" space)))
+     (and (= (get subject-head :person) "3rd")
+          (= (get subject-head :number) "singular"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem "e" space)))
+     (and (= (get subject-head :person) "3rd")
+          (= (get subject-head :number) "plural"))
+     (str-utils/replace root-form regex
+                        (fn [[_ stem vowel space]] (str stem vowel "no" space)))
+     true
+     (str "<tt><i>error: :person or :number value was not matched</i>. (<b>conjugate-italian-verb-regular</b> " (get verb-head :italian) ",(phrase with head:'" (get subject-head :italian) "'))</i></tt>"))))
 
 (defn get-root-head [sign]
   (cond
@@ -131,14 +125,14 @@
              (get-head verb-phrase)
              (get verb-phrase :italian))]
         (if irregular
-          (str
-           (get irregular :italian)
-           " (irr) "
-           except-first)
-          (str (conjugate-italian-verb-regular
-                (get-head verb-phrase) subject)
-               " "
-               except-first))))))
+          (string/join " "
+                       (list (get irregular :italian)
+                             except-first))
+          (string/join " " 
+                       (list
+                        (conjugate-italian-verb-regular
+                         (get-head verb-phrase) subject)
+                        except-first)))))))
 
 (defn plural-masc [italian]
  (let [regex #"^([^ ]*)o([ ]?)(.*)"]
