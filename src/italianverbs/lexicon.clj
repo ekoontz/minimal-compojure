@@ -52,12 +52,27 @@
 ;; prepositions
 (lexfn/add "in" "in"
 	   {:cat :prep
-	    :fn "gram/prep-fn"})
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :place true}})
 
 (lexfn/add "a" "to"
 	   {:cat :prep
-	    :fn "gram/prep-fn"})
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :place true}})
 
+(lexfn/add "a" "to"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :animate true}})
+
+(lexfn/add "con" "with"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :human true}})
 
 ;; verbs
 (lexfn/add "dimenticare" "to forget"
