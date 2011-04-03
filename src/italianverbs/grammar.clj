@@ -40,6 +40,7 @@
    {:head head
     :comp comp}))
 
+;; TODO: use (morph/get-head) instead.
 (defn gramhead [sign]
   (if (get sign :head)
     (get sign :head)
@@ -56,7 +57,7 @@
      }
     {
      :cat :fail
-     ;; FIXME: rewrite as (defn diagnosis [head arg])
+     ;; TODO: rewrite as (defn diagnosis [head arg])
      :note (str (get head :gender) " != " (get arg :gender)
                 " or "
                 (get head :number) " != " (get arg :number))
