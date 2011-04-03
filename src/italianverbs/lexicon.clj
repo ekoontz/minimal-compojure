@@ -270,6 +270,18 @@
 	     :gender :fem}
         (list noun human))
 
+(lexfn/add "raggazo" "guy"
+	    {:cat :noun
+	     :number :singular
+	     :gender :masc}
+        (list noun human))
+	     
+(lexfn/add "raggaza" "girl"
+	    {:cat :noun
+	     :number :singular
+	     :gender :fem}
+        (list noun human))
+
 (lexfn/add "cane" "dog"
 	    {:cat :noun
 	     :number :singular
