@@ -48,12 +48,10 @@
   {:place true})
 (def city
   (merge place
-         {:andare-a true
-          :city true}))
+         {:andare-a true}))
 (def region
   (merge place
-         {:region true
-          :andare-in true}))
+         {:andare-in true}))
 
 ;; WARNING: clear blows away entire lexicon in backing store (mongodb).
 (lexfn/clear)
@@ -84,6 +82,12 @@
 	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}
               :human true}})
+
+(lexfn/add "da" "from"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}
+              :place true}})
 
 (lexfn/add "a" "to"
 	   {:cat :prep
@@ -136,22 +140,6 @@
 		       {:root dire}))
 (lexfn/add-infl "dicono" (list thirdp plural present
 		       {:root dire}))
-
-(def venire (lexfn/add "venire" "to come"
-                       {:cat :verb :infl-omit :infinitive :fn "verb-sv"}
-                       (list choose-pp)))
-(lexfn/add-infl "vengo" (list firstp sing present
-		       {:root venire}))
-(lexfn/add-infl "vieni" (list secondp present
-		       {:root venire}))
-(lexfn/add-infl "viene" (list thirdp sing present
-		       {:root venire}))
-(lexfn/add-infl "veniamo" (list firstp plural present
-		       {:root venire}))
-(lexfn/add-infl "venite" (list secondp plural present
-		       {:root venire}))
-(lexfn/add-infl "vengono" (list thirdp plural present
-		       {:root venire}))
 
 (lexfn/add "scrivere" "to write"
            {:cat :verb :infl :infinitive
@@ -210,41 +198,40 @@
             :adjunct {:cat :prep
                       :obj.place true}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
            
-
+;; <andare root>
 (def andare
   (lexfn/add "andare" "to go"
              {:cat :verb :infl :supertype
               :subj {:animate true}}))
 
+;; <andare adjunct variants> 
 (lexfn/add "andare" "to go"
            (merge andare
                   {:infl :infinitive
                    :adjunct {:cat :prep
                              :italian "a"
                              :obj.andare-a true}}))
-
 (lexfn/add "andare" "to go"
            (merge andare
                   {:infl :infinitive
                    :adjunct {:cat :prep
                              :italian "in"
                              :obj.andare-in true}}))
-
 (lexfn/add "andare" "to go"
            (merge andare
                   {:infl :infinitive
                    :adjunct {:cat :prep
                              :italian "al"
                              :obj.andare-al true}}))
-
 (lexfn/add "andare" "to go"
            (merge andare
                   {:infl :infinitive
                    :adjunct {:cat :prep
                              :italian "da"
                              :obj.human true}}))
+;; </andare root variants>
 
-;; exceptions
+;; <andare exceptions>
 (lexfn/add-infl "vado" (list firstp sing present)
 	  {:root andare})
 (lexfn/add-infl "vai" (list secondp sing present)
@@ -257,7 +244,68 @@
 	  {:root andare})
 (lexfn/add-infl "vanno" (list thirdp plural present)
 	  {:root andare})
+;; </andare exceptions>
+;; </andare>
 
+;; <venire>
+
+(def venire
+  (lexfn/add "venire" "to come"
+             {:cat :verb :infl :supertype
+              :subj {:animate true}}))
+
+;; <venire adjunct variants>
+;; TODO : add and use (lexfn/add-variant)
+;; (which doesn't need the english repeated,
+;; and uses just the defined symbol venire,
+;; not the string "venire".
+;; come *to* a place or by means of something ("vengo in treno")
+(lexfn/add "venire" "to come"
+           (merge venire
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "in"
+                             :obj.andare-in true}}))
+;; come *to* a place.
+(lexfn/add "venire" "to come"
+           (merge venire
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "a"
+                             :obj.andare-a true}}))
+;; come *from* a place.
+(lexfn/add "venire" "to come"
+           (merge venire
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "da"
+                             :obj.place true}}))
+;; come *to* a person.
+(lexfn/add "venire" "to come"
+           (merge venire
+                  {:infl :infinitive
+                   :adjunct {:cat :prep
+                             :italian "da"
+                             :obj.human true}}))
+
+;; </venire adjunct variants>
+
+ ;; <venire exceptions>
+ (lexfn/add-infl "vengo" (list firstp sing present
+		       {:root venire}))
+(lexfn/add-infl "vieni" (list secondp present
+		       {:root venire}))
+(lexfn/add-infl "viene" (list thirdp sing present
+		       {:root venire}))
+(lexfn/add-infl "veniamo" (list firstp plural present
+		       {:root venire}))
+(lexfn/add-infl "venite" (list secondp plural present
+		       {:root venire}))
+(lexfn/add-infl "vengono" (list thirdp plural present
+		       {:root venire}))
+;; </venire exceptions>
+
+;; </venire>
 
 (def volare (lexfn/add "volare" "to want"
                        {:cat :verb :infl :infinitive-omit-me}
@@ -299,7 +347,10 @@
 ;; pronouns
 
 (lexfn/add "io" "i" {:person :1st :number :singular :cat :noun} (list pronoun nominative))
-(lexfn/add "tu" "you" {:person :2nd :number :singular :cat :noun} (list pronoun))
+(lexfn/add "tu" "you" {:person :2nd :number :singular :cat :noun :case :nom}
+           (list pronoun))
+(lexfn/add "te" "you" {:person :2nd :number :singular :cat :noun :case :acc}
+           (list pronoun))
 (lexfn/add "lui" "he" {:person :3rd :number :singular :cat :noun :gender :masc} (list pronoun nominative))
 (lexfn/add "lei" "she" {:person :3rd :number :singular :cat :noun :gender :fem} (list pronoun nominative))
 (lexfn/add "noi" "we" {:person :1st :number :plural :cat :noun} (list pronoun nominative))
