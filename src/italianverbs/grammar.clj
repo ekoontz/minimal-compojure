@@ -122,15 +122,6 @@
    (symbol fn)
    true fn))
 
-(defn np-in-grammar-ns [ & [fs]]
-  (let [noun (choose-lexeme (merge fs {:cat :noun}))
-        ;; use _genfn to generate an argument (determiner) given _noun.
-        genfn (get noun :genfn)]
-    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
-      (if determiner
-        (combine noun determiner right)
-        noun))))
-
 (defn np [ & [fs]]
   (let [noun (choose-lexeme (merge fs {:cat :noun}))
         ;; use _genfn to generate an argument (determiner) given _noun.
