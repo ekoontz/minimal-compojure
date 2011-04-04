@@ -26,33 +26,23 @@
 (defn fs [lexeme]
   (str "<table class='fs'>"
        (string/join " " (seq (map fs-tr
-				  (map (fn [key]
-					 (cond
-					  (= key :_id) nil
-					  (= key :children) nil
-; uncomment for debugging.
-					  (= key :fn) nil
-					  (= key :head) nil
-                      ;; featues whose values are nested feature structures.
-                      (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)(= key :adjunct)(= key :iobj)(= key :choose))
-                      (list key
-                            (fs (get lexeme key)))
-					  (= key :root)
-					  (list key
-                            (fs (get lexeme key)))
-					  (= key :comp) nil
-					  true
-					  (list key
-                            (get lexeme key))))
-                       (if (get lexeme :english)
-                         (cons :italian
-                               (cons :english
-                                     (set/difference
-                                      (set (keys lexeme))
-                                      #{:english :italian})))
-                         (set/difference
-                          (set (keys lexeme))
-                          #{:english :italian}))))))
+                                  (map (fn [key]
+                                         (cond
+                                          (= key :_id) nil
+                                          (= key :children) nil
+                                        ; uncomment for debugging.
+                                          (= key :fn) nil
+                                          (= key :head) nil
+                                          ;; featues whose values are nested feature structures.
+                                          (or (= key :head-debug) (= key :comp-debug) (= key :subj)(= key :obj)
+                                              (= key :adjunct)(= key :iobj)(= key :choose)(= key :root))
+                                          (list key
+                                                (fs (get lexeme key)))
+                                          (or (= key :comp) (= key :genfn)) nil
+                                          true
+                                          (list key
+                                                (get lexeme key))))
+                                       (set (keys lexeme))))))
        "</table>"))
 
 (defn tablize [parent]
