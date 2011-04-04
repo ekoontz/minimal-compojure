@@ -523,6 +523,10 @@
             :cat :noun
             :genfn "gram/np-no-det"})
 
+(lexfn/add "salute" "health"
+           {:cat :noun
+            :genfn "gram/np-no-det"})
+
 ;; adjectives
 (lexfn/add "bianco" "white"
 	    {:cat :adjective})
