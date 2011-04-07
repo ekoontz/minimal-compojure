@@ -35,9 +35,26 @@
 	  [:a {:href "/form/"} "Forms"  ] ] 
 
       ] 
-      [:div {:class "poweredby major"}
+
+      [:div {:class "poweredbox major"}
+      
+       [:div {:class "poweredby"}
+        "Powered by " [:a {:href "https://github.com/ekoontz/minimal-compojure/tree/italian"}
+                       "italianverbs" ] ]
+       
+       [:div {:class "poweredby"}
         "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
-                      "Compojure" ] ] ))
+                       "compojure" ] ]
+       
+       [:div {:class "poweredby"}
+        "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
+                       "congomongo" ] ]
+
+       ]
+
+
+
+      ))
 
 (defn page [title & [content request]]
   (html5

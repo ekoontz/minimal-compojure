@@ -53,8 +53,16 @@ div.footer div {
   float:left;
 }
 
+div.poweredbox {
+  position:absolute;
+  right:0;
+  top:4em;
+  width:10%;
+}
+
 div.poweredby {
-  margin:1em;
+  width:90%;
+  margin:0.2em;
   float:right;
   text-align:right;
   width:auto;
