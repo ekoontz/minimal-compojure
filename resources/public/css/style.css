@@ -55,9 +55,10 @@ div.footer div {
 
 div.poweredbox {
   position:absolute;
+  whitespace:nowrap;
   right:0;
   top:4em;
-  width:10%;
+  width:30%;
 }
 
 div.poweredby {
