@@ -63,7 +63,7 @@
      (merge (first types) result))
     (add italian nil result)))
 
-(defn get [italian & [where ]]
+(defn lookup [italian & [where ]]
   (fetch-one :lexicon :where (merge where {:italian italian})))
 
 (defn clear []

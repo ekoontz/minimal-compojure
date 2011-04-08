@@ -67,48 +67,48 @@
     (gram/combine infinitive pronoun 'right))
 
 (defn io-pranzo []
-  (gram/combine (lexfn/get "pranzare")
-           (lexfn/get "io" {:case {:$ne :acc}}) 'right))
+  (gram/combine (lexfn/lookup "pranzare")
+           (lexfn/lookup "io" {:case {:$ne :acc}}) 'right))
 
 (defn lui-scrivo-il-libro []
-  (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
+  (let [subject (lexfn/lookup "lui" {:case {:$ne :acc}})
         object (gram/combine
-                (lexfn/get "libro")
-                (lexfn/get "il") 'right gram/det-n)
-        verb-phrase (gram/combine (lexfn/get "scrivere") object 'left gram/vo)]
+                (lexfn/lookup "libro")
+                (lexfn/lookup "il") 'right gram/det-n)
+        verb-phrase (gram/combine (lexfn/lookup "scrivere") object 'left gram/vo)]
     (gram/combine verb-phrase subject 'right)))
 
 (def in-italia
-  (let [prep (lexfn/get "in")
-	noun (lexfn/get "Italia")]
+  (let [prep (lexfn/lookup "in")
+	noun (lexfn/lookup "Italia")]
     (gram/combine
      prep noun 'left)))
 
 (def andare-in-italia
-  (gram/combine (lexfn/get "andare")
+  (gram/combine (lexfn/lookup "andare")
            in-italia 'left))
 
 (defn lui-vado-in-italia []
   (gram/combine
    (gram/combine
-    (lexfn/get "andare") in-italia 'left)
-   (lexfn/get "lui" {:case {:$ne :acc}}) 'right))
+    (lexfn/lookup "andare") in-italia 'left)
+   (lexfn/lookup "lui" {:case {:$ne :acc}}) 'right))
 
 (defn io-mangio-il-pane []
-  (let [subject (lexfn/get "io" {:case {:$ne :acc}})
+  (let [subject (lexfn/lookup "io" {:case {:$ne :acc}})
         object (gram/combine
-                (lexfn/get "pane")
-                (lexfn/get "il") 'right)
-        verb-phrase (gram/combine (lexfn/get "mangiare")
+                (lexfn/lookup "pane")
+                (lexfn/lookup "il") 'right)
+        verb-phrase (gram/combine (lexfn/lookup "mangiare")
                              object 'left)]
     (gram/combine verb-phrase subject 'right)))
 
 (defn lui-mangio-la-pasta-in-italia []
-  (let [subject (lexfn/get "lui" {:case {:$ne :acc}})
+  (let [subject (lexfn/lookup "lui" {:case {:$ne :acc}})
         object (gram/combine
-                (lexfn/get "pasta")
-                (lexfn/get "la") 'right)
-        verb-phrase (gram/combine (lexfn/get "mangiare")
+                (lexfn/lookup "pasta")
+                (lexfn/lookup "la") 'right)
+        verb-phrase (gram/combine (lexfn/lookup "mangiare")
                              object
                              'left)]
     (gram/combine 
@@ -116,11 +116,11 @@
      in-italia 'left)))
 
 (defn io-scrivo-il-libro []
-  (let [subject (lexfn/get "io")
+  (let [subject (lexfn/lookup "io")
 	object (gram/combine
-		(lexfn/get "libro")
-		(lexfn/get "il"))
-	verb-phrase (gram/combine (lexfn/get "scrivere")
+		(lexfn/lookup "libro")
+		(lexfn/lookup "il"))
+	verb-phrase (gram/combine (lexfn/lookup "scrivere")
 			     object)]
     (gram/combine verb-phrase subject)))
 
@@ -138,37 +138,37 @@
    "<tr>"
    "<th>io</th>"
    "<td>"
-   (get (conjugate (lexfn/get "io") verb) :italian)
+   (get (conjugate (lexfn/lookup "io") verb) :italian)
    "</td>"
    "</tr>"
    "<tr>"
        "<th>tu</th>"
        "<td>"
-       (get (conjugate (lexfn/get "tu") verb) :italian)
+       (get (conjugate (lexfn/lookup "tu") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>lui/lei</th>"
        "<td>"
-       (get (conjugate (lexfn/get "lui") verb) :italian)
+       (get (conjugate (lexfn/lookup "lui") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>noi</th>"
        "<td>"
-       (get (conjugate (lexfn/get "noi") verb) :italian)
+       (get (conjugate (lexfn/lookup "noi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>voi</th>"
        "<td>"
-       (get (conjugate (lexfn/get "voi") verb) :italian)
+       (get (conjugate (lexfn/lookup "voi") verb) :italian)
        "</td>"
        "</tr>"
        "<tr>"
        "<th>loro</th>"
        "<td>"
-       (get (conjugate (lexfn/get "loro") verb) :italian)
+       (get (conjugate (lexfn/lookup "loro") verb) :italian)
        "</td>"
        "</tr>"
        "</table>"
@@ -178,11 +178,11 @@
 (defn conjugations []
   (list 
    "<div class='section'> <h2>conjugations</h2></div>"
-   (conjugation (lexfn/get "andare"))
-   (conjugation (lexfn/get "volare"))
-   (conjugation (lexfn/get "fare"))
-   (conjugation (lexfn/get "venire"))
-   (conjugation (lexfn/get "dire"))))
+   (conjugation (lexfn/lookup "andare"))
+   (conjugation (lexfn/lookup "volare"))
+   (conjugation (lexfn/lookup "fare"))
+   (conjugation (lexfn/lookup "venire"))
+   (conjugation (lexfn/lookup "dire"))))
 
 (defn random-sentences-1 [num]
   (if (> num 0)
