@@ -8,7 +8,7 @@
 	    [italianverbs.quiz :as quiz]
 	    [italianverbs.test :as test]
 	    [italianverbs.session :as session]
-	    [italianverbs.lexicon :as lexicon]
+        [italianverbs.lexiconfn :as lexfn]
 	    [italianverbs.html :as ihtml]
 	    [italianverbs.grammar :as grammar]))
 
@@ -49,7 +49,7 @@
        ;; response map
        { :session (get request :session)
          :body (page "Lexicon"
-		     (ihtml/verb-table (fetch :lexicon))
+                     (lexfn/show-lexicon-as-feature-structures)
 		     request)
        }
        )

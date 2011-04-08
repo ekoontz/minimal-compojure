@@ -3,6 +3,7 @@
 	[somnium.congomongo])
   (:require
    [clojure.string :as string]
+   [italianverbs.html :as ihtml]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 ; global initializations go here, i guess..
@@ -69,4 +70,13 @@
 (defn clear []
   (destroy! :lexicon {}))
 
+(defn show-lexicon-as-feature-structures []
+;  "FAIL.")
+  (string/join " " (list "fail")))
+;               (map (fn [lexeme]
+;                      "fail"
+;                      nil))))
+;		      (ihtml/fs lexeme))
+;		    (fetch :lexicon :sort {"italian" 1}))))
+;                    (ihtml/verb-table (fetch :lexicon))
 

@@ -56,12 +56,6 @@
   (str "correct guesses: " (count (mapcat quiz/each-correct (fetch :question)))
        " out of : " (count (fetch :question))))
 
-(defn show-lexicon-as-feature-structures []
-  (string/join " "
-	       (map (fn [lexeme]
-		      (html/fs lexeme))
-		    (fetch :lexicon :sort {"italian" 1}))))
-
 ;; fixme: change name to "compose-sv-sentence" or something.
 (defn conjugate [pronoun infinitive]
     (gram/combine infinitive pronoun 'right))
@@ -212,7 +206,7 @@
  ;  (html/tablize (io-pranzo))
  ;  (html/tablize (lui-scrivo-il-libro))
    "<div class='section'> <h2>lexicon</h2></div>"
-   (show-lexicon-as-feature-structures)
+   (lexfn/show-lexicon-as-feature-structures)
 
    (correct)
    (answertable)

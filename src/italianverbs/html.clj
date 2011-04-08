@@ -10,7 +10,10 @@
 (defn verb-row [italian]
   (html  
    [:tr 
-   [:th italian] [:td (get (lex/lookup italian) :english)] 
+    [:th italian] [:td
+;                   (get (lex/lookup italian) :english)
+"FAIL."
+                   ] 
     ]))
 
 (defn verb-table [lexicon]
