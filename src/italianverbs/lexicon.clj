@@ -94,6 +94,20 @@
         :obj {:case {:$ne :nom}
               :human true}})
 
+(add "per" "for"
+     {:cat :prep
+      :benefactive true
+      :fn "gram/prep-fn"
+      :obj {:case {:$ne :nom}
+            :animate true}})
+
+(add "per" "for"
+     {:cat :prep
+      :benefactive true
+      :fn "gram/prep-fn"
+      :obj {:case {:$ne :nom}
+            :human true}})
+
 ;; verbs
 (add "dimenticare" "to forget"
            {:cat :verb :infl :infinitive
@@ -113,13 +127,12 @@
                    :human true
                    }
             :obj {:cat :noun}
-            :iobj {:animate true}})
-           
+            :iobj {:obj.animate true}})
 
 (def dire (add "dire" "to say"
                      {:cat :verb :infl :infinitive
                       :obj {:sayable true}
-                      :iobj {:animate true}
+                      :iobj {:obj.animate true}
                       :subj {:human true}}))
 (add-infl "dico" (list firstp sing present
 		       {:root dire}))
@@ -138,8 +151,8 @@
            {:cat :verb :infl :infinitive
             :subj {:human true}
             :obj {:writable true}
-            :iobj {:human true
-                   :prep {:benefactive true}}})
+            :iobj {:obj.human true
+                   :benefactive true}})
 
 (add "correggere" "to correct"
            {:cat :verb :infl :infinitive
@@ -151,8 +164,9 @@
             :infl :infinitive
             :subj {:human true}
             :obj {:written true}
-            :iobj {:human true}
-            :adjunct {:place true}})
+            :iobj {:obj.case {:$ne :nom}
+                   :obj.human true}
+           :adjunct {:obj.place true}})
 
 (def mangiare
   (add "mangiare" "to eat"
@@ -189,6 +203,7 @@
             :infl :infinitive
             :subj {:human true}
             :adjunct {:cat :prep
+                      :english "in"
                       :obj.place true}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
            
 ;; <andare root>
@@ -321,8 +336,8 @@
                      {:cat :verb :infl :infinitive
                       :obj {:artifact true}
                       :subj {:human true}
-                      :iobj {:animate true
-                             :benifactive true}}))
+                      :iobj {:obj.animate true
+                             :benefactive true}}))
                      
 (add-infl "facio" (list firstp sing present
 			{:root fare}))

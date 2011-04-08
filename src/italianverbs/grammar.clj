@@ -180,11 +180,15 @@
            "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn pp [ & [fs]] ; fs adds restrictions on prep.
+(defn pp [ & [fs fs-obj]]
+  "generate a prepositional phrase.
+   fs adds restrictions on prep.
+   fs-obj adds restrictions on prepositions's complement."
   (let [prep (choose-lexeme (merge fs {:cat :prep}))
         ;; (eventually) use _genfn to generate an argument (np) given _prep.
         genfn (get prep :genfn)]
-    (let [np (np (get prep :obj))]
+    (let [np (np (merge (get prep :obj)
+                        fs-obj))]
       (combine prep np left))))
 
 (defn sv [head comp]
@@ -206,17 +210,23 @@
 (defn det-n [head comp]
   (right head comp))
 
+(defn choose-iobject [verb]
+  (pp (get verb :iobj)))
+
 (defn vp [ & [fs]]
   (let [verb-fs (merge
                  fs
                  {:cat :verb
                   :infl :infinitive})
-        verb
-        (nth (fetch :lexicon :where verb-fs)
-             (rand-int (count (fetch :lexicon :where verb-fs))))]
-    (if (get verb :obj)
-      (combine verb (choose-object verb) vo)
-      verb)))
+        verb (nth (fetch :lexicon :where verb-fs)
+                  (rand-int (count (fetch :lexicon :where verb-fs))))
+        verb-with-object (if (get verb :obj)
+                           (combine verb (choose-object verb) vo)
+                           verb)
+        verb-with-iobject (if (get verb :iobj)
+                            (combine verb-with-object (choose-iobject verb) vo)
+                            verb-with-object)]
+    verb-with-iobject))
 
 (defn vp-with-adjunct-pp [ & [fs]]
   (let [vp (vp fs)]
