@@ -58,6 +58,22 @@
         :obj {:case {:$ne :nom}
               :andare-in true}})
 
+(add "in" "in"
+     {:cat :prep
+      :action-occurring-in true
+      :fn "gram/prep-fn"
+      :obj {:case {:$ne :nom}
+            :english-in true
+            :place true}})
+
+(add "in" "at"
+     {:cat :prep
+      :action-occurring-in true
+      :fn "gram/prep-fn"
+      :obj {:case {:$ne :nom}
+            :english-at true
+            :place true}})
+
 (add "a" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
@@ -114,12 +130,16 @@
             :subj {:animate true}
             :obj {:cat :noun}})
 
+;; FIXME: should also allow "at".
+(def adjunct-in-a-place
+  {:action-occurring-in true
+   :obj.place true})
+
 (add "agitare" "to shake"
            {:cat :verb :infl :infinitive
-            :subj {
-                   :animate true
-                   }
-            :obj {:holdable true}})
+            :subj {:animate true}
+            :obj {:holdable true}
+            :adjunct adjunct-in-a-place})
 
 (add "mostrare" "to show"
            {:cat :verb :infl :infinitive
@@ -127,13 +147,17 @@
                    :human true
                    }
             :obj {:cat :noun}
-            :iobj {:obj.animate true}})
+            :iobj {:obj.animate true}
+            :adjunct adjunct-in-a-place})
 
 (def dire (add "dire" "to say"
                      {:cat :verb :infl :infinitive
                       :obj {:sayable true}
-                      :iobj {:obj.animate true}
-                      :subj {:human true}}))
+                      :iobj {:obj.animate true
+                             :benefactive true}
+                      :subj {:human true}
+                      :adjunct adjunct-in-a-place}))
+
 (add-infl "dico" (list firstp sing present
 		       {:root dire}))
 (add-infl "dici" (list secondp sing present
@@ -152,12 +176,14 @@
             :subj {:human true}
             :obj {:writable true}
             :iobj {:obj.human true
-                   :benefactive true}})
+                   :benefactive true}
+            :adjunct adjunct-in-a-place})
 
 (add "correggere" "to correct"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj {:human true}})
+            :obj {:human true}
+            :adjunct adjunct-in-a-place})
 
 (add "leggere" "to read"
            {:cat :verb
@@ -166,7 +192,7 @@
             :obj {:written true}
             :iobj {:obj.case {:$ne :nom}
                    :obj.human true}
-           :adjunct {:obj.place true}})
+           :adjunct adjunct-in-a-place})
 
 (def mangiare
   (add "mangiare" "to eat"
@@ -196,15 +222,15 @@
 (add "smettere" "to quit"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj.cat :noun})
-
+            :adjunct adjunct-in-a-place})
+;; someday: (e.g. "quits working at the bank")
+;; :obj vp[:tense present-participle]
+ 
 (add "pranzare" "to eat lunch"
            {:cat :verb
             :infl :infinitive
             :subj {:human true}
-            :adjunct {:cat :prep
-                      :english "in"
-                      :obj.place true}}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
+            :adjunct adjunct-in-a-place}) ;; e.g. "[eats lunch [in [ the cafe ]]]"
            
 ;; <andare root>
 (def andare
@@ -337,7 +363,9 @@
                       :obj {:artifact true}
                       :subj {:human true}
                       :iobj {:obj.animate true
-                             :benefactive true}}))
+                             :benefactive true}
+                      :adjunct {:obj.place true
+                                :english "in"}}))
                      
 (add-infl "facio" (list firstp sing present
 			{:root fare}))
@@ -504,31 +532,43 @@
 (add "ufficio" "the office" ;; TODO: better english translation might be "my office","your office", etc, or in some cases "work".
            {:andare-in true
             :cat :noun
+            :place true
             :genfn "gram/np-no-det"})
 
 (add "casa" "home"
            {:andare-a true
             :cat :noun
+            :english-at true
+            :place true
             :genfn "gram/np-no-det"})
 
 (add "letto" "bed"
-           {:andare-a true
-            :cat :noun
-            :genfn "gram/np-no-det"})
+     {:andare-a true
+      :english-in true
+      :place true
+      :cat :noun
+      :genfn "gram/np-no-det"})
 
 (add "cinema" "the theatre"
            {:andare-al true
+            :place true
+            :english-in true
             :cat :noun
             :genfn "gram/np-no-det"})
 
 (add "mare" "the beach"
-           {:andare-al true
-            :cat :noun
-            :genfn "gram/np-no-det"})
+     {:andare-al true
+      :place true
+      :english-at true
+      :cat :noun
+      :genfn "gram/np-no-det"})
 
 (add "ristorante" "the restaurant"
            {:andare-al true
             :cat :noun
+            :english-at true
+            :english-in true
+            :place true
             :genfn "gram/np-no-det"})
 
 (add "salute" "health"
