@@ -451,13 +451,13 @@
 	     :gender :fem}
         (list noun human))
 
-(add "raggazo" "guy"
+(add "raggazzo" "guy"
 	    {:cat :noun
 	     :number :singular
 	     :gender :masc}
         (list noun human))
 	     
-(add "raggaza" "girl"
+(add "raggazza" "girl"
 	    {:cat :noun
 	     :number :singular
 	     :gender :fem}
