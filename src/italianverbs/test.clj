@@ -205,8 +205,6 @@
  ;  (html/tablize (lui-mangio-la-pasta-in-italia))
  ;  (html/tablize (io-pranzo))
  ;  (html/tablize (lui-scrivo-il-libro))
-   "<div class='section'> <h2>lexicon</h2></div>"
-   (lexfn/show-lexicon-as-feature-structures)
 
    (correct)
    (answertable)
