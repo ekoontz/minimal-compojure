@@ -33,7 +33,7 @@
 (def choose-pp
   {:genfn "choose-pp"})
 (def choose-vp-inf
-  {:genfn "choose-vp-inf"})
+  {:obj {:cat :verb}})
 (def human
   {:human true
    :animate true})
@@ -222,7 +222,7 @@
            (list choose-pp))
 
 (add "smettere" "to quit"
-           {:cat :verb :infl :infinitive
+           {:cat :verb :infl :infinitive-omit
             :subj {:human true}
             :obj {:cat :noun}
             :adjunct adjunct-in-a-place})
@@ -345,7 +345,7 @@
 ;; </venire>
 
 (def volare (add "volare" "to want"
-                       {:cat :verb :infl :infinitive-omit-me}
+                       {:cat :verb :infl :infinitive}
                        (list choose-vp-inf)))
                        
 (add-infl "voglio" (list firstp sing present

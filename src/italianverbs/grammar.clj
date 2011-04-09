@@ -221,7 +221,7 @@
          (= (get (get verb :obj) :cat) "noun")
          (np (merge {:case {:$ne :nom}}
                     (get verb :obj)))
-         (= (get (get verb :obj) :cat) "verb-infinitive")
+         (= (get (get verb :obj) :cat) "verb")
          (vp (get verb :obj))
          true nil)
         verb-with-object (if object
