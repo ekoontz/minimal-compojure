@@ -345,8 +345,9 @@
 ;; </venire>
 
 (def volare (add "volare" "to want"
-                       {:cat :verb :infl :infinitive}
-                       (list choose-vp-inf)))
+                 {:cat :verb :infl :infinitive
+                  :subj {:animate true}}
+                 (list choose-vp-inf)))
                        
 (add-infl "voglio" (list firstp sing present
 			 {:root volare}))
