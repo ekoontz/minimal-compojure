@@ -71,12 +71,9 @@
   (destroy! :lexicon {}))
 
 (defn show-lexicon-as-feature-structures []
-;  "FAIL.")
-  (string/join " " (list "fail")))
-;               (map (fn [lexeme]
-;                      "fail"
-;                      nil))))
-;		      (ihtml/fs lexeme))
-;		    (fetch :lexicon :sort {"italian" 1}))))
-;                    (ihtml/verb-table (fetch :lexicon))
-
+  "reload lexicon into mongodb and then render it as HTML."
+  (load-file "src/italianverbs/actual-lexicon.clj")
+  (string/join " "
+               (map (fn [lexeme]
+                      (ihtml/fs lexeme))
+                    (fetch :lexicon :sort {"italian" 1}))))
