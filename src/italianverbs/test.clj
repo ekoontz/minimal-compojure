@@ -186,7 +186,6 @@
 
 (defn random-sentences [num]
   (list
-   "<div class='section'> <h2>random sentences</h2></div>"
    (random-sentences-1 num)))
 
 (def tests
@@ -197,7 +196,7 @@
 
    ;(conjugations)
 
-   (random-sentences 20)
+   (random-sentences 1)
    
 ;   "<div class='section'> <h2>fixed sentences</h2></div>"
  ;  (html/tablize (lui-vado-in-italia))
