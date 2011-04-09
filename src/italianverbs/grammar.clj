@@ -131,10 +131,6 @@
         (combine noun determiner right)
         noun))))
 
-(defn choose-object [verb]
-  (np (merge {:case {:$ne :nom}}
-             (get verb :obj))))
-
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
    ;; unfortunately we have to check
@@ -220,8 +216,16 @@
                   :infl :infinitive})
         verb (nth (fetch :lexicon :where verb-fs)
                   (rand-int (count (fetch :lexicon :where verb-fs))))
-        verb-with-object (if (get verb :obj)
-                           (combine verb (choose-object verb) vo)
+        object
+        (cond
+         (= (get (get verb :obj) :cat) "noun")
+         (np (merge {:case {:$ne :nom}}
+                    (get verb :obj)))
+         (= (get (get verb :obj) :cat) "verb-infinitive")
+         (vp (get verb :obj))
+         true nil)
+        verb-with-object (if object
+                           (combine verb object vo)
                            verb)
         verb-with-iobject (if (get verb :iobj)
                             (combine verb-with-object (choose-iobject verb) vo)

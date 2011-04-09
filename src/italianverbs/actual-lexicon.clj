@@ -138,7 +138,7 @@
 (add "agitare" "to shake"
            {:cat :verb :infl :infinitive
             :subj {:animate true}
-            :obj {:holdable true}
+            :obj {:cat :noun :holdable true}
             :adjunct adjunct-in-a-place})
 
 (add "mostrare" "to show"
@@ -152,7 +152,7 @@
 
 (def dire (add "dire" "to say"
                      {:cat :verb :infl :infinitive
-                      :obj {:sayable true}
+                      :obj {:cat :noun :sayable true}
                       :iobj {:obj.animate true
                              :benefactive true}
                       :subj {:human true}
@@ -174,7 +174,8 @@
 (add "scrivere" "to write"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj {:writable true}
+            :obj {:writable true
+                  :cat :noun}
             :iobj {:obj.human true
                    :benefactive true}
             :adjunct adjunct-in-a-place})
@@ -182,14 +183,14 @@
 (add "correggere" "to correct"
            {:cat :verb :infl :infinitive
             :subj {:human true}
-            :obj {:human true}
+            :obj {:cat :noun :human true}
             :adjunct adjunct-in-a-place})
 
 (add "leggere" "to read"
            {:cat :verb
             :infl :infinitive
             :subj {:human true}
-            :obj {:written true}
+            :obj {:cat :noun :written true}
             :iobj {:obj.case {:$ne :nom}
                    :obj.human true}
            :adjunct adjunct-in-a-place})
@@ -198,7 +199,8 @@
   (add "mangiare" "to eat"
              {:cat :verb
               :subj {:animate true}
-              :obj {:edible true}
+              :obj {:cat :noun
+                    :edible true}
               :adjunct {:cat :prep
                         :obj.place true}
               :infl :infinitive}))
@@ -222,6 +224,7 @@
 (add "smettere" "to quit"
            {:cat :verb :infl :infinitive
             :subj {:human true}
+            :obj {:cat :noun}
             :adjunct adjunct-in-a-place})
 ;; someday: (e.g. "quits working at the bank")
 ;; :obj vp[:tense present-participle]
@@ -360,7 +363,8 @@
 
 (def fare (add "fare" "to make"
                      {:cat :verb :infl :infinitive
-                      :obj {:artifact true}
+                      :obj {:cat :noun
+                            :artifact true}
                       :subj {:human true}
                       :iobj {:obj.animate true
                              :benefactive true}
