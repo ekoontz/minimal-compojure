@@ -47,7 +47,7 @@
                        "compojure" ] ]
        
        [:div {:class "poweredby"}
-        "Powered by " [:a {:href "http://github.com/weavejester/compojure"}
+        "Powered by " [:a {:href "https://github.com/somnium/congomongo"}
                        "congomongo" ] ]
 
        ]
