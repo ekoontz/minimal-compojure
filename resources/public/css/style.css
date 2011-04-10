@@ -54,10 +54,11 @@ div.footer div {
 }
 
 div.poweredbox {
-  position:absolute;
+    float:right;
+  position:relative;
   whitespace:nowrap;
-  right:0;
-  top:4em;
+  right:0%;
+  bottom:0;
   width:30%;
 }
 
@@ -175,4 +176,9 @@ div.syntax table {
 
 div.syntax td {
     vertical-align:top;
+}
+
+table.fs th.fs {
+    padding-right:0.5em;
+    font-style:italic;
 }

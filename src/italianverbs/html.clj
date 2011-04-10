@@ -28,6 +28,8 @@
 
 (defn fs [lexeme]
   (str "<table class='fs'>"
+       (if (get lexeme :italian)
+         (str "<tr><th colspan='2' class='fs'>" (get lexeme :italian) "</th></tr>"))
        (string/join " " (seq (map fs-tr
                                   (map (fn [key]
                                          (cond
@@ -41,11 +43,12 @@
                                               (= key :adjunct)(= key :iobj)(= key :choose)(= key :root))
                                           (list key
                                                 (fs (get lexeme key)))
-                                          (or (= key :comp) (= key :genfn)) nil
+                                          (= key :comp) nil
                                           true
                                           (list key
                                                 (get lexeme key))))
-                                       (set (keys lexeme))))))
+                                       (set/difference (set (keys lexeme))
+                                                       (set (list :italian)))))))
        "</table>"))
 
 (defn tablize [parent]
