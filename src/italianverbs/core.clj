@@ -4,27 +4,11 @@
 	[base.html])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-	    [base.lib :as baselib]
-	    [italianverbs.quiz :as quiz]
-	    [italianverbs.test :as test]
-	    [italianverbs.session :as session]
-        [italianverbs.lexiconfn :as lexfn]
-	    [italianverbs.html :as ihtml]
-	    [italianverbs.grammar :as grammar]))
-
-;; seems like i need to do this explicitly to get certain things to be reloaded
-;; at page load.
-
-;; main app code
-;(load-file "src/italianverbs/morphology.clj")
-;(load-file "src/italianverbs/lexiconfn.clj")
-;(load-file "src/italianverbs/lexicon.clj")
-;(load-file "src/italianverbs/grammar.clj")
-;(load-file "src/italianverbs/generate.clj")
-;(load-file "src/italianverbs/html.clj")
-
-;; test code
-;(load-file "src/italianverbs/test.clj")
+            [base.lib :as baselib]
+            [italianverbs.quiz :as quiz]
+            [italianverbs.test :as test]
+            [italianverbs.session :as session]
+            [italianverbs.lexiconfn :as lexfn]))
 
 (defroutes main-routes
 
@@ -81,6 +65,7 @@
 			  (flatten test/tests))
 		     request)
 	 })
+
   (POST "/test/" 
        request
        { :session (get request :session)
@@ -89,7 +74,7 @@
 			  test/tests)
 		     request)
 	 })
-
+  
 ;; TODO: make this a POST with 'username' and 'password' params.
   (GET "/session/set/"  
        request
@@ -108,7 +93,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (page "not found." "Sorry, page not found.")))
+  (route/not-found (page "Page not found." "Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function
