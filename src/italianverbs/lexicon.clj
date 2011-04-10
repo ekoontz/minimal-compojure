@@ -3,14 +3,18 @@
 ;; useful abbreviations
 (def noun
   {:cat :noun
-   :comp {:cat :det}
+   :det {:cat :det}
    :person :3rd})
+
+(def mass-noun
+  {:det {:cat :det
+         :def :def}})
 
 (def pronoun
   {:cat :noun
    :animate true
    :human true
-   :comp nil}) ;; pronouns don't take a determiner.
+   :det nil}) ;; pronouns don't take a determiner.
 
 (def nominative
   {:case :nom})
@@ -18,7 +22,7 @@
   {:case :acc})
 (def propernoun
   (merge noun
-         {:comp nil})) ;; propernouns also don't take a determiner.
+         {:det nil})) ;; propernouns also don't take a determiner.
 (def firstp
   {:person :1st})
 (def secondp
@@ -431,6 +435,8 @@
 ;; determiners
 (add "il" "the" {:gender :masc :number :singular :cat :det
 			:def :def})
+(add "uno" "a" {:gender :masc :number :singular :cat :det
+			:def :indef})
 (add "i" "the" {:gender :masc :number :plural :cat :det
 		       :def :def})
 (add "gli" "the" {:gender :masc :number :plural :cat :det
@@ -438,6 +444,8 @@
 
 (add "la" "the" {:gender :fem :number :singular :cat :det
 			:def :def})
+(add "una" "a" {:gender :fem :number :singular :cat :det
+			:def :indef})
 (add "le" "the" {:gender :fem :number :plural :cat :det
 			:def :def})
 
@@ -488,8 +496,9 @@
 	     :gender :fem
          :makeable true
          :edible true
+         :det {:def :def}
          :holdable true}
-        (list noun))
+        (list mass-noun noun))
 
 (add "libro" "book"
 	    {:cat :noun
@@ -523,6 +532,11 @@
 	     :gender :masc
          :artifact true}
         (list noun))
+(add "abiti" "dresses"
+	    {:number :plural
+	     :gender :masc
+         :artifact true}
+        (list noun))
 
 (add "parole" "word"
 	    {:number :plural
@@ -534,41 +548,41 @@
 (add "centro" "downtown"
            {:andare-in true
             :cat :noun
-            :comp nil})
+            :det nil})
 
 (add "ufficio" "the office" ;; TODO: better english translation might be "my office","your office", etc, or in some cases "work".
            {:andare-in true
             :cat :noun
             :place true
-            :comp nil})
+            :det nil})
 
 (add "casa" "home"
            {:andare-a true
             :cat :noun
             :english-at true
             :place true
-            :comp nil})
+            :det nil})
 
 (add "letto" "bed"
      {:andare-a true
       :english-in true
       :place true
       :cat :noun
-      :comp nil})
+      :det nil})
 
 (add "cinema" "the theatre"
      {:andare-al true
       :place true
       :english-in true
       :cat :noun
-      :comp nil})
+      :det nil})
 
 (add "mare" "the beach"
      {:andare-al true
       :place true
       :english-at true
       :cat :noun
-      :comp nil})
+      :det nil})
 
 (add "ristorante" "the restaurant"
      {:andare-al true
@@ -576,11 +590,11 @@
       :english-at true
       :english-in true
       :place true
-      :comp nil})
+      :det nil})
 
 (add "salute" "health"
      {:cat :noun
-      :comp nil})
+      :det nil})
 
 ;; adjectives
 (add "bianco" "white"

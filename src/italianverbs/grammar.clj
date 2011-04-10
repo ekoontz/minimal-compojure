@@ -89,11 +89,6 @@
                  (list (get arg :italian)
                        (morph/conjugate-it head)))}))
 
-;; following 3 fns should probably be in generate.clj.
-(defn np-no-det [noun]
-  ;; for nouns that do not take determiners.
-  nil)
-
 (defn choose-lexeme [struct]
   ;; do a query based on the given struct,
   ;; and choose a random element that satisfies the query.
@@ -104,12 +99,6 @@
        :choose struct
        }
       (nth results (rand-int (count results))))))
-
-(defn np-det [noun]
-  (choose-lexeme
-   {:gender (get noun :gender)
-    :number (get noun :number)
-    :cat :det}))
 
 "find a function which might really be a function, or might be a string that
  needs to be converted to a function whose name is that string."
@@ -123,12 +112,13 @@
    true fn))
 
 (defn np [ & [fs]]
-  (let [noun (choose-lexeme (merge fs {:cat :noun}))
-        determiner (if (get noun :comp)
+  (let [noun (choose-lexeme (merge fs {:cat :noun
+                                       }))
+        determiner (if (get noun :det)
                      (choose-lexeme
                       (merge {:number (get noun :number)
                               :gender (get noun :gender)}
-                             (get noun :comp))))]
+                             (get noun :det))))]
     (if determiner
       (combine noun determiner right)
       noun)))
