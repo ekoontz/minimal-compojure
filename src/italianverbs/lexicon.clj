@@ -35,8 +35,6 @@
   {:number :plural})
 (def present
   {:cat :verb :infl :present})
-(def choose-pp
-  {:genfn "choose-pp"})
 (def choose-vp-inf
   {:obj {:cat :verb}})
 (def human
@@ -218,19 +216,21 @@
 	     :cat :verb :infl :present
 	     :person :2nd :number :singular})
 (add "mangia" "to eat"
-	    {:root mangiare
-	     :cat :verb :infl :present
-	     :person :3rd :number :singular})
+     {:root mangiare
+      :cat :verb :infl :present
+      :person :3rd :number :singular})
 
 (add "parlere" "to speak"
-           {:cat :verb :infl-omit :infinitive}
-           (list choose-pp))
+     {:subj {:human true}
+      :cat :verb :infl :infinitive
+      :iobj {:obj.human true}
+      :adjunct adjunct-in-a-place})
 
 (add "smettere" "to quit"
-           {:cat :verb :infl :infinitive-omit
-            :subj {:human true}
-            :obj {:cat :noun}
-            :adjunct adjunct-in-a-place})
+     {:cat :verb :infl :infinitive-omit
+      :subj {:human true}
+      :obj {:cat :noun}
+      :adjunct adjunct-in-a-place})
 ;; someday: (e.g. "quits working at the bank")
 ;; :obj vp[:tense present-participle]
  
