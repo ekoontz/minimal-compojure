@@ -124,12 +124,14 @@
 
 (defn np [ & [fs]]
   (let [noun (choose-lexeme (merge fs {:cat :noun}))
-        ;; use _genfn to generate an argument (determiner) given _noun.
-        genfn (get noun :genfn)]
-    (let [determiner (apply (eval (find-fn genfn)) (list noun))]
-      (if determiner
-        (combine noun determiner right)
-        noun))))
+        determiner (if (get noun :comp)
+                     (choose-lexeme
+                      (merge {:number (get noun :number)
+                              :gender (get noun :gender)}
+                             (get noun :comp))))]
+    (if determiner
+      (combine noun determiner right)
+      noun)))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -250,3 +252,6 @@
         {:cat :error
          :error "vp-with-adjunct-pp returned null."}))))
 
+(defn generate []
+;  (np))
+  (sentence))

@@ -181,7 +181,7 @@
 (defn random-sentences-1 [num]
   (if (> num 0)
     (cons
-     (html/tablize (gram/sentence))
+     (html/tablize (gram/generate))
      (random-sentences-1 (- num 1)))))
 
 (defn random-sentences [num]
@@ -205,8 +205,8 @@
  ;  (html/tablize (io-pranzo))
  ;  (html/tablize (lui-scrivo-il-libro))
 
-   (correct)
-   (answertable)
+;   (correct)
+;   (answertable)
    ))
 
   
