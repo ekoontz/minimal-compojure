@@ -72,7 +72,7 @@
 
 (defn show-lexicon-as-feature-structures []
   "reload lexicon into mongodb and then render it as HTML."
-  (load-file "src/italianverbs/actual-lexicon.clj")
+  (load-file "src/italianverbs/lexicon.clj")
   (string/join " "
                (map (fn [lexeme]
                       (ihtml/fs lexeme))
