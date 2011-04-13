@@ -48,26 +48,26 @@ div.footer {
 }
 
 div.footer div {
-  margin-right:1em;
-  width:auto;
-  float:left;
+    margin-right:1em;
+    width:auto;
+    float:left;
 }
 
 div.poweredbox {
     float:right;
-  position:relative;
-  whitespace:nowrap;
-  right:0%;
-  bottom:0;
-  width:30%;
+    position:relative;
+    whitespace:nowrap;
+    right:0%;
+    bottom:0;
+    width:30%;
 }
 
 div.poweredby {
-  width:90%;
-  margin:0.2em;
-  float:right;
-  text-align:right;
-  width:auto;
+    width:90%;
+    margin:0.2em;
+    float:right;
+    text-align:right;
+    width:auto;
 }
 
 div.guess {
@@ -150,7 +150,7 @@ table.fs {
 }
 
 table.fs th {
-    text-align:right;
+    text-align:center;
     padding:2px;
     padding-right:0.25em;
     background: #cecece;
