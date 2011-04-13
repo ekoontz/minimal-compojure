@@ -393,6 +393,8 @@
 (add "io" "i" {
                :person :1st :number :singular :cat :noun
                } (list pronoun nominative))
+(add "mi" "me" {:person :1st :number :singular :cat :noun :case :acc}
+     (list pronoun))
 (add "tu" "you" {:person :2nd :number :singular :cat :noun :case :nom}
            (list pronoun))
 (add "te" "you" {:person :2nd :number :singular :cat :noun :case :acc}
@@ -435,12 +437,10 @@
 ;; determiners
 (add "il" "the" {:gender :masc :number :singular :cat :det
 			:def :def})
-(add "uno" "a" {:gender :masc :number :singular :cat :det
+(add "un" "a" {:gender :masc :number :singular :cat :det
 			:def :indef})
 (add "i" "the" {:gender :masc :number :plural :cat :det
 		       :def :def})
-(add "gli" "the" {:gender :masc :number :plural :cat :det
-			 :def :def})
 
 (add "la" "the" {:gender :fem :number :singular :cat :det
 			:def :def})
@@ -463,6 +463,12 @@
    :gender :fem}
   (list noun human)
   "women")
+
+(add-with-plural "studente" "student"
+  {:cat :noun
+   :number :singular
+   :gender :masc}
+  (list noun human))
 
 (add-with-plural "raggazzo" "guy"
   {:cat :noun

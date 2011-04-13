@@ -46,7 +46,7 @@
 (defn italian-pluralize [singular gender]
   (cond
    (= gender :masc)
-   (stringc/replace-re #"([o])$" "i" singular)
+   (stringc/replace-re #"([oe])$" "i" singular)
    (= gender :fem)
    (stringc/replace-re #"([a])$" "e" singular)
    true (str "error: gender: " gender  " unknown.")))

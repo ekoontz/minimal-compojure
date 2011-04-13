@@ -178,3 +178,38 @@
 		  (get head :cat)
 		  (= (get head :cat) "noun")))))
 
+(defn italian-article [det noun]
+  "do italian det/noun morphology e.g. [def :def] + studente => lo studente" 
+  (let [det-italian (get det :italian)
+        det-noun (get noun :italian)]
+    (cond
+     (and (re-find #"^[aeiou]" (get noun :italian))
+          (= (get det :def) "def")
+          (= (get noun :number) "singular"))
+     (str "l'" (get noun :italian))
+
+     (and (re-find #"^st" (get noun :italian))
+          (= (get det :def) "def")
+          (= (get noun :number) "singular")
+          (= (get noun :gender) "masc"))
+     (str "lo " (get noun :italian))
+
+     (and (re-find #"^(st|[aeiou])" (get noun :italian))
+          (= (get det :def) "def")
+          (= (get noun :number) "plural")
+          (= (get noun :gender) "masc"))
+     (str "gli " (get noun :italian))
+
+     (and (re-find #"^[aeiou]" (get noun :italian))
+          (= (get det :def) "indef")
+          (= (get noun :number) "singular")
+          (= (get noun :gender) "masc"))
+     (str "un'" (get noun :italian))
+
+     (and (re-find #"^st" (get noun :italian))
+          (= (get det :def) "indef")
+          (= (get noun :number) "singular")
+          (= (get noun :gender) "masc"))
+     (str "uno " (get noun :italian))
+
+     true (str det-italian " " det-noun))))

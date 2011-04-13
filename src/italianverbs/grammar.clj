@@ -120,7 +120,9 @@
                               :gender (get noun :gender)}
                              (get noun :det))))]
     (if determiner
-      (combine noun determiner right)
+      (merge 
+       (combine noun determiner right)
+       {:italian (morph/italian-article determiner noun)})
       noun)))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
