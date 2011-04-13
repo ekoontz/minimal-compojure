@@ -4,7 +4,8 @@
   (:require
    [clojure.string :as string]
    [italianverbs.html :as ihtml]
-   [clojure.contrib.str-utils2 :as str-utils]))
+   [clojure.contrib.str-utils2 :as str-utils]
+   [clojure.contrib.string :as stringc]))
 
 ; global initializations go here, i guess..
 (mongo! :db "mydb")
@@ -20,6 +21,11 @@
   (get (nth lexeme 1) :english))
 
 ;; CRUD-like functions:
+(defn add-fs [fs]
+  (let [function-to-symbol fs]
+    (insert! :lexicon fs)
+    fs))
+
 ;; italian and english are strings, featuremap is a map of key->values.
 (defn add [italian english & [featuremap types result]]
   (if (first types)
@@ -35,9 +41,35 @@
                         (if english
                           (assoc {} :italian italian :english english)
                           (assoc {} :italian italian))))]
-      (let [function-to-symbol featuremap]
-        (insert! :lexicon function-to-symbol)
-        featuremap))))
+      (add-fs featuremap))))
+
+(defn italian-pluralize [singular gender]
+  (cond
+   (= gender :masc)
+   (stringc/replace-re #"([o])$" "i" singular)
+   (= gender :fem)
+   (stringc/replace-re #"([a])$" "e" singular)
+   true (str "error: gender: " gender  " unknown.")))
+
+(defn english-pluralize [singular]
+  (str (stringc/replace-re #"([sxz])$" "$1e" singular) "s"))
+
+(defn add-plural [fs types & [english-plural]]
+  (add
+   (italian-pluralize (get fs :italian)
+                      (get fs :gender))
+   (if english-plural english-plural
+     (english-pluralize (get fs :english)))
+   (merge
+    fs 
+    {:number :plural})
+   types))
+
+(defn add-with-plural [italian english featuremap types & [english-plural]]
+  (add-plural
+   (add italian english featuremap types)
+   types
+   english-plural))
 
 ;; _italian and _english are strings; _types is a list of symbols (each of which is a map of key-values);
 ;; _result is an accumulator which is the merge of all of the maps in _types.

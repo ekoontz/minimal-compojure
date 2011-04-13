@@ -450,45 +450,47 @@
 			:def :def})
 
 ;; nouns
-(add "uomo" "man"
-	    {:cat :noun
-	     :number :singular
-	     :gender :masc}
-        (list noun human))
-	     
-(add "donna" "woman"
-	    {:cat :noun
-	     :number :singular
-	     :gender :fem}
-        (list noun human))
+(add-with-plural "uomo" "man"
+  {:cat :noun
+   :number :singular
+   :gender :masc}
+  (list noun human)
+  "men")
 
-(add "raggazzo" "guy"
-	    {:cat :noun
-	     :number :singular
-	     :gender :masc}
-        (list noun human))
+(add-with-plural "donna" "woman"
+  {:cat :noun
+   :number :singular
+   :gender :fem}
+  (list noun human)
+  "women")
+
+(add-with-plural "raggazzo" "guy"
+  {:cat :noun
+   :number :singular
+   :gender :masc}
+  (list noun human))
 	     
-(add "raggazza" "girl"
-	    {:cat :noun
-	     :number :singular
-	     :gender :fem}
-        (list noun human))
+(add-with-plural "raggazza" "girl"
+  {:cat :noun
+   :number :singular
+   :gender :fem}
+  (list noun human))
 
 (add "cane" "dog"
-	    {:cat :noun
-	     :number :singular
-	     :gender :masc
-         :animate true}
-        (list noun))
+     {:cat :noun
+      :number :singular
+      :gender :masc
+      :animate true}
+     (list noun))
 
 (add "pane" "bread"
-	    {:cat :noun
-	     :number :singular
-	     :gender :masc
-         :artifact true
-         :edible true
-         :holdable true}
-        (list noun))
+     {:cat :noun
+      :number :singular
+      :gender :masc
+      :artifact true
+      :edible true
+      :holdable true}
+     (list noun))
 
 (add "pasta" "pasta"
 	    {:cat :noun
@@ -500,23 +502,23 @@
          :holdable true}
         (list mass-noun noun))
 
-(add "libro" "book"
-	    {:cat :noun
-	     :number :singular
-	     :gender :masc
-         :artifact true
-         :written true
-         :holdable true
-         :person :3rd}
-        (list noun))
+(add-with-plural "libro" "book"
+     {:cat :noun
+      :number :singular
+      :gender :masc
+      :artifact true
+      :written true
+      :holdable true
+      :person :3rd}
+     (list noun))
 
-(add "gamba" "leg"
-	    {:cat :noun
-	     :number :singular
-	     :gender :fem
-         :person :3rd
-         :body-part true}
-        (list noun))
+(add-with-plural "gamba" "leg"
+  {:cat :noun
+   :number :singular
+   :gender :fem
+   :person :3rd
+   :body-part true}
+  (list noun))
 
 (add "giornale" "newspaper"
 	    {:cat :noun
@@ -527,23 +529,18 @@
          :written true}
         (list noun))
 
-(add "abito" "dress"
-	    {:number :singular
-	     :gender :masc
-         :artifact true}
-        (list noun))
-(add "abiti" "dresses"
-	    {:number :plural
-	     :gender :masc
-         :artifact true}
-        (list noun))
+(add-with-plural "abito" "dress"
+  {:number :singular
+   :gender :masc
+   :artifact true}
+  (list noun))
 
-(add "parole" "word"
-	    {:number :plural
-         :sayable true
-         :writable true
-	     :gender :fem}
-        (list noun))
+(add-with-plural "parole" "word"
+  {:number :plural
+   :sayable true
+   :writable true
+   :gender :fem}
+  (list noun))
 
 (add "centro" "downtown"
            {:andare-in true
