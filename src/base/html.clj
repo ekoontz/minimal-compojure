@@ -62,6 +62,9 @@
    [:title "Verbi italiani &#0187; " title]
    (include-css "/css/style.css")]
    [:body
+    {:onload
+     (if (= title "test")
+       "setTimeout('location.reload(true);',5000);")}
     [:h1.major
      [:a {:href "/"} "Verbi italiani" ]
       " &#0187;" title ]
