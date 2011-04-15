@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as string]
    [italianverbs.html :as html]
+   [clojure.contrib.string :as stringc]
    [clojure.contrib.str-utils2 :as str-utils]))
 
 (defn get-head [sign]
@@ -38,12 +39,16 @@
   (let [english (get verb-head :english)
         remove-to (remove-to verb-head)]
     (cond
-     (and (not (= (get (get-head subject) :cat) "noun"))
-          (not (= (get (get-head subject) :cat) "pronoun")))
-     {:cat :error
-      :note  (str "<tt><i>error: :cat of '" (get subject :english) "' != :noun</i>."
-                  "(<b>conjugate-english-verb</b> " (get verb-head :english)
-                  "," (get subject :english) ")</tt>")}
+     (= (get (get-head verb-head) :english) "must")
+     (stringc/replace-re
+      #"^must to"
+      "must"
+      (get verb-head :english))
+     (= (get (get-head verb-head) :english) "to be able")
+     (stringc/replace-re
+      #"^to be able to"
+      "can"
+      (get verb-head :english))
      (= (get (get-head subject) :person) "1st")
      (get remove-to :remove-to)
      (= (get (get-head subject) :person) "2nd")

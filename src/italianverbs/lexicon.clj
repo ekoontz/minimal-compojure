@@ -367,6 +367,43 @@
 (add-infl "vogliono" (list thirdp plural plural present
 			 {:root volare}))
 
+
+(def potere (add "potere" "to be able"
+                 {:cat :verb :infl :infinitive
+                  :subj {:animate true}}
+                 (list choose-vp-inf)))
+
+(add-infl "posso" (list firstp sing present
+			 {:root potere}))
+(add-infl "possi" (list secondp sing present
+			{:root potere}))
+(add-infl "può" (list thirdp sing present
+			 {:root potere}))
+(add-infl "possiamo" (list firstp plural sing present
+			 {:root potere}))
+(add-infl "potete" (list secondp plural plural present
+			 {:root potere}))
+(add-infl "possono" (list thirdp plural plural present
+			 {:root potere}))
+
+(def dovere (add "dovere" "must"
+                 {:cat :verb :infl :infinitive
+                  :subj {:animate true}}
+                 (list choose-vp-inf)))
+(add-infl "devo" (list firstp sing present
+                       {:root dovere}))
+(add-infl "devi" (list firstp sing present
+                       {:root dovere}))
+(add-infl "deve" (list firstp sing present
+                       {:root dovere}))
+(add-infl "dobbiamo" (list firstp sing present
+                       {:root dovere}))
+(add-infl "dovete" (list firstp sing present
+                       {:root dovere}))
+(add-infl "devono" (list firstp sing present
+                       {:root dovere}))
+
+
 (def fare (add "fare" "to make"
                      {:cat :verb :infl :infinitive
                       :obj {:cat :noun
