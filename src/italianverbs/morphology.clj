@@ -92,7 +92,11 @@
      (and (= (get subject-head :person) "3rd")
           (= (get subject-head :number) "plural"))
      (str-utils/replace root-form regex
-                        (fn [[_ stem vowel space]] (str stem vowel "no" space)))
+                        (fn [[_ stem vowel space]] (str stem
+                                                        (cond
+                                                         (= vowel "a") "a"
+                                                         true "o")
+                                                        "no" space)))
      true
      (str "<tt><i>error: :person or :number value was not matched</i>. (<b>conjugate-italian-verb-regular</b> " (get verb-head :italian) ",(phrase with head:'" (get subject-head :italian) "'))</i></tt>"))))
 
