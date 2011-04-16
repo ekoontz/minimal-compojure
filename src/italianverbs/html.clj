@@ -29,7 +29,14 @@
 (defn fs [lexeme]
   (str "<table class='fs'>"
        (if (get lexeme :italian)
-         (str "<tr><th colspan='2' class='fs'>" (get lexeme :italian) "</th></tr>"))
+         (str "<tr><th colspan='2' class='fs'>"
+              "<a href='"
+              "http://translate.google.com/"
+              "#it|en|"
+              (get lexeme :italian)
+              "'"   ">"
+              (get lexeme :italian) "</a>"
+              "</th></tr>"))
        (string/join " " (seq (map fs-tr
                                   (map (fn [key]
                                          (cond
