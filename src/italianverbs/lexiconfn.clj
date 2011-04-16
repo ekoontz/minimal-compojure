@@ -54,10 +54,11 @@
 (defn english-pluralize [singular]
   (str (stringc/replace-re #"([sxz])$" "$1e" singular) "s"))
 
-(defn add-plural [fs types & [english-plural]]
+(defn add-plural [fs types & [italian-plural english-plural]]
   (add
-   (italian-pluralize (get fs :italian)
-                      (get fs :gender))
+   (if italian-plural italian-plural
+       (italian-pluralize (get fs :italian)
+                          (get fs :gender)))
    (if english-plural english-plural
      (english-pluralize (get fs :english)))
    (merge
@@ -65,11 +66,11 @@
     {:number :plural})
    types))
 
-(defn add-with-plural [italian english featuremap types & [english-plural]]
+(defn add-with-plural [italian english featuremap types & [italian-plural english-plural]]
   (add-plural
    (add italian english featuremap types)
    types
-   english-plural))
+   italian-plural english-plural))
 
 ;; _italian and _english are strings; _types is a list of symbols (each of which is a map of key-values);
 ;; _result is an accumulator which is the merge of all of the maps in _types.

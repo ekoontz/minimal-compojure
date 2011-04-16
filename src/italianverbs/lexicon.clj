@@ -492,14 +492,14 @@
    :number :singular
    :gender :masc}
   (list noun human)
-  "men")
+  "uomini" "men")
 
 (add-with-plural "donna" "woman"
   {:cat :noun
    :number :singular
    :gender :fem}
   (list noun human)
-  "women")
+  nil "women")
 
 (add-with-plural "studente" "student"
   {:cat :noun
