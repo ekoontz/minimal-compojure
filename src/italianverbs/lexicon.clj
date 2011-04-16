@@ -507,13 +507,13 @@
    :gender :masc}
   (list noun human))
 
-(add-with-plural "raggazzo" "guy"
+(add-with-plural "ragazzo" "guy"
   {:cat :noun
    :number :singular
    :gender :masc}
   (list noun human))
 	     
-(add-with-plural "raggazza" "girl"
+(add-with-plural "ragazza" "girl"
   {:cat :noun
    :number :singular
    :gender :fem}
