@@ -177,9 +177,11 @@
    fs adds restrictions on prep.
    obj is simply an object for the preposition."
   (let [prep (choose-lexeme (merge fs {:cat :prep}))]
-    (let [np (np (merge (get prep :obj)
-                        fs-obj))]
-      (combine prep np left))))
+    (let [np (if obj obj
+                 (np (get prep :obj)))]
+      (merge 
+       (combine prep np left)
+       {:italian (morph/conjugate-italian-prep prep np)}))))
 
 (defn sv [head comp]
   (merge
@@ -247,7 +249,15 @@
 (defn generate []
   (pp
    {:italian "di"}
-   (np)))
+   (np
+    {:det.cat :det
+     :gender :masc}
+    (choose-lexeme {:cat :det :def :def :gender :masc}))))
+;)
+  
+;(np
+;   {:det.cat :det}))
+;   {:def :def}))
 ;    {:cat :noun})))
 ;    {:def :def})))
 ;   ))
