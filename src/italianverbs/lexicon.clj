@@ -467,21 +467,20 @@
            {}
            (list sing propernoun city))
 
-
 ;; determiners
 (add "il" "the" {:gender :masc :number :singular :cat :det
-			:def :def})
+                 :def :def})
 (add "un" "a" {:gender :masc :number :singular :cat :det
-			:def :indef})
+               :def :indef})
 (add "i" "the" {:gender :masc :number :plural :cat :det
-		       :def :def})
+                :def :def})
 
 (add "la" "the" {:gender :fem :number :singular :cat :det
-			:def :def})
+                 :def :def})
 (add "una" "a" {:gender :fem :number :singular :cat :det
-			:def :indef})
+                :def :indef})
 (add "le" "the" {:gender :fem :number :plural :cat :det
-			:def :def})
+                 :def :def})
 
 ;; nouns
 (add-with-plural "uomo" "man"
