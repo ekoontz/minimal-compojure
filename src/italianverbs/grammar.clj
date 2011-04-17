@@ -122,9 +122,7 @@
     (if determiner
       (merge 
        (combine noun determiner right)
-       {:italian (morph/italian-article determiner noun)
-        :foo "bar"})
-       
+       {:italian (morph/italian-article determiner noun)})
       noun)))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
