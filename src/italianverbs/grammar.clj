@@ -111,14 +111,16 @@
    (symbol fn)
    true fn))
 
-(defn np [ & [fs]]
-  (let [noun (choose-lexeme (merge fs {:cat :noun
+(defn np [ & [fs determiner]]
+  (let [chosen-determiner determiner
+        noun (choose-lexeme (merge fs {:cat :noun
                                        }))
-        determiner (if (get noun :det)
-                     (choose-lexeme
-                      (merge {:number (get noun :number)
-                              :gender (get noun :gender)}
-                             (get noun :det))))]
+        determiner (if chosen-determiner chosen-determiner
+                       (if (get noun :det)
+                         (choose-lexeme
+                          (merge {:number (get noun :number)
+                                  :gender (get noun :gender)}
+                                 (get noun :det)))))]
     (if determiner
       (merge 
        (combine noun determiner right)
@@ -170,10 +172,10 @@
            "<p>get-head comp :cat=" (get (morph/get-head comp) :cat) "</p>"
            "</tt>")}))
 
-(defn pp [ & [fs fs-obj]]
+(defn pp [ & [fs obj]]
   "generate a prepositional phrase.
    fs adds restrictions on prep.
-   fs-obj adds restrictions on prepositions's complement."
+   obj is simply an object for the preposition."
   (let [prep (choose-lexeme (merge fs {:cat :prep}))]
     (let [np (np (merge (get prep :obj)
                         fs-obj))]
