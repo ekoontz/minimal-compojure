@@ -95,7 +95,7 @@
   (let [results (fetch :lexicon :where struct)]
     (if (= (count results) 0)
       {:english "??" :italian "??"
-       :cat :error :note (str "(choose-lexeme): no results found for (see :choose feature).")
+       :cat :error :note (str "No results found. <p/>See <tt>:choose</tt> feature below for query.")
        :choose struct
        }
       (nth results (rand-int (count results))))))
@@ -122,7 +122,9 @@
     (if determiner
       (merge 
        (combine noun determiner right)
-       {:italian (morph/italian-article determiner noun)})
+       {:italian (morph/italian-article determiner noun)
+        :foo "bar"})
+       
       noun)))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
@@ -174,9 +176,7 @@
   "generate a prepositional phrase.
    fs adds restrictions on prep.
    fs-obj adds restrictions on prepositions's complement."
-  (let [prep (choose-lexeme (merge fs {:cat :prep}))
-        ;; (eventually) use _genfn to generate an argument (np) given _prep.
-        genfn (get prep :genfn)]
+  (let [prep (choose-lexeme (merge fs {:cat :prep}))]
     (let [np (np (merge (get prep :obj)
                         fs-obj))]
       (combine prep np left))))
@@ -245,5 +245,15 @@
          :error "vp-with-adjunct-pp returned null."}))))
 
 (defn generate []
+  (pp
+   {:italian "di"}
+   (np)))
+;    {:cat :noun})))
+;    {:def :def})))
+;   ))
+;   (np)))
+;    {:det.def :def})))
+     
+ 
 ;  (np))
-  (sentence))
+;  (sentence))
