@@ -2,7 +2,8 @@
     (:use 
      [hiccup core page-helpers]
      [somnium.congomongo])
-    (:require [italianverbs.lexicon :as lexicon]))
+    (:require [italianverbs.lexicon :as lexicon]
+              [italianverbs.grammar :as gram]))
 
 (defn wrapchoice [word & [ istrue ] ]
   ;; FIXME: url-encode word.
