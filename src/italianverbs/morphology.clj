@@ -222,3 +222,32 @@
      (str "uno " (get noun :italian))
 
      true (str det-italian " " det-noun))))
+
+(defn replace-from-list [regexp-list target]
+  "Apply the first regexp pair (from=>to) from regexp-list to target;
+   if this regexp changes target, return changed string,
+   otherwise, try next regexp."
+  (if (> (count regexp-list) 0)
+    (let [regexp-pair (first regexp-list)
+          regexp-from (first regexp-pair)
+          regexp-to (second regexp-pair)
+          result (stringc/replace-re regexp-from regexp-to target)]
+      (if (= result target)
+        (replace-from-list (rest regexp-list) target)
+        result))
+    target))
+
+(defn conjugate-italian-prep [prep np]
+  (let [concat (str (get prep :italian)
+                    " "
+                    (get np :italian))]
+    (replace-from-list
+     (list
+      (list #"^di il " "del ")
+      (list #"^di lo " "dello ")
+      (list #"^di la " "della ")
+      (list #"^di l'" "dell'")
+      (list #"^di i " "dei ")
+      (list #"^di gli " "degli ")
+      (list #"^di le " "delle "))
+     concat)))
