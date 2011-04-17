@@ -89,11 +89,10 @@
         :obj {:case {:$ne :nom}
               :andare-al true}})
 
-(add "da" "to"
+(add "di" "of"
 	   {:cat :prep
 	    :fn "gram/prep-fn"
-        :obj {:case {:$ne :nom}
-              :human true}})
+        :obj {:case {:$ne :nom}}})
 
 (add "da" "from"
 	   {:cat :prep
