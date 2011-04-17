@@ -36,12 +36,12 @@
    "'"   ">"
    italian "</a>"))
 
-(defn fs [lexeme]
+(defn fs [feature-structure]
   "Format a feature structure as an  HTML table."
   (str "<table class='fs'>"
-       (if (get lexeme :italian)
+       (if (get feature-structure :italian)
          (str "<tr><th colspan='2' class='fs'>"
-              (google-translate (get lexeme :italian))
+              (google-translate (get feature-structure :italian))
               "</th></tr>"))
        (string/join " " (seq (map fs-tr
                                   (map (fn [key]
@@ -58,12 +58,12 @@
                                               (= key :adjunct)(= key :iobj)
                                               (= key :choose)(= key :root))
                                           (list key
-                                                (fs (get lexeme key)))
+                                                (fs (get feature-structure key)))
                                           (= key :comp) nil
                                           true
                                           (list key
-                                                (get lexeme key))))
-                                       (set/difference (set (keys lexeme))
+                                                (get feature-structure key))))
+                                       (set/difference (set (keys feature-structure))
                                                        (set (list :italian)))))))
        "</table>"))
 
