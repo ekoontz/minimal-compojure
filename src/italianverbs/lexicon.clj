@@ -85,13 +85,11 @@
 
 (add "al" "to"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}
               :andare-al true}})
 
 (add "di" "of"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}}})
 
 (add "da" "from"
