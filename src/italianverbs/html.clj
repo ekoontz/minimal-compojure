@@ -26,16 +26,22 @@
 	val (second key-val-pair)]
     (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
 
-(defn fs [lexeme]
+(defn google-translate [italian]
+  (str
+   "<a href='"
+   "http://translate.google.com/"
+   "#it|en|"
+   ;; TODO: URL:encode the following:
+   italian
+   "'"   ">"
+   italian "</a>"))
+
+(defn fs [fs]
+  "Format a feature structure as an  HTML table."
   (str "<table class='fs'>"
-       (if (get lexeme :italian)
+       (if (get fs :italian)
          (str "<tr><th colspan='2' class='fs'>"
-              "<a href='"
-              "http://translate.google.com/"
-              "#it|en|"
-              (get lexeme :italian)
-              "'"   ">"
-              (get lexeme :italian) "</a>"
+              (google-translate (get fs :italian))
               "</th></tr>"))
        (string/join " " (seq (map fs-tr
                                   (map (fn [key]
@@ -52,12 +58,12 @@
                                               (= key :adjunct)(= key :iobj)
                                               (= key :choose)(= key :root))
                                           (list key
-                                                (fs (get lexeme key)))
+                                                (fs (get fs key)))
                                           (= key :comp) nil
                                           true
                                           (list key
-                                                (get lexeme key))))
-                                       (set/difference (set (keys lexeme))
+                                                (get fs key))))
+                                       (set/difference (set (keys fs))
                                                        (set (list :italian)))))))
        "</table>"))
 
