@@ -2,7 +2,8 @@
     (:use 
     [hiccup core page-helpers]
     [somnium.congomongo])
-    (:require [italianverbs.lexicon :as lexicon])
+    (:require [italianverbs.lexicon :as lexicon]
+              [somnium.congomongo :as congomongo])
     (:import (java.security 
               NoSuchAlgorithmException
               MessageDigest)
@@ -18,13 +19,22 @@
   (let [my-user (fetch-one :users :where {:name username})]
        (update! :users my-user (merge my-user {:lastlogin "reallynow"}))))
 
-(defn start-session [username]
+(defn start-session [username cookie]
   (last-activity username)
-  (insert! :session {:user username :start "now"}))
+  (insert! :session {:user username :start "now"
+                     :cookie cookie}))
 
-(defn new [username] ;; create a new session for the given user.
+(defn get-session [username request]
+  "get a session for user _username_ based on cookie in request."
+                                        ;  (fetch-one :session {:user username}))
+  (let [fetch (fetch-one :session);{:user username}))
+        ]
+    (if fetch
+      (get fetch :user))))
+
+(defn new [username request] ;; create a new session for the given user.
   (let [newuser (find-or-insert-user username)
-        newsession (start-session username)]
+        newsession (start-session username (get (get (get request :cookies) "ring-session") :value))]
        {:name (get newuser :name)}))
 
 (defn clear-questions [session]

@@ -1,7 +1,7 @@
 (ns italianverbs.core
   (:use [compojure.core]
-	[somnium.congomongo]
-	[base.html])
+        [somnium.congomongo]
+        [base.html])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [base.lib :as baselib]
@@ -51,11 +51,11 @@
   (POST "/quiz/" 
        request
        ;; response map
-       { :session (get request :session)
-         :body (page "Quiz"
-		     (quiz/run (get request :query-string))
-		     request)
-       }
+       {:session (get request :session)
+        :body (page "Quiz"
+                    (quiz/run (get request :query-string))
+                    request)
+        }
        )
 
   (GET "/quiz/clear/" 
@@ -69,27 +69,27 @@
 
   (GET "/test/" 
        request
-       { :session (get request :session)
-         :body (page "test" 
-		     (map test/wrap-div 
-			  (flatten test/tests))
-		     request)
-	 })
+       {:session (session/get-session "Eugene" request)
+        :body (page "test" 
+                    (map test/wrap-div 
+                         (flatten test/tests))
+                    request)
+        })
 
   (POST "/test/" 
        request
-       { :session (get request :session)
-         :body (page "test" 
-		     (map test/wrap-div 
-			  test/tests)
-		     request)
-	 })
+       {:session (get request :session)
+        :body (page "test" 
+                    (map test/wrap-div 
+                         test/tests)
+                    request)
+        })
   
 ;; TODO: make this a POST with 'username' and 'password' params.
   (GET "/session/set/"  
        request
        {
-       :session (session/new "Eugene")
+       :session (session/new "Eugene" request)
        :status 302
        :headers {"Location" "/?msg=set"}
        })
