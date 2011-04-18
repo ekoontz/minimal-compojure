@@ -20,12 +20,12 @@
        request
 
        ;; response map
-       { :session (get request :session)
-         :body (let [username (get (get request :session) :name)]
-		    (page "Welcome"
-			  (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
-			  request))
-       }
+       {:session (get request :session)
+        :body (let [username (get (get request :session) :name)]
+                (page "Welcome"
+                      (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
+                      request))
+        }
        )
 
   (GET "/lexicon/" 
@@ -39,6 +39,16 @@
        )
 
   (GET "/quiz/" 
+       request
+       ;; response map
+       { :session (get request :session)
+         :body (page "Quiz"
+		     (quiz/run (get request :query-string))
+		     request)
+       }
+       )
+
+  (POST "/quiz/" 
        request
        ;; response map
        { :session (get request :session)
