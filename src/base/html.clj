@@ -65,7 +65,7 @@
     {:onload
      (if (= title "test")
        "setTimeout('location.reload(true);',5000);")}
-    [:h1.major
+    [:h1
      [:a {:href "/"} "Verbi italiani" ]
       " &#0187;" title ]
      [:div#content content]

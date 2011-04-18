@@ -76,36 +76,6 @@
        ]
        )))
 
-(defn next-question [index lexicon]
-  (let 
-      [italian-verb (nth (keys lexicon) index)
-       english-verb (get lexicon italian-verb)
-       number-of-guesses 4
-       true-before (rand-int (+ 1 number-of-guesses))
-       store-question (store-question index lexicon)
-       ]
-       
-      (html 
-       [:div.debug (str "index:" index "(" italian-verb ")" ) ] 
-       [:div.debug (str "english:" english-verb)]
-       [:div.debug (str "lexicon size:" (count lexicon))]
-       [:div.debug (str "# guesses:" number-of-guesses)]
-       [:div.debug (str "true@ :" true-before)]
-       [:div {:class "question major"}
-       [:h2 [:i italian-verb]]
-         (show-choice (dissoc lexicon italian-verb) 
-		number-of-guesses english-verb true-before) 
-       ]
-
-       [:div.history
-         (show-history)
-       ]
-
- )
-
- ) 
-)
-
 (defn evaluate-guess [ guess ]
   ;; get last question.
   (let [question 
@@ -131,7 +101,7 @@
 
      [:div.history
       [:h2 "History"]
-      "eval.."])))
+      (evaluate-guess last-guess)])))
 
 
 (defn url-decode [string]

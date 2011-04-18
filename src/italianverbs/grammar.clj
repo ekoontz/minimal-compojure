@@ -248,12 +248,7 @@
 
 (defn generate []
   (pp
-   {:italian "di"}
-   (np
-    {:det.cat :det
-     :gender :masc}
-    (choose-lexeme {:cat :det :def :def :gender :masc}))))
-;)
+   {:italian "di"}))
   
 ;(np
 ;   {:det.cat :det}))
