@@ -29,10 +29,10 @@
 			answer show-true-before)))))))
 
 (defn store-question [index lexicon]
-      (insert! :question {:q-index index 
-                          :question (nth (keys lexicon) index) 
-	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)
-                         }))
+  (insert! :question {:q-index index 
+                      :question (nth (keys lexicon) index) 
+	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)}))
+
 (defn each-correct [question]
   (if (= (get question :guess) (get question :answer)) '(true) nil))
 
@@ -84,6 +84,10 @@
 	(if question
 	    (update! :question question (merge question {:guess guess})))))
 
+(defn get-next-question-id [user]
+  "get the question id for the next question for this user."
+  "43")
+
 (defn quiz [ last-guess]
   (let [next-question (gram/generate)]
     (html
@@ -97,6 +101,7 @@
          [:td
           [:input {:name "guess" :size "50"}]]]]
        [:div
+        [:input {:type "hidden" :name "question_id" :value (get-next-question-id {:foo "bar"})}]
         [:input.submit {:type "submit" :value "riposta"}]]]]
 
      [:div.history

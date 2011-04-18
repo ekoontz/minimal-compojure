@@ -212,3 +212,19 @@ table.fs th.fs {
     font-weight:normal;
     font-style:italic;
 }
+
+div.reqdata {
+    font-size:small;
+    font-family:monospace;
+    width:50%;
+    float:left;
+    border:2px dashed blue;
+    padding:3px;
+    position: absolute;
+    bottom:0;
+    left:0;
+}
+
+div.reqdata th {
+    text-align:right;
+}

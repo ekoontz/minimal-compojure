@@ -71,15 +71,16 @@
      [:div#content content]
 
    (if request
-       [:div {:class "http major"}
-     (sessiondata (get request :session))
-     (if false ; probably removing this
-	 (baselib/reqdata (get request :request-method) 
-			 (get request :uri)
-			 (get request :query-string)))
-     ])
-     (footer (get request :session))
-   ]))
+     [:div {:class "http major"}
+      (sessiondata (get request :session))])
+
+    (if request
+      [:div.reqdata
+       (baselib/reqdata request)])
+
+    (if request
+      (footer (get request :session)))]))
+   
 
 
 

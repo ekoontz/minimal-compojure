@@ -1,23 +1,19 @@
 (ns base.lib
-    (:use [hiccup core page-helpers]))
+  (:use [hiccup core page-helpers])
+  (:require
+   [clojure.string :as string]))
 
-(defn reqdata [request-method & [ uri query-string]] 
+(defn req-tr [key-value-pair]
+  (let [key (first key-value-pair)
+        val (second key-value-pair)]
+    (str "<tr><th>" key "</th><td>" val "</td></tr>")))
+
+(defn reqdata [request]
   (html
-   [:div.reqdata
+   [:div
      [:table
-       [:tr
-         [:th "Method" ]
-	 [:td request-method ]
-       ]
-       [:tr
-         [:th "Uri" ]
-	 [:td uri ]
-       ]
-       [:tr
-         [:th "Query String" ]
-	 [:td query-string ]
-       ]
-
-     ] 
-   ]))
-
+      (string/join " " (seq
+                        (map req-tr
+                             (map (fn [key]
+                                    (list key (get request key)))
+                                  (keys request)))))]]))

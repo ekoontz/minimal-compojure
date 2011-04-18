@@ -2,10 +2,10 @@
   (:use [hiccup core page-helpers]
 	[somnium.congomongo])
   (:require
-      [clojure.set :as set]
-      [clojure.string :as string]
-      [italianverbs.lexiconfn :as lex]
-      [clojure.contrib.str-utils2 :as str-utils]))
+   [clojure.set :as set]
+   [clojure.string :as string]
+   [italianverbs.lexiconfn :as lex]
+   [clojure.contrib.str-utils2 :as str-utils]))
 
 (defn verb-row [italian]
   (html  
@@ -23,7 +23,7 @@
 
 (defn fs-tr [key-val-pair]
   (let [key (first key-val-pair)
-	val (second key-val-pair)]
+        val (second key-val-pair)]
     (str "<tr> <th> " key "</th>  <td>" val "</td></tr>")))
 
 (defn google-translate [italian]
