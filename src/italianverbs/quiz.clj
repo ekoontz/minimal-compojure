@@ -115,8 +115,24 @@
 	    (update! :question question (merge question {:guess guess})))))
 
 (defn quiz [ last-guess]
-  (evaluate-guess last-guess)      
-  (next-question (rand-int (count (fetch :lexicon)) (fetch :lexicon))))
+  (let [next-question (gram/generate)]
+    (html
+     [:div.quiz
+      [:h2 "Question"]
+      [:form {:method "post" :action "/quiz/"}
+       [:table
+        [:tr
+         [:td [:h1 (get next-question :english)]]]
+        [:tr
+         [:td
+          [:input {:name "guess" :size "50"}]]]]
+       [:div
+        [:input.submit {:type "submit" :value "riposta"}]]]]
+
+     [:div.history
+      [:h2 "History"]
+      "eval.."])))
+
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))
