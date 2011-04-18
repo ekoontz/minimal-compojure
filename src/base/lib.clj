@@ -1,6 +1,7 @@
 (ns base.lib
   (:use [hiccup core page-helpers])
   (:require
+   [clojure.set :as set]
    [clojure.string :as string]))
 
 (defn req-tr [key-value-pair]
@@ -16,4 +17,5 @@
                         (map req-tr
                              (map (fn [key]
                                     (list key (get request key)))
-                                  (keys request)))))]]))
+                                  (set/difference (set (keys request))
+                                                  (set (list )))))))]]))
