@@ -229,4 +229,10 @@ div.reqdata {
 
 div.reqdata th {
     text-align:right;
+    border-bottom:1px dashed black;
+}
+
+div.reqdata td {
+    text-align:right;
+    border-bottom:1px dashed black;
 }

@@ -88,7 +88,7 @@
   "get the question id for the next question for this user."
   "43")
 
-(defn quiz [ last-guess]
+(defn quiz [last-guess request]
   (let [next-question (gram/generate)]
     (html
      [:div.quiz
@@ -124,11 +124,12 @@
   (if query-string
       (get-params (re-seq #"[^&]+" query-string))))
 
-(defn run [ query-string ]
-  (let [params (get-param-map query-string)]
-       (html  
-	;; get 'guess' from query-string (e.g. from "guess=to%20eat")
-	;; pass the users's guess to (quiz), which will evaluate it.
-	[:div (quiz (get params "guess"))])))
+(defn run [ query-string request]
+  (let [query-string query-string
+        params (get-param-map query-string)]
+    (html  
+     ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
+     ;; pass the users's guess to (quiz), which will evaluate it.
+     [:div (quiz (get params "guess") request)])))
 
 

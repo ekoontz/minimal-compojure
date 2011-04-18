@@ -43,7 +43,7 @@
        ;; response map
        { :session (get request :session)
          :body (page "Quiz"
-		     (quiz/run (get request :query-string))
+		     (quiz/run (get request :query-string) request)
 		     request)
        }
        )

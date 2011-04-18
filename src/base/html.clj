@@ -9,14 +9,14 @@
 (defn sessiondata [data] 
   (html
    (let [name (get data :name)]
-	[:div.sessiondata
-	(if name 
-	    [:p "Welcome, " name "." 
-		 [:a {:href "/session/clear/"} "Logout"]
+     [:div.sessiondata
+      (if name 
+        [:p "Welcome, " name "." 
+         [:a {:href "/session/clear/"} "Logout"]
 		 ]
-	  [:a {:href "/session/set/"} "Login"]
-	  )
-	])))
+        [:a {:href "/session/set/"} "Login"]
+        )
+      ])))
 
 (defn footer [session]
      (html
@@ -70,10 +70,10 @@
       " &#0187;" title ]
      [:div#content content]
 
-   (if request
-     [:div {:class "http major"}
-      (sessiondata (get request :session))])
-
+    (if request
+      [:div {:class "http major"}
+       (sessiondata (get request :session))])
+    
     (if request
       [:div.reqdata
        (baselib/reqdata request)])
