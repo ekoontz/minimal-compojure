@@ -95,9 +95,9 @@
        })
 
   (GET "/session/clear/" 
-       {} 
+       request 
        {
-       :session {}
+       :session (session/clear request)
        :status 302
        :headers {"Location" "/?msg=cleared"}
        })

@@ -34,9 +34,21 @@
 
 (defn new [username request] ;; create a new session for the given user.
   (let [newuser (find-or-insert-user username)
-        newsession (start-session username (get (get (get request :cookies) "ring-session") :value))]
+        newsession (start-session username (get (get request :cookies) "ring-session"))]
        {:name (get newuser :name)}))
 
 (defn clear-questions [session]
   (destroy! :question {})
   session)
+
+(defn clear [request]
+  "remove session with cookie in request; return nil."
+  (let [cookie (if (get request :cookies)
+                 (if (get (get request :cookies) "ring-session")
+                   (if (get (get (get request :cookies) "ring-session") :value)
+                     (get (get (get request :cookies) "ring-session") :value))))]
+    (if cookie
+      (destroy! :session {:cookie cookie}))
+    nil))
+
+
