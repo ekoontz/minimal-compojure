@@ -522,6 +522,13 @@
       :animate true}
      (list noun))
 
+(add "pacco" "package"
+     {:cat :noun
+      :number :singular
+      :gender :masc
+      :artifact true}
+     (list noun))
+
 (add "pane" "bread"
      {:cat :noun
       :number :singular
@@ -694,4 +701,5 @@
 (add "qui" "here"
 	   {:cat :adjective})
 
-
+(add "proprio accanto a" "right next to"
+     {:cat :prep})
