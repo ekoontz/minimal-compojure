@@ -28,10 +28,15 @@
 		 (show-choice (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
 			answer show-true-before)))))))
 
-(defn store-question [index lexicon]
-  (insert! :question {:q-index index 
-                      :question (nth (keys lexicon) index) 
-	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)}))
+;(defn store-question [index lexicon]
+;  (insert! :question {:q-index index 
+;                      :question (nth (keys lexicon) index) 
+;	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)}))
+
+(defn store-question [question]
+  (insert! :question {:english (get question :english)
+                      :italian (get question :italian)
+                      :session "foo"}))
 
 (defn each-correct [question]
   (if (= (get question :guess) (get question :answer)) '(true) nil))
@@ -86,27 +91,34 @@
 
 (defn get-next-question-id [user]
   "get the question id for the next question for this user."
-  "43")
+  (+ 1 (count (fetch :question))))
+
+(defn store-guess [guess question_id]
+  "update question # question id with guess: a rewrite of (evaluate-guess)."
+  )
 
 (defn quiz [last-guess request]
   (let [next-question (gram/generate)]
-    (html
-     [:div.quiz
-      [:h2 "Question"]
-      [:form {:method "post" :action "/quiz/"}
-       [:table
-        [:tr
-         [:td [:h1 (get next-question :english)]]]
-        [:tr
-         [:td
-          [:input {:name "guess" :size "50"}]]]]
-       [:div
-        [:input {:type "hidden" :name "question_id" :value (get-next-question-id {:foo "bar"})}]
-        [:input.submit {:type "submit" :value "riposta"}]]]]
-
-     [:div.history
-      [:h2 "History"]
-      (evaluate-guess last-guess)])))
+    (do
+      (store-guess (get request :guess) (get request :question_id))
+      (store-question next-question)
+      (html
+       [:div.quiz
+        [:h2 "Question"]
+        [:form {:method "post" :action "/quiz/"}
+         [:table
+          [:tr
+           [:td [:h1 (get next-question :english)]]]
+          [:tr
+           [:td
+            [:input {:name "guess" :size "50"}]]]]
+         [:div
+          [:input {:type "hidden" :name "question_id" :value (get-next-question-id {:foo "bar"})}]
+          [:input.submit {:type "submit" :value "riposta"}]]]]
+       
+       [:div.history
+        [:h2 "History"]
+        (evaluate-guess last-guess)]))))
 
 
 (defn url-decode [string]
@@ -124,8 +136,8 @@
   (if query-string
       (get-params (re-seq #"[^&]+" query-string))))
 
-(defn run [ query-string request]
-  (let [query-string query-string
+(defn run [request]
+  (let [query-string (get request :query-string)
         params (get-param-map query-string)]
     (html  
      ;; get 'guess' from query-string (e.g. from "guess=to%20eat")

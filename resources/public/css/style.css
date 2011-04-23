@@ -214,7 +214,8 @@ table.fs th.fs {
 }
 
 div.reqdata {
-    height:20em;
+    display:none;
+    height:15em;
     overflow:scroll;
     font-size:small;
     font-family:monospace;

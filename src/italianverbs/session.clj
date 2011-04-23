@@ -26,9 +26,7 @@
 
 (defn get-session [username request]
   "get a session for user _username_ based on cookie in request."
-                                        ;  (fetch-one :session {:user username}))
-  (let [fetch (fetch-one :session);{:user username}))
-        ]
+  (let [fetch (fetch-one :session)]
     (if fetch
       (get fetch :user))))
 
@@ -48,7 +46,7 @@
                    (if (get (get (get request :cookies) "ring-session") :value)
                      (get (get (get request :cookies) "ring-session") :value))))]
     (if cookie
-      (destroy! :session {:cookie cookie}))
-    nil))
+      (destroy! :session {:cookie {:value cookie}})
+    nil)))
 
 
