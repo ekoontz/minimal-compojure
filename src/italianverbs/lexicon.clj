@@ -13,6 +13,7 @@
 (def pronoun
   {:cat :noun
    :animate true
+   :pronoun true ;; TODO: fix overlap with [:det nil]
    :human true
    :det nil}) ;; pronouns don't take a determiner.
 
@@ -598,6 +599,13 @@
             :cat :noun
             :place true
             :det nil})
+
+;; variant that takes a determiner: ('il ufficio')
+(add "ufficio" "the office"
+     {:andare-in true
+      :cat :noun
+      :place true
+      :det true})
 
 (add "casa" "home"
            {:andare-a true
