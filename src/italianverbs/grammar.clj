@@ -111,6 +111,7 @@
    (symbol fn)
    true fn))
 
+  
 (defn np [ & [fs determiner]]
   (let [chosen-determiner determiner
         noun (choose-lexeme (merge fs {:cat :noun
@@ -126,6 +127,20 @@
        (combine noun determiner right)
        {:italian (morph/italian-article determiner noun)})
       noun)))
+
+(defn np-with-post-conditions [ & [conditions keep-trying]]
+  ;; forgot how to pass default params, so doing this (let) instead.
+  (let [default-limit 3
+        keep-trying (if (not (= keep-trying nil))
+                      keep-trying
+                      default-limit)]
+    (let [candidate (np)]
+      (if (not (= (get candidate :pronoun) true))
+        candidate
+        {:cat :error
+         :note (str "gave up trying to generate after " default-limit " attempts.")
+         :notefs candidate
+         }))))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -247,9 +262,11 @@
          :error "vp-with-adjunct-pp returned null."}))))
 
 (defn generate []
-  (pp
-   {:italian "di"}))
-  
+;  (pp
+;   {:italian "di"}))
+  (np-with-post-conditions
+    {:pronoun {:ne true}}))
+;  (np))
 ;(np
 ;   {:det.cat :det}))
 ;   {:def :def}))
