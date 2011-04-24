@@ -33,15 +33,20 @@
 ;                      :question (nth (keys lexicon) index) 
 ;	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)}))
 
-(defn store-question [question]
-  (insert! :question {:english (get question :english)
-                      :italian (get question :italian)
-                      :session "foo"}))
+(defn store-question [question request]
+  (insert! :question {:question (get question :english)
+                      :answer (get question :italian)
+                      :id (get-next-question-id request)
+                      :session (get request :cookies)}))
+
+(defn clear-questions [session]
+  (destroy! :question {})
+  session)
 
 (defn each-correct [question]
   (if (= (get question :guess) (get question :answer)) '(true) nil))
 
-(defn show-history-rows [qs count last]
+(defn show-history-rows [qs count]
    (if (first qs)
        (let
 	  [row (first qs)
@@ -51,11 +56,12 @@
 			     "incorrect"))]
 	  (html
 	   [:tr 
-	     [:td count][:th (get row :question)  ] 
-	     [:td (if (not (= count last)) (get row :answer))]  
-	     [:td {:class correctness} (get row :guess)]
-           ]
-	   (show-history-rows (rest qs) (+ 1 count) last)))))
+        [:th count]
+        [:td (get row :question)] 
+        [:td {:class correctness} (get row :guess)]
+        [:td (if (first (rest qs)) (get row :answer))]  
+        ]
+	   (show-history-rows (rest qs) (+ 1 count))))))
 
 (defn show-history []
   (let 
@@ -91,7 +97,7 @@
 
 (defn get-next-question-id [user]
   "get the question id for the next question for this user."
-  (+ 1 (count (fetch :question))))
+  (count (fetch :question)))
 
 (defn store-guess [guess question_id]
   "update question # question id with guess: a rewrite of (evaluate-guess)."
@@ -101,10 +107,10 @@
   (let [next-question (gram/generate)]
     (do
       (store-guess (get request :guess) (get request :question_id))
-      (store-question next-question)
+      (store-question next-question (get request :cookie))
       (html
        [:div.quiz
-        [:h2 "Question"]
+        [:h2 (str "Question" " " (get-next-question-id request))]
         [:form {:method "post" :action "/quiz/"}
          [:table
           [:tr
@@ -113,12 +119,31 @@
            [:td
             [:input {:name "guess" :size "50"}]]]]
          [:div
-          [:input {:type "hidden" :name "question_id" :value (get-next-question-id {:foo "bar"})}]
+          [:input {:type "hidden" :name "question_id" :value (get-next-question-id (get request :cookies))}]
           [:input.submit {:type "submit" :value "riposta"}]]]]
-       
-       [:div.history
-        [:h2 "History"]
-        (evaluate-guess last-guess)]))))
+
+       [:div {:style "float:right"} ;; contains the history and the controls.
+        [:div {:class "major"}
+         [:h2 "History"]
+                                        ;        (evaluate-guess last-guess)
+         [:table
+          [:thead
+           [:tr
+            [:th]
+            [:th "Q"]
+            [:th "Guess"]
+            [:th "A"]
+            ]
+           ]
+          [:tbody
+           (show-history-rows (fetch :question) 1) ; where..(session..)
+           ]
+          ]]
+
+        [:div {:class "major"}
+         [:h2 "Controls"]
+         [:form {:method "post" :action "/quiz/clear"}
+          [:input.submit {:type "submit" :value "clear"}]]]]))))
 
 
 (defn url-decode [string]

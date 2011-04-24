@@ -2,9 +2,23 @@ body {
    font-family: sans-serif;
 }
 
-.major {
-    border: 4px solid #caecae;
-    padding: 2px;
+div.major {
+    border:4px solid #caecae;
+    width:100%;
+    float:right;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+    padding-bottom:2px;
+}
+
+div.major h2 {
+    padding:0.25em;
+    margin:0;
+    background: #caecae;
+}
+
+div.major form {
+    margin:2px;
 }
 
 h1 {
@@ -237,3 +251,4 @@ div.reqdata td {
     text-align:right;
     border-bottom:1px dashed black;
 }
+

@@ -21,7 +21,7 @@
 
        ;; response map
        {:session (get request :session)
-        :body (let [username (get (get request :session) :name)]
+        :body (let [username (get (get request :cookie) :name)]
                 (page "Welcome"
                       (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
                       request))
@@ -48,7 +48,7 @@
        }
        )
 
-  (POST "/quiz/" 
+  (POST "/quiz/"
        request
        ;; response map
        {:session (get request :session)
@@ -58,10 +58,10 @@
         }
        )
 
-  (GET "/quiz/clear/" 
+  (POST "/quiz/clear" 
        request
        ;; response map
-       { :session (session/clear-questions (get request :session))
+       { :session (quiz/clear-questions (get request :cookie))
          :status 302
          :headers {"Location" "/quiz/"}
        }
@@ -78,7 +78,7 @@
 
   (POST "/test/" 
        request
-       {:session (get request :session)
+       {:session (get request :cookie)
         :body (page "test" 
                     (map test/wrap-div 
                          test/tests)
