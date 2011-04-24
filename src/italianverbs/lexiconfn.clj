@@ -68,7 +68,10 @@
 
 (defn add-with-plural [italian english featuremap types & [italian-plural english-plural]]
   (add-plural
-   (add italian english featuremap types)
+   (add italian english
+        (merge featuremap
+               {:number :singular})
+               types)
    types
    italian-plural english-plural))
 

@@ -577,14 +577,12 @@
         (list noun))
 
 (add-with-plural "abito" "dress"
-  {:number :singular
-   :gender :masc
+  {:gender :masc
    :artifact true}
   (list noun))
 
 (add-with-plural "parola" "word"
-  {:number :plural
-   :sayable true
+  {:sayable true
    :writable true
    :gender :fem}
   (list noun)
