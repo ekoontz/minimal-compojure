@@ -125,6 +125,7 @@
 
   
 (defn np [ & [fs determiner]]
+  "'fs' puts pre-conditions on noun (head of the np)"
   (let [chosen-determiner determiner
         noun (choose-lexeme (merge fs {:cat :noun
                                        }))
@@ -141,13 +142,13 @@
        {:italian (morph/italian-article determiner noun)})
       noun)))
 
-(defn np-with-post-conditions [ & [conditions keep-trying]]
+(defn np-with-post-conditions [ & [pre-conditions post-conditions keep-trying]]
   ;; forgot how to pass default params, so doing this (let) instead.
   (let [default-limit 10
         keep-trying (if (not (= keep-trying nil))
                       keep-trying
                       default-limit)]
-    (let [candidate (np)]
+    (let [candidate (np pre-conditions)]
       (if (and (not (= (get candidate :pronoun) true)) ;; e.g. "noi (us)"
                (not (= (get candidate :det) nil)) ;; e.g. "Italia (Italy)"
                (= (get candidate :def) "def")
@@ -158,7 +159,7 @@
            :note (str "gave up trying to generate after " default-limit " attempts.")
            :notefs candidate
            }
-          (np-with-post-conditions conditions (- keep-trying 1)))))))
+          (np-with-post-conditions pre-conditions post-conditions (- keep-trying 1)))))))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -283,6 +284,9 @@
   (pp
    {:italian "di"}
    (np-with-post-conditions
+     {
+      :italian "parola"
+      }
      {:pronoun {:ne true}})))
 ;  (np))
 ;(np
