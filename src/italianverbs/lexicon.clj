@@ -602,11 +602,12 @@
             :det nil})
 
 ;; variant that takes a determiner: ('il ufficio')
-(add "ufficio" "the office"
-     {:andare-in true
-      :cat :noun
-      :place true
-      :det true})
+;; commented out: lexical variants do not work yet!
+;(add "ufficio" "the office"
+;     {:andare-in true
+;      :cat :noun
+;      :place true
+;      :det true})
 
 (add "casa" "home"
            {:andare-a true
