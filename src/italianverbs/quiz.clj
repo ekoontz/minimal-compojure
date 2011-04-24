@@ -99,14 +99,18 @@
   "get the question id for the next question for this user."
   (count (fetch :question)))
 
-(defn store-guess [guess question_id]
+(defn store-guess [guess]
   "update question # question id with guess: a rewrite of (evaluate-guess)."
-  )
-
+  (let [question 
+        (if (not (= (fetch :question :sort {:_id -1}) '()))
+          (nth (fetch :question :sort {:_id -1}) 0))]
+                                        ;    (update! :question question (merge question {:guess guess}))))
+    (update! :question question (merge question {:guess guess}))))
+    
 (defn quiz [last-guess request]
   (let [next-question (gram/generate)]
     (do
-      (store-guess (get request :guess) (get request :question_id))
+      (if last-guess (store-guess last-guess))
       (store-question next-question (get request :cookie))
       (html
        [:div.quiz
@@ -119,7 +123,6 @@
            [:td
             [:input {:name "guess" :size "50"}]]]]
          [:div
-          [:input {:type "hidden" :name "question_id" :value (get-next-question-id (get request :cookies))}]
           [:input.submit {:type "submit" :value "riposta"}]]]]
 
        [:div {:style "float:right"} ;; contains the history and the controls.
@@ -162,11 +165,10 @@
       (get-params (re-seq #"[^&]+" query-string))))
 
 (defn run [request]
-  (let [query-string (get request :query-string)
-        params (get-param-map query-string)]
-    (html  
+  (let [query-string (get request :form-params)]
+    (html
      ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
      ;; pass the users's guess to (quiz), which will evaluate it.
-     [:div (quiz (get params "guess") request)])))
+     [:div (quiz (get query-string "guess") request)])))
 
 
