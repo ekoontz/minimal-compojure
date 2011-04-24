@@ -24,6 +24,9 @@
   (insert! :session {:user username :start "now"
                      :cookie cookie}))
 
+(defn request-to-session [request]
+  (get (get (get request :cookies) "ring-session") :value))
+
 (defn get-session [username request]
   "get a session for user _username_ based on cookie in request."
   (let [fetch (fetch-one :session)]
@@ -44,5 +47,4 @@
     (if cookie
       (destroy! :session {:cookie {:value cookie}})
     nil)))
-
 

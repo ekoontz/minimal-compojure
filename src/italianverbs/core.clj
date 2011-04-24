@@ -61,7 +61,7 @@
   (POST "/quiz/clear" 
        request
        ;; response map
-       { :session (quiz/clear-questions (get request :cookie))
+       { :session (quiz/clear-questions (session/request-to-session request))
          :status 302
          :headers {"Location" "/quiz/"}
        }

@@ -3,6 +3,7 @@
      [hiccup core page-helpers]
      [somnium.congomongo])
     (:require [italianverbs.lexicon :as lexicon]
+              [italianverbs.session :as session]
               [italianverbs.grammar :as gram]))
 
 (defn wrapchoice [word & [ istrue ] ]
@@ -28,19 +29,18 @@
 		 (show-choice (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
 			answer show-true-before)))))))
 
-;(defn store-question [index lexicon]
-;  (insert! :question {:q-index index 
-;                      :question (nth (keys lexicon) index) 
-;	                  :answer (get (get lexicon (nth (keys lexicon) index)) :english)}))
+(defn get-next-question-id [user]
+  "get the question id for the next question for this user."
+  (count (fetch :question)))
 
 (defn store-question [question request]
   (insert! :question {:question (get question :english)
                       :answer (get question :italian)
                       :id (get-next-question-id request)
-                      :session (get request :cookies)}))
+                      :session request}))
 
 (defn clear-questions [session]
-  (destroy! :question {})
+  (destroy! :question {:session session})
   session)
 
 (defn each-correct [question]
@@ -95,10 +95,6 @@
 	(if question
 	    (update! :question question (merge question {:guess guess})))))
 
-(defn get-next-question-id [user]
-  "get the question id for the next question for this user."
-  (count (fetch :question)))
-
 (defn store-guess [guess]
   "update question # question id with guess: a rewrite of (evaluate-guess)."
   (let [question 
@@ -111,7 +107,7 @@
   (let [next-question (gram/generate)]
     (do
       (if last-guess (store-guess last-guess))
-      (store-question next-question (get request :cookie))
+      (store-question next-question (session/request-to-session request))
       (html
        [:div.quiz
         [:h2 (str "Question" " " (get-next-question-id request))]
