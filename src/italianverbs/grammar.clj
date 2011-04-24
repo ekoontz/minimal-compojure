@@ -38,7 +38,19 @@
   (merge
    (apply fn (list head comp))
    {:head head
-    :comp comp}))
+    :comp comp
+    :def (get comp :def)
+
+    }
+   ;; following is all features copied from complement to parent..
+   (if (get head :det)
+     {:det (get head :det)})
+
+   ;; following is all features copied from complement to parent..
+   (if (get comp :def)
+     {:def (get comp :def)})))
+
+
 
 ;; TODO: use (morph/get-head) instead.
 (defn gramhead [sign]
@@ -121,7 +133,8 @@
                          (choose-lexeme
                           (merge {:number (get noun :number)
                                   :gender (get noun :gender)}
-                                 (get noun :det)))))]
+                                 (if (get noun :det)
+                                   (get noun :det))))))]
     (if determiner
       (merge 
        (combine noun determiner right)
@@ -130,17 +143,22 @@
 
 (defn np-with-post-conditions [ & [conditions keep-trying]]
   ;; forgot how to pass default params, so doing this (let) instead.
-  (let [default-limit 3
+  (let [default-limit 10
         keep-trying (if (not (= keep-trying nil))
                       keep-trying
                       default-limit)]
     (let [candidate (np)]
-      (if (not (= (get candidate :pronoun) true))
+      (if (and (not (= (get candidate :pronoun) true)) ;; e.g. "noi (us)"
+               (not (= (get candidate :det) nil)) ;; e.g. "Italia (Italy)"
+               (= (get candidate :def) "def")
+               )
         candidate
-        {:cat :error
-         :note (str "gave up trying to generate after " default-limit " attempts.")
-         :notefs candidate
-         }))))
+        (if (= keep-trying 0)
+          {:cat :error
+           :note (str "gave up trying to generate after " default-limit " attempts.")
+           :notefs candidate
+           }
+          (np-with-post-conditions conditions (- keep-trying 1)))))))
 
 (defn verb-sv [head comp]  ;; e.g. "i [sleep]","he [writes a book]"
   (cond
@@ -262,10 +280,10 @@
          :error "vp-with-adjunct-pp returned null."}))))
 
 (defn generate []
-;  (pp
-;   {:italian "di"}))
-  (np-with-post-conditions
-    {:pronoun {:ne true}}))
+  (pp
+   {:italian "di"}
+   (np-with-post-conditions
+     {:pronoun {:ne true}})))
 ;  (np))
 ;(np
 ;   {:det.cat :det}))
