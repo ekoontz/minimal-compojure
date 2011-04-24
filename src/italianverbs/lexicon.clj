@@ -582,12 +582,13 @@
    :artifact true}
   (list noun))
 
-(add-with-plural "parole" "word"
+(add-with-plural "parola" "word"
   {:number :plural
    :sayable true
    :writable true
    :gender :fem}
-  (list noun))
+  (list noun)
+  "parole" "words")
 
 (add "centro" "downtown"
            {:andare-in true
