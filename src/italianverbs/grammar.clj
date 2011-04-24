@@ -285,7 +285,8 @@
    {:italian "di"}
    (np-with-post-conditions
      {
-      :italian "parola"
+      ;; example of how to force a particular italian word for debugging:
+                                        ;      :italian "parola"
       }
      {:pronoun {:ne true}})))
 ;  (np))
