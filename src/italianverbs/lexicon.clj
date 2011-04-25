@@ -84,7 +84,7 @@
         :obj {:case {:$ne :nom}
               :andare-a true}})
 
-(add "al" "to"
+(add "a" "to"
 	   {:cat :prep
         :obj {:case {:$ne :nom}
               :andare-al true}})
@@ -261,7 +261,7 @@
            (merge andare
                   {:infl :infinitive
                    :adjunct {:cat :prep
-                             :italian "al"
+                             :italian "a"
                              :obj.andare-al true}}))
 (add "andare" "to go"
            (merge andare
