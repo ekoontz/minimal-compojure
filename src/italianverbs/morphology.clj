@@ -250,6 +250,7 @@
       (list #"^di i " "dei ")
       (list #"^di gli " "degli ")
       (list #"^di le " "delle ")
+
       (list #"^a il " "al ")
       (list #"^a lo " "allo ")
       (list #"^a la " "alla ")
@@ -258,6 +259,13 @@
       (list #"^a gli " "agli ")
       (list #"^a le " "alle ")
       
+      (list #"^da il " "dal ")
+      (list #"^da lo" "dallo ")
+      (list #"^da la" "dalla ")
+      (list #"^da l'" "dall'")
+      (list #"^da i " "dai ")
+      (list #"^da gli " "dagli ")
+      (list #"^da le" "dalle ")
 
       )
      concat)))

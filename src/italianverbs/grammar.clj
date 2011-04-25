@@ -291,7 +291,7 @@
 
 (defn generate []
   (pp
-   {:$or [ {:italian "a"}, {:italian "di" } ]}
+   {:$or [ {:italian "a"}, {:italian "di" }, {:italian "da"} ]}
    (np-with-post-conditions
      {
       ;; example of how to force a particular italian word for debugging:
