@@ -1,0 +1,2 @@
+-normalize whitespace in guess so that it can be compared with correct answer:
+ e.g. " nella     pasta   " => "nella pasta"

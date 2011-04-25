@@ -2,7 +2,8 @@
     (:use 
      [hiccup core page-helpers]
      [somnium.congomongo])
-    (:require [italianverbs.lexicon :as lexicon]
+    (:require [clojure.contrib.string :as stringc]
+              [italianverbs.lexicon :as lexicon]
               [italianverbs.session :as session]
               [italianverbs.grammar :as gram]))
 
@@ -33,9 +34,12 @@
   "get the question id for the next question for this user."
   (count (fetch :question)))
 
+(defn normalize-whitespace [string]
+  (stringc/replace-re #"[ ]+$" "" (stringc/replace-re #"^[ ]+" "" (stringc/replace-re #"[ ]+" " " string))))
+
 (defn store-question [question request]
-  (insert! :question {:question (get question :english)
-                      :answer (get question :italian)
+  (insert! :question {:question (normalize-whitespace (get question :english))
+                      :answer (normalize-whitespace (get question :italian))
                       :id (get-next-question-id request)
                       :session request}))
 
@@ -47,21 +51,20 @@
   (if (= (get question :guess) (get question :answer)) '(true) nil))
 
 (defn show-history-rows [qs count]
-   (if (first qs)
-       (let
-	  [row (first qs)
-	   correctness (if (and (get row :guess) (not (= (get row :guess) "")))
-			   (if (= (get row :answer) (get row :guess))
-			       "correct"
-			     "incorrect"))]
-	  (html
-	   [:tr 
+  (if (first qs)
+    (let
+        [row (first qs)
+         correctness (if (and (get row :guess) (not (= (get row :guess) "")))
+                       (if (= (get row :answer) (get row :guess))
+                         "correct"
+                         "incorrect"))]
+      (html
+       [:tr 
         [:th count]
         [:td (get row :question)] 
-        [:td {:class correctness} (get row :guess)]
-        [:td (if (first (rest qs)) (get row :answer))]  
-        ]
-	   (show-history-rows (rest qs) (+ 1 count))))))
+        [:td {:class correctness} (get row :guess) ]
+        [:td (if (first (rest qs)) (get row :answer))]]
+       (show-history-rows (rest qs) (+ 1 count))))))
 
 (defn show-history []
   (let 
@@ -97,10 +100,11 @@
 
 (defn store-guess [guess]
   "update question # question id with guess: a rewrite of (evaluate-guess)."
-  (let [question 
+  (let [guess
+        (normalize-whitespace guess)
+        question 
         (if (not (= (fetch :question :sort {:_id -1}) '()))
           (nth (fetch :question :sort {:_id -1}) 0))]
-                                        ;    (update! :question question (merge question {:guess guess}))))
     (update! :question question (merge question {:guess guess}))))
     
 (defn quiz [last-guess request]
