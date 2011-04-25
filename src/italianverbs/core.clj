@@ -5,6 +5,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [base.lib :as baselib]
+            [clojure.string :as string]
+            [italianverbs.html :as ihtml]
             [italianverbs.quiz :as quiz]
             [italianverbs.test :as test]
             [italianverbs.session :as session]
@@ -31,11 +33,16 @@
   (GET "/lexicon/" 
        request
        ;; response map
-       { :session (get request :session)
-         :body (page "Lexicon"
-                     (lexfn/show-lexicon-as-feature-structures)
-		     request)
-       }
+       {:session (get request :session)
+        :body
+        (do ;"reload lexicon into mongodb and then render it as HTML."
+          (load-file "src/italianverbs/lexicon.clj")
+          (page "Lexicon"
+                (string/join " "
+                             (map (fn [lexeme]
+                                    (ihtml/fs lexeme))
+                                  (fetch :lexicon :sort {"italian" 1})))))
+        }
        )
 
   (GET "/quiz/" 

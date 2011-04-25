@@ -2,9 +2,6 @@
   (:use [hiccup core page-helpers]
 	[somnium.congomongo])
   (:require
-   [clojure.string :as string]
-   [italianverbs.html :as ihtml]
-   [clojure.contrib.str-utils2 :as str-utils]
    [clojure.contrib.string :as stringc]))
 
 ; global initializations go here, i guess..
@@ -106,10 +103,3 @@
 (defn clear []
   (destroy! :lexicon {}))
 
-(defn show-lexicon-as-feature-structures []
-  "reload lexicon into mongodb and then render it as HTML."
-  (load-file "src/italianverbs/lexicon.clj")
-  (string/join " "
-               (map (fn [lexeme]
-                      (ihtml/fs lexeme))
-                    (fetch :lexicon :sort {"italian" 1}))))
