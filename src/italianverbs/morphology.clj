@@ -267,5 +267,22 @@
       (list #"^da gli " "dagli ")
       (list #"^da le" "dalle ")
 
+      (list #"^in il " "nel ")
+      (list #"^in lo" "nello ")
+      (list #"^in la" "nella ")
+      (list #"^in l'" "nell'")
+      (list #"^in i " "nei ")
+      (list #"^in gli " "negli ")
+      (list #"^in le" "nelle ")
+
+      (list #"^su il " "sul ")
+      (list #"^su lo" "sullo ")
+      (list #"^su la" "sulla ")
+      (list #"^su l'" "sull'")
+      (list #"^su i " "sui ")
+      (list #"^su gli " "sugli ")
+      (list #"^su le" "sulle ")
+
+      
       )
      concat)))

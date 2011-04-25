@@ -125,6 +125,11 @@
       :obj {:case {:$ne :nom}
             :human true}})
 
+(add "su" "on"
+	   {:cat :prep
+	    :fn "gram/prep-fn"
+        :obj {:case {:$ne :nom}}})
+
 ;; verbs
 (add "dimenticare" "to forget"
            {:cat :verb :infl :infinitive
