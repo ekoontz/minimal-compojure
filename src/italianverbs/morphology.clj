@@ -249,5 +249,15 @@
       (list #"^di l'" "dell'")
       (list #"^di i " "dei ")
       (list #"^di gli " "degli ")
-      (list #"^di le " "delle "))
+      (list #"^di le " "delle ")
+      (list #"^a il " "al ")
+      (list #"^a lo " "allo ")
+      (list #"^a la " "alla ")
+      (list #"^a l'" "all'")
+      (list #"^a i " "ai ")
+      (list #"^a gli " "agli ")
+      (list #"^a le " "alle ")
+      
+
+      )
      concat)))

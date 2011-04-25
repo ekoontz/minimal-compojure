@@ -284,9 +284,14 @@
         {:cat :error
          :error "vp-with-adjunct-pp returned null."}))))
 
+(defn generate-test []
+  (choose-lexeme
+   {:cat :prep
+    :italian "a"}))
+
 (defn generate []
   (pp
-   {:italian "di"}
+   {:$or [ {:italian "a"}, {:italian "di" } ]}
    (np-with-post-conditions
      {
       ;; example of how to force a particular italian word for debugging:
