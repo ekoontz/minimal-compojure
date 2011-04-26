@@ -284,31 +284,3 @@
         {:cat :error
          :error "vp-with-adjunct-pp returned null."}))))
 
-(defn generate-test []
-  (choose-lexeme
-   {:cat :prep
-    :italian "a"}))
-
-(defn generate []
-  (pp
-   {:$or [ {:italian "a"}, {:italian "di" }, {:italian "da"}, {:italian "in" :english "in"}, {:italian "su"} ]}
-   (np-with-post-conditions
-     {
-      ;; example of how to force a particular italian word for debugging:
-                                        ;      :italian "parola"
-      }
-     np-with-common-noun-and-definite-pronoun)))
-;     {:pronoun {:ne true}})))
-;  (np))
-;(np
-;   {:det.cat :det}))
-;   {:def :def}))
-;    {:cat :noun})))
-;    {:def :def})))
-;   ))
-;   (np)))
-;    {:det.def :def})))
-     
- 
-;  (np))
-;  (sentence))
