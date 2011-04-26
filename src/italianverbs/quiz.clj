@@ -70,7 +70,7 @@
   (let 
       [total (fetch-count :question)
        skip (if (> total 10) (- total 10) 0)
-       qs (fetch :question :sort {:_id 1} :limit 10 :skip skip )]
+       qs (fetch :question :sort {:id 1} :limit 10 :skip skip )]
       (html
        [:div#stats
          [:table
