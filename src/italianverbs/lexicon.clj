@@ -488,6 +488,10 @@
 (add "le" "the" {:gender :fem :number :plural :cat :det
                  :def :def})
 
+(add "del" "some" {:gender :masc :number :plural :cat :det
+                 :def :part})
+
+
 ;; nouns
 (add-with-plural "uomo" "man"
   {:cat :noun

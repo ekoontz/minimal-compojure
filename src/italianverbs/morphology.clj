@@ -221,6 +221,19 @@
           (= (get noun :gender) "masc"))
      (str "uno " (get noun :italian))
 
+     (and (= (get det :def) "part")
+          (= (get noun :gender) "fem"))
+     (str "delle " (get noun :italian))
+
+     (and (= (get det :def) "part")
+          (= (get noun :gender) "masc")
+          (re-find #"^(st|[aeiou])" (get noun :italian)))
+     (str "degli " (get noun :italian))
+
+     (and (= (get det :def) "part")
+          (= (get noun :gender) "masc"))
+     (str "dei " (get noun :italian))
+     
      true (str det-italian " " det-noun))))
 
 (defn replace-from-list [regexp-list target]
