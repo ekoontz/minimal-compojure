@@ -181,7 +181,9 @@
 (defn random-sentences-1 [num]
   (if (> num 0)
     (cons
-     (html/tablize (gram/generate))
+     (html/tablize (gram/np {:number :plural
+                             :pronoun {:$ne true}}
+                            (gram/choose-lexeme {:def :part})))
      (random-sentences-1 (- num 1)))))
 
 (defn random-sentences [num]

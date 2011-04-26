@@ -106,9 +106,26 @@
         (if (not (= (fetch :question :sort {:_id -1}) '()))
           (nth (fetch :question :sort {:_id -1}) 0))]
     (update! :question question (merge question {:guess guess}))))
-    
+
+(defn generate [question-type]
+  (cond
+   (= question-type 'pp)
+   (gram/pp
+    {:$or [ {:italian "a"}, {:italian "di" }, {:italian "da"}, {:italian "in" :english "in"}, {:italian "su"} ]}
+    (gram/np-with-post-conditions
+     {}
+     gram/np-with-common-noun-and-definite-pronoun))
+   (= question-type 'partitivo)
+   (gram/np {:number :plural
+             :pronoun {:$ne true}}
+            (gram/choose-lexeme {:def :part}))
+   true
+   (gram/sentence)))
+
 (defn quiz [last-guess request]
-  (let [next-question (gram/generate)]
+  "choose a question type: currently either pp or partitivo."
+  (let [next-question
+        (generate (nth '(pp partitivo) (rand-int 2)))]
     (do
       (if last-guess (store-guess last-guess))
       (store-question next-question (session/request-to-session request))
