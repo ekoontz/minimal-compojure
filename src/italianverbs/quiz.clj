@@ -166,14 +166,14 @@
           [:table
            [:tr
             [:th
-             [:input.furniture {:type "checkbox" :checked "checked"}]]
+             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
             [:td "mobili"
              ]
             ]
 
            [:tr
             [:th
-             [:input.furniture {:type "checkbox" :checked "checked"}]]
+             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
             [:td "preposizioni"
              ]
             ]
@@ -181,7 +181,7 @@
 
            [:tr
             [:th
-             [:input.furniture {:type "checkbox" :checked "checked"}]]
+             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
             [:td "partitivo"
              ]
             ]
