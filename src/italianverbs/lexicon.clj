@@ -565,8 +565,24 @@
       :artifact true
       :written true
       :holdable true
+      :roomable true
+      :tableable true
+      :ruggable true
       :person :3rd}
      (list noun))
+
+(add-with-plural "tavolo" "table"
+     {:cat :noun
+      :number :singular
+      :gender :masc
+      :artifact true
+      :written true
+      :holdable true
+      :roomable true
+      :ruggable true
+      :person :3rd}
+     (list noun))
+
 
 (add-with-plural "gamba" "leg"
   {:cat :noun
