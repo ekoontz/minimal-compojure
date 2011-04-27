@@ -162,8 +162,36 @@
 
         [:div {:class "major"}
          [:h2 "Controls"]
-         [:form {:method "post" :action "/quiz/clear"}
-          [:input.submit {:type "submit" :value "clear"}]]]]))))
+         [:form {:method "post" :action "/quiz/filter"}
+          [:table
+           [:tr
+            [:th
+             [:input.furniture {:type "checkbox" :checked "checked"}]]
+            [:td "mobili"
+             ]
+            ]
+
+           [:tr
+            [:th
+             [:input.furniture {:type "checkbox" :checked "checked"}]]
+            [:td "preposizioni"
+             ]
+            ]
+
+
+           [:tr
+            [:th
+             [:input.furniture {:type "checkbox" :checked "checked"}]]
+            [:td "partitivo"
+             ]
+            ]
+
+           
+           ]]
+            
+         [:div {:style "float:right"}
+          [:form {:method "post" :action "/quiz/clear"}
+           [:input.submit {:type "submit" :value "clear"}]]]]]))))
 
 
 (defn url-decode [string]
