@@ -65,6 +65,17 @@
         }
        )
 
+  (POST "/quiz/filter" ;; for now just run quiz.
+       request
+       ;; response map
+       {:session (get request :session)
+        :body (page "Quiz"
+                    (quiz/run request)
+                    request)
+        }
+       )
+
+  
   (POST "/quiz/clear" 
        request
        ;; response map
@@ -110,7 +121,7 @@
        })
 
   (route/resources "/")
-  (route/not-found (page "Page not found." "Sorry, page not found.")))
+  (route/not-found (page "Non posso trovare. Page not found." "Non passo trovare. Sorry, page not found.")))
 
 ; http://weavejester.github.com/compojure/compojure.handler-api.html
 ; site function
