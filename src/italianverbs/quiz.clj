@@ -129,70 +129,20 @@
     (do
       (if last-guess (store-guess last-guess))
       (store-question next-question (session/request-to-session request))
+
       (html
-       [:div.quiz
-        [:h2 (str "Question" " " (get-next-question-id request))]
-        [:form {:method "post" :action "/quiz/"}
-         [:table
-          [:tr
-           [:td [:h1 (get next-question :english)]]]
-          [:tr
-           [:td
-            [:input {:name "guess" :size "50"}]]]]
-         [:div
-          [:input.submit {:type "submit" :value "riposta"}]]]]
-
-       [:div {:style "float:right"} ;; contains the history and the controls.
-        [:div {:class "major"}
-         [:h2 "History"]
-                                        ;        (evaluate-guess last-guess)
-         [:table
-          [:thead
-           [:tr
-            [:th]
-            [:th "Q"]
-            [:th "Guess"]
-            [:th "A"]
-            ]
-           ]
-          [:tbody
-           (show-history-rows (fetch :question) 1) ; where..(session..)
-           ]
-          ]]
-
-        [:div {:class "major"}
-         [:h2 "Controls"]
-         [:form {:method "post" :action "/quiz/filter"}
-          [:table
-           [:tr
-            [:th
-             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
-            [:td "mobili"
-             ]
-            ]
-
-           [:tr
-            [:th
-             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
-            [:td "preposizioni"
-             ]
-            ]
-
-
-           [:tr
-            [:th
-             [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
-            [:td "partitivo"
-             ]
-            ]
-
-           
-           ]]
-            
-         [:div {:style "float:right"}
-          [:form {:method "post" :action "/quiz/clear"}
-           [:input.submit {:type "submit" :value "clear"}]]]]]))))
-
+       (with-history-and-controls
+         [:div.quiz
+          [:h2 (str "Question" " " (get-next-question-id request))]
+          [:form {:method "post" :action "/quiz/"}
+           [:table
+            [:tr
+             [:td [:h1 (get next-question :english)]]]
+            [:tr
+             [:td
+              [:input {:name "guess" :size "50"}]]]]
+           [:div
+            [:input.submit {:type "submit" :value "riposta"}]]]])))))
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))
@@ -215,5 +165,68 @@
      ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
      ;; pass the users's guess to (quiz), which will evaluate it.
      [:div (quiz (get query-string "guess") request)])))
+
+(defn with-history-and-controls [content]
+  [:div
+   content
+   [:div {:style "float:right"} ;; contains the history and the controls.
+    [:div {:class "major"}
+     [:h2 "History"]
+     [:table
+      [:thead
+       [:tr
+        [:th]
+        [:th "Q"]
+        [:th "Guess"]
+        [:th "A"]
+        ]
+       ]
+      [:tbody
+       (show-history-rows (fetch :question) 1) ; where..(session..)
+       ]
+      ]]
+    
+    [:div {:class "major"}
+     [:h2 "Controls"]
+     [:form {:method "post" :action "/quiz/filter"}
+      [:table
+       [:tr
+        [:th
+         [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
+        [:td "mobili"
+         ]
+        ]
+       
+       [:tr
+        [:th
+         [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
+        [:td "preposizioni"
+         ]
+        ]
+       
+       
+       [:tr
+        [:th
+         [:input.furniture {:onclick "submit()" :type "checkbox" :checked "checked"}]]
+        [:td "partitivo"
+         ]
+        ]
+       
+       
+       ]]
+     
+     [:div {:style "float:right"}
+      [:form {:method "post" :action "/quiz/clear"}
+       [:input.submit {:type "submit" :value "clear"}]]]]]])
+   
+
+(defn filter [request]
+  (let [query-string (get request :form-params)]
+    (html
+     ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
+     ;; pass the users's guess to (quiz), which will evaluate it.
+     (with-history-and-controls
+       [:div
+        "stuff done got filtered."]))))
 
 

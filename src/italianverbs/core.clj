@@ -70,7 +70,7 @@
        ;; response map
        {:session (get request :session)
         :body (page "Quiz"
-                    (quiz/run request)
+                    (quiz/filter request)
                     request)
         }
        )
