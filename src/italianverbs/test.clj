@@ -178,12 +178,21 @@
    (conjugation (lexfn/lookup "venire"))
    (conjugation (lexfn/lookup "dire"))))
 
+(def choose-head
+  {:number :singular
+   :pronoun {:$ne true}})
+
+(def choose-comp-lexeme
+  {
+   :cat :det
+   :number :singular
+   })
+
 (defn random-sentences-1 [num]
   (if (> num 0)
     (cons
-     (html/tablize (gram/np {:number :plural
-                             :pronoun {:$ne true}}
-                            (gram/choose-lexeme {:def :part})))
+     (html/tablize (gram/np choose-head
+                            (gram/choose-lexeme choose-comp-lexeme)))
      (random-sentences-1 (- num 1)))))
 
 (defn random-sentences [num]
