@@ -101,7 +101,10 @@
                  (list (get arg :italian)
                        (morph/conjugate-it head)))}))
 
-(defn choose-lexeme [struct]
+(defn choose-lexeme [struct & [dummy]]
+  "Choose a random lexeme from the set of lexemes
+   that match search criteria.
+   dummy: ignored for compatibility with gram/np"
   ;; do a query based on the given struct,
   ;; and choose a random element that satisfies the query.
   (let [results (fetch :lexicon :where struct)]
