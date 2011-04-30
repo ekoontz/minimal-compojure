@@ -122,50 +122,6 @@
    true
    (gram/sentence)))
 
-(defn quiz [last-guess request]
-  "choose a question type: currently either pp or partitivo."
-  (let [next-question
-        (generate (nth '(pp partitivo) (rand-int 2)))]
-    (do
-      (if last-guess (store-guess last-guess))
-      (store-question next-question (session/request-to-session request))
-
-      (html
-       (with-history-and-controls
-         [:div.quiz
-          [:h2 (str "Question" " " (get-next-question-id request))]
-          [:form {:method "post" :action "/quiz/"}
-           [:table
-            [:tr
-             [:td [:h1 (get next-question :english)]]]
-            [:tr
-             [:td
-              [:input {:name "guess" :size "50"}]]]]
-           [:div
-            [:input.submit {:type "submit" :value "riposta"}]]]])))))
-
-(defn url-decode [string]
-  (.replaceAll string "(%20)" " "))
-
-(defn get-params [pairs]
-  (if (first pairs)
-      (let [keyval (re-seq #"[^=]+" (first pairs))]
-	   (merge 
-	    {(first keyval) (url-decode (second keyval))}
-	    (get-params (rest pairs))))
-    {}))
-
-(defn get-param-map [query-string]
-  (if query-string
-      (get-params (re-seq #"[^&]+" query-string))))
-
-(defn run [request]
-  (let [query-string (get request :form-params)]
-    (html
-     ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
-     ;; pass the users's guess to (quiz), which will evaluate it.
-     [:div (quiz (get query-string "guess") request)])))
-
 (defn with-history-and-controls [content]
   [:div
    content
@@ -218,7 +174,50 @@
      [:div {:style "float:right"}
       [:form {:method "post" :action "/quiz/clear"}
        [:input.submit {:type "submit" :value "clear"}]]]]]])
-   
+
+(defn quiz [last-guess request]
+  "choose a question type: currently either pp or partitivo."
+  (let [next-question
+        (generate (nth '(pp partitivo) (rand-int 2)))]
+    (do
+      (if last-guess (store-guess last-guess))
+      (store-question next-question (session/request-to-session request))
+
+      (html
+       (with-history-and-controls
+         [:div.quiz
+          [:h2 (str "Question" " " (get-next-question-id request))]
+          [:form {:method "post" :action "/quiz/"}
+           [:table
+            [:tr
+             [:td [:h1 (get next-question :english)]]]
+            [:tr
+             [:td
+              [:input {:name "guess" :size "50"}]]]]
+           [:div
+            [:input.submit {:type "submit" :value "riposta"}]]]])))))
+
+(defn url-decode [string]
+  (.replaceAll string "(%20)" " "))
+
+(defn get-params [pairs]
+  (if (first pairs)
+      (let [keyval (re-seq #"[^=]+" (first pairs))]
+	   (merge 
+	    {(first keyval) (url-decode (second keyval))}
+	    (get-params (rest pairs))))
+    {}))
+
+(defn get-param-map [query-string]
+  (if query-string
+      (get-params (re-seq #"[^&]+" query-string))))
+
+(defn run [request]
+  (let [query-string (get request :form-params)]
+    (html
+     ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
+     ;; pass the users's guess to (quiz), which will evaluate it.
+     [:div (quiz (get query-string "guess") request)])))
 
 (defn filter [request]
   (let [query-string (get request :form-params)]
