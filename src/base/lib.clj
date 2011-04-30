@@ -9,10 +9,25 @@
         val (second key-value-pair)]
     (str "<tr><th>" key "</th><td>" val "</td></tr>")))
 
+(defn get-session-key [request]
+  (let [cookies (get request :cookies)]
+    (if cookies
+      (let [ring-session (get cookies "ring-session")]
+        (if ring-session
+          (get ring-session :value))))))
+
 (defn reqdata [request]
   (html
    [:div
-     [:table
+    [:h2 "Cookie:"
+     (get-session-key request)]
+
+    [:h2 "Request Map"]
+    [:table
+     [:tr
+      [:th "key"]
+      [:th "val"]
+      ]
       (string/join " " (seq
                         (map req-tr
                              (map (fn [key]

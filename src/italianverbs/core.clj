@@ -22,7 +22,7 @@
        request
 
        ;; response map
-       {:session (get request :session)
+       {
         :body (let [username (get (get request :cookie) :name)]
                 (page "Welcome"
                       (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
@@ -33,7 +33,7 @@
   (GET "/lexicon/" 
        request
        ;; response map
-       {:session (get request :session)
+       {
         :body
         (do ;"reload lexicon into mongodb and then render it as HTML."
           (load-file "src/italianverbs/lexicon.clj")
@@ -48,7 +48,7 @@
   (GET "/quiz/" 
        request
        ;; response map
-       { :session (get request :session)
+       { 
          :body (page "Quiz"
                      (quiz/run request)
                      request)
@@ -58,7 +58,7 @@
   (POST "/quiz/"
        request
        ;; response map
-       {:session (get request :session)
+       {
         :body (page "Quiz"
                     (quiz/run request)
                     request)
@@ -68,7 +68,7 @@
   (POST "/quiz/filter" ;; for now just run quiz.
        request
        ;; response map
-       {:session (get request :session)
+       {
         :body (page "Quiz"
                     (quiz/filter request)
                     request)
@@ -79,7 +79,7 @@
   (POST "/quiz/clear" 
        request
        ;; response map
-       { :session (quiz/clear-questions (session/request-to-session request))
+       { :side-effect (quiz/clear-questions (session/request-to-session request))
          :status 302
          :headers {"Location" "/quiz/"}
        }
@@ -87,7 +87,7 @@
 
   (GET "/test/" 
        request
-       {:session (session/get-session "Eugene" request)
+       {
         :body (page "test" 
                     (map test/wrap-div 
                          (flatten test/tests))
@@ -96,7 +96,7 @@
 
   (POST "/test/" 
        request
-       {:session (get request :cookie)
+       {
         :body (page "test" 
                     (map test/wrap-div 
                          test/tests)
@@ -107,7 +107,7 @@
   (GET "/session/set/"  
        request
        {
-       :session (session/new "Eugene" request)
+       :side-effect (session/register "Eugene" request)
        :status 302
        :headers {"Location" "/?msg=set"}
        })
@@ -115,7 +115,7 @@
   (GET "/session/clear/" 
        request 
        {
-       :session (session/clear request)
+       :side-effect (session/unregister request)
        :status 302
        :headers {"Location" "/?msg=cleared"}
        })

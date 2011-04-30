@@ -6,7 +6,7 @@
   (html
    [:div msg]))
 
-(defn sessiondata [data] 
+(defn welcome [data] 
   (html
    (let [name (get data :name)]
      [:div.sessiondata
@@ -72,14 +72,14 @@
 
     (if request
       [:div {:class "http major"}
-       (sessiondata (get request :session))])
+       (welcome "(fake name)")])
     
     (if request
       [:div.reqdata
        (baselib/reqdata request)])
 
     (if request
-      (footer (get request :session)))]))
+      (footer "(fake name"))]))
    
 
 

@@ -28,18 +28,18 @@
   (get (get (get request :cookies) "ring-session") :value))
 
 (defn get-session [username request]
-  "get a session for user _username_ based on cookie in request."
+  "register session from database keyed on request; return session record from db."
   (let [fetch (fetch-one :session)]
     (if fetch
       (get fetch :user))))
 
-(defn new [username request] ;; create a new session for the given user.
+(defn register [username request] ;; create a new session for the given user.
   (let [newuser (find-or-insert-user username)
         newsession (start-session username (get (get request :cookies) "ring-session"))]
        {:name (get newuser :name)}))
 
-(defn clear [request]
-  "remove session with cookie in request; return nil."
+(defn unregister [request]
+  "remove session from database keyed on request; return nil."
   (let [cookie (if (get request :cookies)
                  (if (get (get request :cookies) "ring-session")
                    (if (get (get (get request :cookies) "ring-session") :value)
