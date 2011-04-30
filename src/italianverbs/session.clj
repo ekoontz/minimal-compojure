@@ -3,7 +3,9 @@
     [hiccup core page-helpers]
     [somnium.congomongo])
     (:require [italianverbs.lexicon :as lexicon]
-              [somnium.congomongo :as congomongo])
+              [somnium.congomongo :as congomongo]
+              [clojure.contrib.string :as stringc]
+              [base.lib :as lib])
     (:import (java.security 
               NoSuchAlgorithmException
               MessageDigest)
@@ -19,23 +21,26 @@
   (let [my-user (fetch-one :users :where {:name username})]
        (update! :users my-user (merge my-user {:lastlogin "reallynow"}))))
 
-(defn start-session [username cookie]
-  (last-activity username)
-  (insert! :session {:user username :start "now"
-                     :cookie cookie}))
-
 (defn request-to-session [request]
   (get (get (get request :cookies) "ring-session") :value))
 
-(defn get-session [username request]
-  "register session from database keyed on request; return session record from db."
-  (let [fetch (fetch-one :session)]
+(defn get-session-row [request]
+  (fetch-one :session))
+
+(defn get-username [request]
+  (let [fetch (get-session-row request)]
     (if fetch
       (get fetch :user))))
 
-(defn register [username request] ;; create a new session for the given user.
-  (let [newuser (find-or-insert-user username)
-        newsession (start-session username (get (get request :cookies) "ring-session"))]
+(defn register [request] ;; create a new session for the given user.
+  "register session from database keyed on request; return session record from db."
+  (let [username (str "eugene-" (stringc/take 5 (lib/get-session-key request)))
+        newuser (find-or-insert-user username)
+        newsession
+        (do (last-activity username)
+            (insert! :session {:user username
+                               :start "now"
+                               :cookie (lib/get-session-key request)}))]
        {:name (get newuser :name)}))
 
 (defn unregister [request]
@@ -45,6 +50,6 @@
                    (if (get (get (get request :cookies) "ring-session") :value)
                      (get (get (get request :cookies) "ring-session") :value))))]
     (if cookie
-      (destroy! :session {:cookie {:value cookie}})
-    nil)))
+      (destroy! :session {:cookie cookie})
+      nil)))
 

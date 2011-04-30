@@ -1,40 +1,36 @@
 (ns base.html
     (:use [hiccup core page-helpers])
-    (:require [base.lib :as baselib]))
+    (:require [base.lib :as baselib]
+              [italianverbs.session :as session]))
 
 (defn message [msg] 
   (html
    [:div msg]))
 
-(defn welcome [data] 
+(defn welcome [username] 
   (html
-   (let [name (get data :name)]
-     [:div.sessiondata
-      (if name 
-        [:p "Welcome, " name "." 
-         [:a {:href "/session/clear/"} "Logout"]
-		 ]
-        [:a {:href "/session/set/"} "Login"]
-        )
-      ])))
+   [:div.sessiondata
+    (if username 
+      [:p "Welcome, " username "." 
+       [:a {:href "/session/clear/"} "Logout"]
+       ]
+      [:a {:href "/session/set/"} "Login"]
+      )]))
 
-(defn footer [session]
+(defn footer [session-row]
      (html
       [:div {:class "footer major"}
         [:div 
 	  [:a {:href "/"} "Main"  ] ] 
-	  (if (get session :name)
-	      [:div [:a {:href "/quiz/"} "Quiz"]])
-        [:div 
-	  [:a {:href "/lexicon/"} "Lexicon"  ] ] 
-
-        [:div 
-	  [:a {:href "/test/"} "Test"  ] ] 
-
-        [:div 
-	  [:a {:href "/form/"} "Forms"  ] ] 
-
-      ] 
+       (if session-row
+         [:div [:a {:href "/quiz/"} "Quiz"]])
+       [:div 
+        [:a {:href "/lexicon/"} "Lexicon"  ] ] 
+       [:div 
+        [:a {:href "/test/"} "Test"  ] ] 
+       [:div 
+        [:a {:href "/form/"} "Forms"  ] ] 
+       ] 
 
       [:div {:class "poweredbox major"}
       
@@ -72,14 +68,14 @@
 
     (if request
       [:div {:class "http major"}
-       (welcome "(fake name)")])
+       (welcome (session/get-username request))])
     
     (if request
       [:div.reqdata
        (baselib/reqdata request)])
 
     (if request
-      (footer "(fake name"))]))
+      (footer (session/get-session-row request)))]))
    
 
 

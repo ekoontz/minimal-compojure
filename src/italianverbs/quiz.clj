@@ -30,9 +30,10 @@
 		 (show-choice (dissoc lexicon (nth (keys lexicon) choice)) (- remaining 1)
 			answer show-true-before)))))))
 
-(defn get-next-question-id [user]
+(defn get-next-question-id [request]
   "get the question id for the next question for this user."
-  (count (fetch :question)))
+  (let [session (session/request-to-session request)]
+    (count (fetch :question :where {:session session}))))
 
 (defn normalize-whitespace [string]
   (stringc/replace-re #"[ ]+$" "" (stringc/replace-re #"^[ ]+" "" (stringc/replace-re #"[ ]+" " " string))))
@@ -68,9 +69,10 @@
 
 (defn show-history []
   (let 
-      [total (fetch-count :question)
+      [session nil ;; TODO : get session from request (as param to this fn).
+       total (fetch-count :question)
        skip (if (> total 10) (- total 10) 0)
-       qs (fetch :question :sort {:id 1} :limit 10 :skip skip )]
+       qs (fetch :question {:session session} :sort {:id 1} :limit 10 :skip skip )]
       (html
        [:div#stats
          [:table
@@ -122,7 +124,7 @@
    true
    (gram/sentence)))
 
-(defn with-history-and-controls [content]
+(defn with-history-and-controls [session content]
   [:div
    content
    [:div {:style "float:right"} ;; contains the history and the controls.
@@ -138,7 +140,7 @@
         ]
        ]
       [:tbody
-       (show-history-rows (fetch :question) 1) ; where..(session..)
+       (show-history-rows (fetch :question :where {:session session}) 1) ; where..(session..)
        ]
       ]]
     
@@ -185,6 +187,7 @@
 
       (html
        (with-history-and-controls
+         (session/request-to-session request)
          [:div.quiz
           [:h2 (str "Question" " " (get-next-question-id request))]
           [:form {:method "post" :action "/quiz/"}
@@ -225,6 +228,7 @@
      ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
      ;; pass the users's guess to (quiz), which will evaluate it.
      (with-history-and-controls
+       (session/request-to-session request)
        [:div
         "stuff done got filtered."]))))
 

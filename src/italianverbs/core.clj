@@ -12,8 +12,11 @@
             [italianverbs.session :as session]
             [italianverbs.lexiconfn :as lexfn]))
 
-(defroutes main-routes
+(defn title [request]
+  (let [username (session/get-username request)]
+    (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")))
 
+(defroutes main-routes
 ;   "A handler processes the request map and returns a response map."
 ; http://groups.google.com/group/compojure/browse_thread/thread/3c507da23540da6e
   (GET "/" 
@@ -23,12 +26,11 @@
 
        ;; response map
        {
-        :body (let [username (get (get request :cookie) :name)]
-                (page "Welcome"
-                      (str "Welcome to Italian Verbs" (if username (str ", " username)) ".")
-                      request))
-        }
-       )
+        :body (page "Welcome"
+                    (title request)
+                    request)
+       }
+ )
 
   (GET "/lexicon/" 
        request
@@ -107,7 +109,7 @@
   (GET "/session/set/"  
        request
        {
-       :side-effect (session/register "Eugene" request)
+       :side-effect (session/register request)
        :status 302
        :headers {"Location" "/?msg=set"}
        })
