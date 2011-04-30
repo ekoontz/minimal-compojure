@@ -169,7 +169,15 @@
         [:td "partitivo"
          ]
         ]
-       
+
+
+       [:tr
+        [:th
+         [:input.le_mese {:onclick "submit()" :type "checkbox" :checked "checked"}]]
+        [:td "le mese"
+         ]
+        ]
+
        
        ]]
      
