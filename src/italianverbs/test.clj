@@ -36,50 +36,15 @@
 (def test2-comp {:number :plural
                  :cat :det})
 
-
+;; test3: months of the year
+(def test3-fn gram/choose-lexeme)
+(def test3-head {:month true})
+(def test3-comp nil)
 
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
   (str "<div class='test'>" string "</div>"))
-
-(defn lex-thead [lexeme]
-  (str "<tr>"
-       "<th>italian</th>"
-       "<th>english</th>"
-       "<th>person</th>"
-       "<th>number</th>"
-       "<th>cat</th>"
-       "<th>infl</th>"
-       "<th>writable</th>"
-       "<th>fn</th>"
-       "</tr>"))
-
-(defn lex-row [lexeme]
-  (str "<tr>"
-       "<td>" (nth lexeme 0) "</td>"
-       "<td>" (get (nth lexeme 1) :english) "</td>"
-       "<td>" (get (nth lexeme 1) :person) "</td>"
-       "<td>" (get (nth lexeme 1) :number) "</td>"
-       "<td>" (get (nth lexeme 1) :cat) "</td>"
-       "<td>" (get (nth lexeme 1) :infl) "</td>"
-       "<td>" (get (nth lexeme 1) :writable) "</td>"
-       "<td>" (get (nth lexeme 1) :fn) "</td>"
-       "</tr>"))
-
-(defn answer-row [question]
-  (let [correctness (if (= (get question :guess) (get question :answer)) "correct" "incorrect")]
-       (str "<tr><td>" 
-	    (get question :answer) 
-	    "</td><td>" 
-	    (get question :guess) 
-	    "</td><td class='" correctness "'>"
-	    correctness
-	    "</td></tr>")))
-
-;; tests
-(defn answertable []
-  (str "<table>" (string/join " " (map answer-row (fetch :question))) "</table>"))
 
 (defn correct []
   (str "correct guesses: " (count (mapcat quiz/each-correct (fetch :question)))
@@ -229,16 +194,7 @@
 
    (random-sentences 1 test1-fn test1-head test1-comp)
    (random-sentences 1 test2-fn test2-head test2-comp)
-   
-;   "<div class='section'> <h2>fixed sentences</h2></div>"
- ;  (html/tablize (lui-vado-in-italia))
- ;  (html/tablize (io-mangio-il-pane))
- ;  (html/tablize (lui-mangio-la-pasta-in-italia))
- ;  (html/tablize (io-pranzo))
- ;  (html/tablize (lui-scrivo-il-libro))
-
-;   (correct)
-;   (answertable)
+   (random-sentences 1 test3-fn test3-head test3-comp)
    ))
 
   

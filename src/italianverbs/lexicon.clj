@@ -55,7 +55,11 @@
 
 ;; BEGIN LEXICON
 
-;; prepositions
+;; 
+(add "gennario" "january"
+     {:month true})
+
+;; prepotizioni (prepositions)
 (add "in" "to"
 	   {:cat :prep
 	    :fn "gram/prep-fn"

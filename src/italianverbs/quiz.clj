@@ -121,6 +121,8 @@
    (gram/np {:number :plural
              :pronoun {:$ne true}}
             (gram/choose-lexeme {:def :part}))
+   (= question-type 'mese)
+   (gram/choose-lexeme {:month true})
    true
    (gram/sentence)))
 
@@ -188,8 +190,9 @@
 (defn quiz [last-guess request]
   "choose a question type: currently either pp or partitivo."
   (let [next-question
-        (generate (nth '(pp partitivo) (rand-int 2)))]
-    (do
+;;        (generate (nth '(pp partitivo mese) (rand-int 3)))]
+        (generate (nth '(mese) (rand-int 1)))]
+        (do
       (if last-guess (store-guess last-guess))
       (store-question next-question (session/request-to-session request))
 
