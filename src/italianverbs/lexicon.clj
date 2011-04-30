@@ -55,8 +55,30 @@
 
 ;; BEGIN LEXICON
 
-;; 
+;; TODO: do a map over pairs rather than this..
 (add "gennario" "january"
+     {:month true})
+(add "febbraio" "february"
+     {:month true})
+(add "marzo" "march"
+     {:month true})
+(add "aprile" "april"
+     {:month true})
+(add "maggio" "may"
+     {:month true})
+(add "giugno" "june"
+     {:month true})
+(add "luglio" "july"
+     {:month true})
+(add "agosto" "august"
+     {:month true})
+(add "settembre" "september"
+     {:month true})
+(add "ottobre" "october"
+     {:month true})
+(add "novembre" "november"
+     {:month true})
+(add "dicembre" "december"
      {:month true})
 
 ;; prepotizioni (prepositions)
