@@ -111,7 +111,7 @@ div.question {
 }
 
 .debug {
-    display:none;
+    display:block;
 }
 
 div.debug {
@@ -233,7 +233,7 @@ table.fs th.fs {
 }
 
 div.reqdata {
-    display:none;
+    display:block;
     height:15em;
     overflow:scroll;
     font-size:small;
