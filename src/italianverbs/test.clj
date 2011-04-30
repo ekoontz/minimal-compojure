@@ -9,6 +9,25 @@
      [clojure.string :as string]
      [italianverbs.quiz :as quiz]))
 
+
+;; <test definitions>
+(def test1-fn gram/np)
+(def test1-head {:cat :noun
+                 :pronoun {:$ne true}
+                 :number :singular})
+(def test1-comp {:number :singular
+                 :cat :det})
+
+;; </test definitions>
+
+;; 2 choices for generate-fn:
+;; gram/choose-lexeme : choose a random lexeme based on choose-head which is a feature structure.
+;;                      choose-comp-lexeme is ignored.
+;; gram/np : generate a np with head based on choose-head,
+;;           det based on choose-comp-lexeme.
+
+;; </test parameters>
+
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
@@ -178,30 +197,17 @@
    (conjugation (lexfn/lookup "venire"))
    (conjugation (lexfn/lookup "dire"))))
 
-(def choose-number
-  {:number :singular})
-
-(def choose-head
-  (merge choose-number
-         {:pronoun {:$ne true}}))
-
-(def choose-comp-lexeme
-  (merge choose-number
-         {:cat :det}))
-
-(def generate-fn gram/np)
-
-(defn random-sentences-1 [num]
+(defn random-sentences-1 [num generate-fn head comp]
   (if (> num 0)
     (cons
 
-     (html/tablize (apply generate-fn (list choose-head
-                                        (gram/choose-lexeme choose-comp-lexeme))))
-     (random-sentences-1 (- num 1)))))
+     (html/tablize (apply generate-fn (list head
+                                            (gram/choose-lexeme comp nil))))
+     (random-sentences-1 (- num 1) generate-fn head comp))))
 
-(defn random-sentences [num]
+(defn random-sentences [num generate-fn head comp]
   (list
-   (random-sentences-1 num)))
+   (random-sentences-1 num generate-fn head comp)))
 
 (def tests
   (list
@@ -211,7 +217,7 @@
 
    ;(conjugations)
 
-   (random-sentences 1)
+   (random-sentences 1 test1-fn test1-head test1-comp)
    
 ;   "<div class='section'> <h2>fixed sentences</h2></div>"
  ;  (html/tablize (lui-vado-in-italia))
