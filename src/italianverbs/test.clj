@@ -11,6 +11,16 @@
 
 
 ;; <test definitions>
+
+;; each testN must specify a testN-fn, a testN-head, and testN-comp.
+;; 2 choices for testN-fn.
+;; gram/choose-lexeme : choose a random lexeme based on choose-head which is a feature structure.
+;;                      choose-comp-lexeme is ignored.
+;; gram/np : generate a np with head based on choose-head,
+;;           det based on choose-comp-lexeme.
+
+
+;; test1: singular NPs with determiners.
 (def test1-fn gram/np)
 (def test1-head {:cat :noun
                  :pronoun {:$ne true}
@@ -18,15 +28,15 @@
 (def test1-comp {:number :singular
                  :cat :det})
 
-;; </test definitions>
+;; test2: plural NPs with determiners.
+(def test2-fn gram/np)
+(def test2-head {:cat :noun
+                 :pronoun {:$ne true}
+                 :number :plural})
+(def test2-comp {:number :plural
+                 :cat :det})
 
-;; 2 choices for generate-fn:
-;; gram/choose-lexeme : choose a random lexeme based on choose-head which is a feature structure.
-;;                      choose-comp-lexeme is ignored.
-;; gram/np : generate a np with head based on choose-head,
-;;           det based on choose-comp-lexeme.
 
-;; </test parameters>
 
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
@@ -218,6 +228,7 @@
    ;(conjugations)
 
    (random-sentences 1 test1-fn test1-head test1-comp)
+   (random-sentences 1 test2-fn test2-head test2-comp)
    
 ;   "<div class='section'> <h2>fixed sentences</h2></div>"
  ;  (html/tablize (lui-vado-in-italia))
