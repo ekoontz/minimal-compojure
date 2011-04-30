@@ -154,9 +154,14 @@ div.quiz h2 {
     background: #caecae;
 }
 
+div.quiz form {
+    margin-left:10%;
+}
+
+
 div.quiz input.submit {
     padding:0.5em;
-    margin:0.5em;
+    margin-left:1.5em;
 }
 
 td.correct {
