@@ -56,14 +56,14 @@
                  :furniture true})
 (def test5-comp {})
 
+;; def test5 lets us use the results of test5 in subsequent tests, e.g. test6.
+(def test5
+  (apply test5-fn (list test5-head test5-comp)))
+
 ;; test6 : prepositional phrases
 (def test6-fn gram/pp)
 (def test6-head {})
-(def test6-comp
-  (gram/np {:cat :noun
-            :furniture true}))
-            
-
+(def test6-comp test5)
 
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
@@ -217,7 +217,7 @@
    ;(conjugations)
 
    (random-sentences 1 test6-fn test6-head test6-comp)
-   (random-sentences 1 test5-fn test5-head test5-comp)
+   test5
    (random-sentences 1 test4-fn test4-head test4-comp)
    (random-sentences 1 test1-fn test1-head test1-comp)
    (random-sentences 1 test2-fn test2-head test2-comp)
