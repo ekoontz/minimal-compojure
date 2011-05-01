@@ -110,7 +110,7 @@
   (let [results (fetch :lexicon :where struct)]
     (if (= (count results) 0)
       {:english "??" :italian "??"
-       :cat :error :note (str "No results found. <p/>See <tt>:choose</tt> feature below for query.")
+       :cat :error :note (str "<tt>(choose-lexeme)</tt>: no results found. <p/>See <tt>:choose</tt> feature below for query.")
        :choose struct
        }
       (nth results (rand-int (count results))))))
@@ -224,6 +224,9 @@
     (let [np (if obj obj
                  (np (get prep :obj)))]
       (merge 
+       {:choose-head prep}
+       {:choose-comp (np {:cat :noun} nil)}
+       {:given-an-obj (if obj true false)}
        (combine prep np left)
        {:italian (morph/conjugate-italian-prep prep np)}))))
 

@@ -50,6 +50,19 @@
                  })
 (def test4-comp nil);{:cat :det})
 
+;; test5 : furniture np-as-complement-for-prep-phrase
+(def test5-fn gram/np)
+(def test5-head {:cat :noun
+                 :furniture true})
+(def test5-comp {})
+
+;; test6 : prepositional phrases
+(def test6-fn gram/pp)
+(def test6-head {})
+(def test6-comp
+  (gram/np {:cat :noun
+            :furniture true}))
+            
 
 
 ;; useful library functions: will move elsewhere after testing.
@@ -203,10 +216,12 @@
 
    ;(conjugations)
 
+   (random-sentences 1 test6-fn test6-head test6-comp)
+   (random-sentences 1 test5-fn test5-head test5-comp)
+   (random-sentences 1 test4-fn test4-head test4-comp)
    (random-sentences 1 test1-fn test1-head test1-comp)
    (random-sentences 1 test2-fn test2-head test2-comp)
    (random-sentences 1 test3-fn test3-head test3-comp)
-   (random-sentences 1 test4-fn test4-head test4-comp)
    ))
 
   
