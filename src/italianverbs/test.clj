@@ -65,6 +65,9 @@
 (def test6-head {})
 (def test6-comp test5)
 
+(def test6
+  (apply test6-fn (list test6-head test6-comp)))
+
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
 (defn wrap-div [string]
@@ -201,7 +204,9 @@
     (cons
 
      (html/tablize (apply generate-fn (list head
-                                            (gram/choose-lexeme comp nil))))
+                                            (if (and (get comp :type) (= (get comp :type) "combine()d"))
+                                              comp
+                                              (gram/choose-lexeme comp nil)))))
      (random-sentences-1 (- num 1) generate-fn head comp))))
 
 (defn random-sentences [num generate-fn head comp]
@@ -216,8 +221,8 @@
 
    ;(conjugations)
 
-   (random-sentences 1 test6-fn test6-head test6-comp)
-   test5
+   (html/tablize (merge {:test "test6: furniture PPs"} test6))
+   (html/tablize (merge {:test "test5: plural NPs"} test5))
    (random-sentences 1 test4-fn test4-head test4-comp)
    (random-sentences 1 test1-fn test1-head test1-comp)
    (random-sentences 1 test2-fn test2-head test2-comp)
