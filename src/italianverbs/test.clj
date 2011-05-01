@@ -20,15 +20,16 @@
 ;;           det based on choose-comp-lexeme.
 
 
-;; test1: singular NPs with determiners.
+;; test1: singular NPs without determiners. (e.g. "Italia (Italy)")
 (def test1-fn gram/np)
 (def test1-head {:cat :noun
+                 :det nil
                  :pronoun {:$ne true}
                  :number :singular})
 (def test1-comp {:number :singular
                  :cat :det})
 
-;; test2: plural NPs with determiners.
+;; test2: plural NPs with determiners. (e.g. "i cani (the dogs)")
 (def test2-fn gram/np)
 (def test2-head {:cat :noun
                  :pronoun {:$ne true}
@@ -40,6 +41,16 @@
 (def test3-fn gram/choose-lexeme)
 (def test3-head {:month true})
 (def test3-comp nil)
+
+;; test4 : furniture.
+(def test4-fn gram/np)
+(def test4-head {:cat :noun
+                 :furniture true
+                 :pronoun {:$ne true}
+                 })
+(def test4-comp nil);{:cat :det})
+
+
 
 ;; useful library functions: will move elsewhere after testing.
 (defn show-answer [question] (get question :answer))
@@ -195,6 +206,7 @@
    (random-sentences 1 test1-fn test1-head test1-comp)
    (random-sentences 1 test2-fn test2-head test2-comp)
    (random-sentences 1 test3-fn test3-head test3-comp)
+   (random-sentences 1 test4-fn test4-head test4-comp)
    ))
 
   
