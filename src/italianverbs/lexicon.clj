@@ -551,12 +551,12 @@
    :gender :fem}
   (list noun human))
 
-(add "cane" "dog"
-     {:cat :noun
-      :number :singular
-      :gender :masc
-      :animate true}
-     (list noun))
+(add-with-plural "cane" "dog"
+  {:cat :noun
+   :number :singular
+   :gender :masc
+   :animate true}
+  (list noun))
 
 (add "pacco" "package"
      {:cat :noun
@@ -603,8 +603,8 @@
       :gender :masc
       :artifact true
       :written true
-      :holdable true
-      :roomable true
+      :holdable true ;; barely holdable (if you're strong or there's more than one of you) :)
+      :furniture true
       :ruggable true
       :person :3rd}
      (list noun))
@@ -671,6 +671,19 @@
       :place true
       :cat :noun
       :det nil})
+
+(add-with-plural "letto" "bed"
+     {:furniture true
+      :gender :masc
+      :number :singular}
+     (list noun))
+
+(add-with-plural "tavolino" "coffee table"
+     {:furniture true
+      :gender :masc
+      :number :singular}
+     (list noun))
+
 
 (add "cinema" "the theatre"
      {:andare-al true
