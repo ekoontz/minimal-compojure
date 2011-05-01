@@ -209,7 +209,7 @@
                  (np (get prep :obj)))]
       (merge 
        {:choose-head prep}
-       {:choose-comp (np {:cat :noun} nil)}
+       {:choose-comp np}
        {:given-an-obj (if obj true false)}
        (combine prep np left)
        {:italian (morph/conjugate-italian-prep prep np)}))))
