@@ -192,7 +192,11 @@
 (defn quiz [last-guess request]
   "choose a question type: currently either pp or partitivo."
   (let [session (session/request-to-session request)
-        get-next-question-id (get-next-question-id request)
+        get-next-question-id
+        (if (or last-guess
+                (= get-next-question-id 0))
+          (get-next-question-id request)
+          (get-next-question-id request))
         next-question
 ;;        (generate (nth '(pp partitivo mese) (rand-int 3)))]
 
@@ -212,16 +216,20 @@
        (with-history-and-controls
          (session/request-to-session request)
          [:div.quiz
-          [:h2 (str "Question" " " get-next-question-id)]
+          [:h2 (str "Question" " "
+                    (if (or last-guess
+                            (= get-next-question-id 0))
+                      (+ 1 get-next-question-id)
+                      get-next-question-id))]
           [:form {:method "post" :action "/quiz/"}
            [:table
             [:tr
              [:td [:h1 
                    (if (or last-guess
                            (= get-next-question-id 0))
-                     (get (generate (nth '(mese) (rand-int 1))) :english)
-                     (get (nth (fetch :question :where {:session session} :sort {:_id -1} :limit 1) 0)
-                          :question))]]]
+                     (get next-question :english)
+                     (str (get (nth (fetch :question :where {:session session} :sort {:_id -1} :limit 1) 0)
+                          :question)))]]]
             [:tr
              [:td
               [:input {:name "guess" :size "50"}]]]]
