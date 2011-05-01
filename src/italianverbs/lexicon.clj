@@ -84,14 +84,14 @@
 ;; prepotizioni (prepositions)
 (add "in" "to"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
+	    
         :obj {:case {:$ne :nom}
               :andare-in true}})
 
 (add "in" "in"
      {:cat :prep
       :action-occurring-in true
-      :fn "gram/prep-fn"
+      
       :obj {:case {:$ne :nom}
             :english-in true
             :place true}})
@@ -99,14 +99,14 @@
 (add "in" "at"
      {:cat :prep
       :action-occurring-in true
-      :fn "gram/prep-fn"
+      
       :obj {:case {:$ne :nom}
             :english-at true
             :place true}})
 
 (add "a" "to"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
+	    
         :obj {:case {:$ne :nom}
               :andare-a true}})
 
@@ -121,39 +121,38 @@
 
 (add "da" "from"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
+	    
         :obj {:case {:$ne :nom}
               :place true}})
 
 (add "a" "to"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
+	    
         :obj {:case {:$ne :nom}
               :animate true}})
 
 (add "con" "with"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
+	    
         :obj {:case {:$ne :nom}
               :human true}})
 
 (add "per" "for"
      {:cat :prep
       :benefactive true
-      :fn "gram/prep-fn"
+      
       :obj {:case {:$ne :nom}
             :animate true}})
 
 (add "per" "for"
      {:cat :prep
       :benefactive true
-      :fn "gram/prep-fn"
+      
       :obj {:case {:$ne :nom}
             :human true}})
 
 (add "su" "on"
 	   {:cat :prep
-	    :fn "gram/prep-fn"
         :obj {:case {:$ne :nom}}})
 
 ;; verbs

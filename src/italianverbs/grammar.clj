@@ -75,22 +75,6 @@
                 (get head :number) " != " (get arg :number))
      }))
 
-
-(defn prep-fn [head arg]  ;; e.g. "[in Italia]","[a lavorare]"
-  {:head head
-   :comp arg
-   :english
-   (string/join " "
-		(list 
-		 (get head :english)
-		 (get arg :english)))
-   
-   :italian
-   (string/join " "
-		(list 
-		 (get head :italian)
-		 (get arg :italian)))})
-
 (defn noun-fn [head arg]  ;; e.g. "il libro"
   (merge
    (unify-np head arg)
