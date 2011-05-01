@@ -32,6 +32,7 @@
 
 (defn get-next-question-id [request]
   "get the question id for the next question for this user."
+  ;; TODO: improve: only return last question and get its _id.
   (let [session (session/request-to-session request)]
     (count (fetch :question :where {:session session}))))
 
@@ -94,9 +95,10 @@
 
 (defn evaluate-guess [ guess ]
   ;; get last question.
+  ;; FIXME: should filter by session!
   (let [question 
     (if (not (= (fetch :question :sort {:_id -1}) '()))
-	(nth (fetch :question :sort {:_id -1}) 0))]
+	(nth (fetch :question :sort {:_id -1} :limit 1) 0))]
 	(if question
 	    (update! :question question (merge question {:guess guess})))))
 
@@ -189,27 +191,42 @@
 
 (defn quiz [last-guess request]
   "choose a question type: currently either pp or partitivo."
-  (let [next-question
+  (let [session (session/request-to-session request)
+        get-next-question-id (get-next-question-id request)
+        next-question
 ;;        (generate (nth '(pp partitivo mese) (rand-int 3)))]
-        (generate (nth '(mese) (rand-int 1)))]
-        (do
+
+        ;; TODO: next-question is too totally different things depending on the (if) - it's confusing.
+        (if (or last-guess
+                (= get-next-question-id 0))
+          (generate (nth '(mese) (rand-int 1)))
+          (nth (fetch :question :where {:session session} :sort {:_id -1} :limit 1) 0))]
+
       (if last-guess (store-guess last-guess))
-      (store-question next-question (session/request-to-session request))
+
+      (if (or last-guess
+              (= get-next-question-id 0))
+        (store-question next-question (session/request-to-session request)))
 
       (html
        (with-history-and-controls
          (session/request-to-session request)
          [:div.quiz
-          [:h2 (str "Question" " " (get-next-question-id request))]
+          [:h2 (str "Question" " " get-next-question-id)]
           [:form {:method "post" :action "/quiz/"}
            [:table
             [:tr
-             [:td [:h1 (get next-question :english)]]]
+             [:td [:h1 
+                   (if (or last-guess
+                           (= get-next-question-id 0))
+                     (get (generate (nth '(mese) (rand-int 1))) :english)
+                     (get (nth (fetch :question :where {:session session} :sort {:_id -1} :limit 1) 0)
+                          :question))]]]
             [:tr
              [:td
               [:input {:name "guess" :size "50"}]]]]
            [:div
-            [:input.submit {:type "submit" :value "riposta"}]]]])))))
+            [:input.submit {:type "submit" :value "riposta"}]]]]))))
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))
@@ -226,12 +243,20 @@
   (if query-string
       (get-params (re-seq #"[^&]+" query-string))))
 
+;; TODO : differentiate (run) and (display): see also TODO in core.clj.
 (defn run [request]
   (let [query-string (get request :form-params)]
     (html
      ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
      ;; pass the users's guess to (quiz), which will evaluate it.
      [:div (quiz (get query-string "guess") request)])))
+
+(defn display [request]
+  (let [query-string (get request :form-params)]
+    (html
+     ;; get 'guess' from query-string (e.g. from "guess=to%20eat")
+     ;; pass the users's guess to (quiz), which will evaluate it.
+     [:div (quiz nil request)])))
 
 (defn filter [request]
   (let [query-string (get request :form-params)]

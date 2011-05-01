@@ -47,6 +47,9 @@
         }
        )
 
+  ;; TO DO: /quiz/ and quiz/display/ should
+  ;; be the same thing. for now we need this here
+  ;; in order to initialize a new quiz.
   (GET "/quiz/" 
        request
        ;; response map
@@ -57,6 +60,17 @@
        }
        )
 
+  (GET "/quiz/display" 
+       request
+       ;; response map
+       { 
+         :body (page "Quiz"
+                     (quiz/display request)
+                     request)
+       }
+       )
+
+  
   (POST "/quiz/"
        request
        ;; response map
@@ -67,13 +81,19 @@
         }
        )
 
+                                        ; TODO: when quiz/filter works, use this instead of the redirect.
+                                        ; might also redirect after :side-effect instead of a separate filter page.
+                                        ;  :body (page "Quiz"
+                                        ;              (quiz/filter request)
+                                        ;              request)
+  
   (POST "/quiz/filter" ;; for now just run quiz.
        request
        ;; response map
        {
-        :body (page "Quiz"
-                    (quiz/filter request)
-                    request)
+        ;; not working yet: just redirect for now.
+        :status 302
+        :headers {"Location" "/quiz/display"}
         }
        )
 
