@@ -55,9 +55,10 @@
                                           (or (= key :head-debug) (= key :comp-debug)
                                               (= key :subj)(= key :obj)
                                               (= key :det)
-                                              (= key :notefs) ;; used for debugging.
+                                              (= key :notefs) ;; the following set is used for debugging.
                                               (= key :adjunct)(= key :iobj)
-                                              (= key :choose)(= key :root))
+                                              (= key :choose)(= key :root)
+                                              (= key :choose-comp))
                                           (list key
                                                 (fs (get feature-structure key)))
                                           (= key :comp) nil

@@ -132,15 +132,18 @@
   (let [chosen-determiner determiner
         noun (choose-lexeme (merge fs {:cat :noun
                                        }))
-        determiner (if chosen-determiner chosen-determiner
-                       (if (get noun :det)
-                         (choose-lexeme
-                          (merge {:number (get noun :number)
-                                  :gender (get noun :gender)}
-                                 (if (get noun :det)
-                                   (get noun :det))))))]
+        determiner-search
+        (if (not (= (get noun :det) nil))
+          (merge
+           (get noun :det)
+           {:cat :det
+            :gender (get noun :gender)
+            :number (get noun :number)}))
+        determiner (if (not (= (get noun :det) nil))
+                     (choose-lexeme determiner-search))]
     (if determiner
       (merge 
+       {:choose-comp determiner-search}
        (combine noun determiner right)
        {:italian (morph/italian-article determiner noun)})
       noun)))
