@@ -196,7 +196,11 @@
         (if (or last-guess
                 (= get-next-question-id 0))
           (get-next-question-id request)
+<<<<<<< HEAD
           (get-next-question-id request))
+=======
+          (- (get-next-question-id request) 1))
+>>>>>>> aeb015d9e370783f7130b10f6514ff164cdd5cf3
         next-question
 ;;        (generate (nth '(pp partitivo mese) (rand-int 3)))]
 
