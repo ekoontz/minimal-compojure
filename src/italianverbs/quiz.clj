@@ -234,7 +234,7 @@
              [:td
               [:input {:name "guess" :size "50"}]]]]
            [:div
-            [:input.submit {:type "submit" :value "riposta"}]]]])))
+            [:input.submit {:type "submit" :value "riposta"}]]]]))))
 
 (defn url-decode [string]
   (.replaceAll string "(%20)" " "))
